@@ -87,3 +87,11 @@ _Append-only. Newest at the bottom. Add an entry for any non-obvious choice, so 
 ## D-019 — Isometric art rendered from the Blender study; UI kit adopted (2026-10-31) [Accepted]
 **Decision:** The isometric view's art is rendered by `tools/blender/render_iso_sprites.py` from the Blender study's models, using the camera in `docs/graphics-spec-iso.md`. Buildings the study didn't have (scavenger, workshop, barracks, storage, scaffolds, rubble, ground tiles) got simple stand-in models in the study's style (`tools/blender/extra_models.py`). Menus use ChatGPT's `HighwayHoldout_UI_Kit` via `App/UI/KitStyle.swift`.
 **Why:** The owner wanted real art in the 3D view, and no isometric sprites had been delivered. The study's hand-off said to re-render from its 3D source once the game picked a projection. Rendering from 3D gives exact 2:1 angles and anchors and makes facings easy. Any art-team PNG with the same name replaces a rendered one on the next import.
+
+## D-020 — Repairing a damaged building is instant in 1B (2026-10-31) [Accepted]
+**Decision:** Repairing a damaged building pays and restores full hp at once, and the building keeps working. Rubble still rebuilds on a construction timer.
+**Why:** A repair timer marked the building unfinished, so a Storage under repair dropped the storage cap and the economy deleted stock above it. Timed repairs come back with 1C builders, using a separate repair state.
+
+## D-021 — 1B rule interpretations (hordes and towers) (2026-10-31) [Accepted]
+**Decision:** Horde budget = baseBudget + budgetPerDay × (day − 1) (per hordes.json notes). One zombie spawns per active edge every spawnIntervalSeconds. Edges are picked at the warning, and the mix at the start. Seeded picks use plain modulo. Repair cost rounds up, so small damage isn't free. Towers fire when (tick + buildingID) % max(1, round(tps / fireRate)) == 0, with no saved cooldown. Unknown `targeting` values act like `single_nearest`. Nearest-to-HQ uses the weight-1.0 flow field.
+**Why:** These keep hordes and towers deterministic with no extra save fields, and match the content notes. Details: docs/features/hordes.md and combat.md.

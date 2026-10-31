@@ -1,8 +1,9 @@
 // Purpose: Repairs damaged buildings and rebuilds rubble (cost and time from buildings.json rules). Notes: docs/features/construction.md
 import Foundation
 
-/// `Command.repair(id)`. Buildings keep their level. Repairing or rebuilding pays at once, restores full hp,
-/// and runs a construction timer (the building does nothing until it finishes). No builder limit until 1C.
+/// `Command.repair(id)`. Buildings keep their level and pay at once. Rubble rebuilds on a construction timer (it
+/// isn't working anyway). A damaged building heals at once and keeps working: a timer would switch it off, and a
+/// Storage going off drops the cap and deletes stock (D-020). The repair time in rules.repair waits for 1C builders.
 enum RepairSystem {
     static func repair(id: BuildingID, state: inout GameState, content: GameContent) -> Result<CommandOutcome, CommandError> {
         guard let index = state.base.buildings.firstIndex(where: { $0.id == id }) else { return .failure(.unknownBuildingID(id)) }
@@ -10,7 +11,7 @@ enum RepairSystem {
         guard let level = content.buildingDef(building.defId)?.level(building.level),
               let quote = quote(building, level: level, content: content) else { return .failure(.nothingToRepair(id)) }
         guard state.base.stock.covers(quote.cost) else { return .failure(.notEnoughResources(needed: quote.cost)) }
-        let ticks = content.ticks(forSeconds: quote.seconds)
+        let ticks = building.isRubble ? content.ticks(forSeconds: quote.seconds) : 0
         state.base.stock.scrap -= quote.cost.scrap
         state.base.stock.food -= quote.cost.food
         state.base.buildings[index].isRubble = false

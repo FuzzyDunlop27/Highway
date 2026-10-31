@@ -17,6 +17,25 @@ struct RepairSystemTests {
         return (loop, id)
     }
 
+    @Test func damagedStorageKeepsItsCapWhileRepaired() throws {
+        // Bug: a repair timer switched Storage off, dropped the cap, and deleted stored food/scrap.
+        let setup = try TestSupport.loop { $0.group.survivors = 8; $0.base.stock = Cost(scrap: 900, food: 200) }
+        guard case .success(.placed(let id)) = setup.send(.placeBuilding(defId: "storage", at: TestSupport.grassSpot)) else {
+            throw RepairTestError.notPlaced
+        }
+        setup.step(ticks: TestSupport.ticks(setup.content.buildingDef("storage")!.level(1)!.buildSeconds, setup))
+        let loop = try setup.edited { s in
+            s.base.buildings[s.base.buildings.firstIndex { $0.id == id }!].hp = 100
+            s.base.stock.scrap = 900  // above the base cap, only possible thanks to the storage
+        }
+        let capBefore = loop.resources.scrapCap
+        guard case .success = loop.send(.repair(id: id)) else { Issue.record("repair failed"); return }
+        loop.step(ticks: 1)
+        #expect(loop.state.base.building(id)?.isComplete == true)
+        #expect(loop.resources.scrapCap == capBefore)
+        #expect(loop.state.base.stock.scrap >= 800)
+    }
+
     private enum RepairTestError: Error { case notPlaced }
 
     @Test func damagedBuildingCostsAShareOfItsLevelCostAndTime() throws {
@@ -26,25 +45,21 @@ struct RepairSystemTests {
         let missing = Double(level.hp - 150) / Double(level.hp)
         let expected = Cost(scrap: Int((Double(level.cost.scrap * rule.costPctOfLevelCost) / 100 * missing).rounded(.up)),
                             food: Int((Double(level.cost.food * rule.costPctOfLevelCost) / 100 * missing).rounded(.up)))
-        let ticks = loop.content.ticks(forSeconds: max(rule.minSeconds,
-                                                       level.buildSeconds * Double(rule.timePctOfBuildTime) / 100 * missing))
         let before = loop.state.base.stock
         let invested = loop.state.base.building(id)!.invested
         #expect(loop.send(.repair(id: id)) == .success(.repairStarted(cost: expected)))
         let b = try #require(loop.state.base.building(id))
         #expect(loop.state.base.stock == Cost(scrap: before.scrap - expected.scrap, food: before.food - expected.food))
         #expect(b.hp == level.hp && b.level == 1)
-        #expect(b.constructionTicksLeft == ticks && b.constructionTicksTotal == ticks)
+        #expect(b.constructionTicksLeft == 0 && b.isComplete)  // heals at once and keeps working (D-020)
         #expect(b.invested == invested + expected)
-        loop.step(ticks: ticks)
-        #expect(loop.state.base.building(id)?.isComplete == true)
     }
 
-    @Test func tinyDamageUsesTheMinimumTime() throws {
+    @Test func tinyDamageStillCostsSomething() throws {
         let (loop, id) = try withFarm { $0.hp -= 1 }
-        loop.send(.repair(id: id))
-        let min = loop.content.ticks(forSeconds: loop.content.buildings.rules.repair.minSeconds)
-        #expect(loop.state.base.building(id)?.constructionTicksLeft == min)
+        guard case .success(.repairStarted(let cost)) = loop.send(.repair(id: id)) else { Issue.record("no repair"); return }
+        #expect(cost.scrap > 0)
+        #expect(loop.state.base.building(id)?.hp == loop.content.buildingDef("farm")!.level(1)!.hp)
     }
 
     @Test func rubbleRebuildsFromWhatWasInvested() throws {

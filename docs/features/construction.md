@@ -28,15 +28,15 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 
 ## Repair (1B)
 - `Command.repair(id)` works on a **damaged finished** building (hp < its level's max, not under construction) or on **rubble**. Buildings keep their level.
-- Damaged: cost = level cost × `rules.repair.costPctOfLevelCost` % × missing-hp fraction, **rounded up** per resource; time = max(`minSeconds`, `buildSeconds` × `timePctOfBuildTime` % × missing fraction).
+- Damaged: cost = level cost × `rules.repair.costPctOfLevelCost` % × missing-hp fraction, **rounded up** per resource; the building heals **at once** and keeps working (D-020). `minSeconds`/`timePctOfBuildTime` are kept for 1C, when repairs need builders.
 - Rubble: cost = `invested` × `rules.rubble.rebuildCostPctOfInvested` % (rounded down); free starting buildings (invested 0) use their level cost instead. Time = `buildSeconds` × `rebuildTimePctOfInvested` % (the field name says "invested" but it is a share of build time).
-- On success: pay at once, hp = max, not rubble, construction timer = the time, cost added to `invested` (so it raises town value and demolish refunds). Like construction, the building does nothing until the timer ends.
+- On success: pay at once, hp = max, cost added to `invested` (raises town value and demolish refunds). Rubble also runs a construction timer and does nothing until it ends.
 - Errors (nothing changes): `unknownBuildingID`, `nothingToRepair` (full hp, or still being built/repaired), `notEnoughResources(needed:)`.
 - 0-hp buildings become rubble in `HordeResolution` (see hordes.md). No builder limit until 1C.
 
 ## Known issues
-- Repairing a damaged building takes it offline for the repair time (`isComplete` is false). For the HQ or a Storage that briefly lowers caps/housing, and the economy trims stock above the lower cap, so resources can be lost. Open question for the lead/owner (see STATUS).
 
 ## Change log
 - 2026-10-31 — Added repair / rubble rebuild (`RepairSystem`, 1B).
+- 2026-10-31 — Damaged buildings now heal at once instead of going offline (a repaired Storage was deleting stock).
 - 2026-10-31 — Built placement rules, place/move/demolish, build timers, Phase 1 map (1A).
