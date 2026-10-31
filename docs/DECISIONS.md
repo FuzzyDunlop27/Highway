@@ -100,3 +100,7 @@ _Append-only. Newest at the bottom. Add an entry for any non-obvious choice, so 
 **Decision:** The owner approved improving placement in isometric with a ground grid, clear footprint/validity feedback, drag preview + Confirm, and temporary fading of obstructing buildings. Once verified on iPhone, disable automatic top-down switching. Keep the existing top-down mode manually available during testing; do not remove it yet.
 **Why:** A continuous isometric view avoids the visual/style jump and reduces the need to maintain two polished art sets. Top-down remains a fallback until touch placement is proven.
 **Scope/status:** Docs-only coordination in this pass; app behavior is unchanged. Supersedes D-016's automatic placement-switch requirement, not its view-independent projection architecture. Build order and acceptance checks: `PHASE1-TASKS.md` → Approved update — isometric placement first.
+
+## D-023 — Starting walls fully enclose the HQ (2026-10-31) [Accepted]
+**Decision:** A new game starts with a closed ring of 28 wood walls (x 20–28, y 16–22) around the HQ and watchtower, instead of two 6-wall rows. `buildings.json startingLayout` wall count 12 → 28 (under the HQ-1 cap of 40).
+**Why:** The owner wants walls to matter from the first horde. With gaps, zombies walked around the walls. Now day 1 has to break through a wall to reach the HQ. Existing saves keep their own walls; only new games change.
