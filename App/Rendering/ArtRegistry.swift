@@ -92,13 +92,13 @@ final class ArtRegistry {
         return image
     }
 
-    /// Picture for a building in menus: the UI kit's 3/4 card (`ui_build_<id>`, or `ui_build_<first word>` so
-    /// `wall_wood` finds `ui_build_wall`), else the isometric sprite, else top-down art, else a placeholder.
+    /// Picture for a building in menus: the UI kit's 3/4 card `ui_build_<id>`, else the isometric sprite, else top-down
+    /// art, else a placeholder. Only `wall_wood` borrows the kit's generic `ui_build_wall` (it is drawn as wood).
     func menuImage(for def: BuildingDef) -> UIImage {
         let key = "menu/\(def.id)"
         if let cached = images[key] { return cached }
-        let firstWord = def.id.split(separator: "_").first.map(String.init) ?? def.id
-        let candidates = [("UI", "ui_build_\(def.id)"), ("UI", "ui_build_\(firstWord)"), ("Iso", def.sprite), ("TopDown", def.sprite)]
+        let kitAliases = ["wall_wood": "ui_build_wall"]
+        let candidates = [("UI", "ui_build_\(def.id)"), ("UI", kitAliases[def.id] ?? ""), ("Iso", def.sprite), ("TopDown", def.sprite)]
         let image = candidates.lazy.compactMap { self.image($0.1, namespace: $0.0) }.first
             ?? PlaceholderArt.flatBox(def.sprite, size: CGSize(width: 64, height: 64))
         images[key] = image

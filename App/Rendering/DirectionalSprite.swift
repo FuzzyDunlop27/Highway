@@ -1,6 +1,7 @@
 // Purpose: Picks the facing image for things that turn (turrets now; units/zombies in 1B), or rotates one image. Notes: docs/features/rendering-art.md
 import CoreGraphics
 import Foundation
+import HoldoutCore
 
 enum DirectionalSprite {
     struct Frame: Equatable {
@@ -12,8 +13,6 @@ enum DirectionalSprite {
         let rotation: CGFloat
     }
 
-    /// Screen-direction suffixes counter-clockwise from east (screen y is up).
-    static let names = ["e", "ne", "n", "nw", "w", "sw", "s", "se"]
     /// West-side facings are mirrors of these east-side ones.
     static let mirrorOf = ["w": "e", "nw": "ne", "sw": "se"]
 
@@ -21,21 +20,8 @@ enum DirectionalSprite {
     /// `facings`: 1 = rotate `baseId`; 4 = diagonals only (ne, nw, sw, se); 8 = all eight.
     static func frame(baseId: String, screenAngle: Double, facings: Int, allowMirror: Bool = true) -> Frame {
         guard facings == 4 || facings == 8 else { return Frame(id: baseId, mirrored: false, rotation: CGFloat(screenAngle)) }
-        let step = Double.pi / 4
-        var index = Int((normalized(screenAngle) / step).rounded()) % 8
-        if facings == 4 && index % 2 == 0 {
-            // Snap to the nearest diagonal, favoring the one counter-clockwise.
-            let diff = normalized(screenAngle) - Double(index) * step
-            index = (index + (diff >= 0 ? 1 : 7)) % 8
-        }
-        let name = names[index]
+        let name = Facing.name(screenAngle: screenAngle, facings: facings)  // Core/Presentation/Facing.swift (tested)
         if allowMirror, let east = mirrorOf[name] { return Frame(id: "\(baseId)_\(east)", mirrored: true, rotation: 0) }
         return Frame(id: "\(baseId)_\(name)", mirrored: false, rotation: 0)
-    }
-
-    private static func normalized(_ angle: Double) -> Double {
-        let full = 2 * Double.pi
-        let a = angle.truncatingRemainder(dividingBy: full)
-        return a < 0 ? a + full : a
     }
 }
