@@ -48,18 +48,21 @@ struct HordeSystemTests {
         #expect(loop.state.base.horde.warningEdges.isEmpty)
     }
 
+    /// Removes the starting watchtower so a horde can't be shot down while a test watches the clock.
+    private static func noTowers(_ state: inout GameState) { state.base.buildings.removeAll { $0.defId == "watchtower" } }
+
     @Test func clockIsFrozenDuringAHorde() throws {
-        let loop = try TestSupport.loop()
+        let loop = try TestSupport.loop(Self.noTowers)
         loop.send(.debugStartHorde)
-        loop.step(ticks: TestSupport.ticks(schedule(loop).intervalSeconds * 2, loop))
-        #expect(loop.state.base.horde.active != nil)  // zombies don't die by themselves here
+        loop.step(ticks: TestSupport.ticks(30, loop))  // zombies still walking in, nothing shoots them
+        #expect(loop.state.base.horde.active != nil)
         #expect(loop.state.base.horde.day == 1)
         #expect(loop.state.base.horde.ticksUntilNext == nil)
         #expect(loop.hordeStatus.secondsUntilNext == nil)
     }
 
     @Test func zombiesSpawnAtTheIntervalInsideTheEdges() throws {
-        let loop = try TestSupport.loop()
+        let loop = try TestSupport.loop(Self.noTowers)
         loop.send(.debugStartHorde)
         let active = try #require(loop.state.base.horde.active)
         let total = active.spawnQueue.count + active.spawned
@@ -75,9 +78,13 @@ struct HordeSystemTests {
         #expect(loop.state.base.horde.active?.spawned == total)
         #expect(loop.state.base.horde.active?.spawnQueue.isEmpty == true)
 
-        let rects = loop.map.spawnEdges.filter { active.edges.contains($0.id) }
-        for z in loop.state.base.zombies {
-            let def = try #require(loop.content.zombies.zombies.first { $0.id == z.defId })
+        // Zombies walk off once spawned, so check where they appear on a fresh start (startNow runs no movement).
+        let fresh = try TestSupport.loop(Self.noTowers)
+        fresh.send(.debugStartHorde)
+        let edges = try #require(fresh.state.base.horde.active?.edges)
+        let rects = fresh.map.spawnEdges.filter { edges.contains($0.id) }
+        for z in fresh.state.base.zombies {
+            let def = try #require(fresh.content.zombies.zombies.first { $0.id == z.defId })
             #expect(z.hp == Double(def.hp))
             #expect(z.x == Double(z.tile.x) + 0.5 && z.y == Double(z.tile.y) + 0.5)
             #expect(rects.contains { r in (r.x..<r.x + r.w).contains(z.tile.x) && (r.y..<r.y + r.h).contains(z.tile.y) })
@@ -98,16 +105,17 @@ struct HordeSystemTests {
     }
 
     @Test func noSurvivorsArriveDuringAHorde() throws {
+        // Runs the economy alone: in the full loop a towerless town can lose its HQ (ending the horde) first.
         let loop = try TestSupport.loop { $0.group.survivors = 1; $0.base.stock.food = 400 }
-        loop.send(.debugStartHorde)
-        loop.step(ticks: TestSupport.ticks(loop.content.resources.survivorArrival.intervalSeconds * 3, loop))
-        #expect(loop.state.group.survivors == 1)
+        var state = loop.state
+        state.base.horde.active = ActiveHorde(edges: ["side_road_north"], spawnQueue: [])
+        let interval = TestSupport.ticks(loop.content.resources.survivorArrival.intervalSeconds, loop)
+        for _ in 0..<(interval * 3) { EconomySystem.tick(&state, content: loop.content) }
+        #expect(state.group.survivors == 1)
 
-        // Once the horde is over (it ends during the next tick, after the economy ran), arrivals resume.
-        let after = try loop.edited { $0.base.zombies.removeAll(); $0.base.horde.active?.spawnQueue.removeAll() }
-        after.step(ticks: TestSupport.ticks(loop.content.resources.survivorArrival.intervalSeconds, after) + 1)
-        #expect(after.state.base.horde.active == nil)
-        #expect(after.state.group.survivors == 2)
+        state.base.horde.active = nil  // horde over: arrivals resume
+        for _ in 0..<(interval + 1) { EconomySystem.tick(&state, content: loop.content) }
+        #expect(state.group.survivors == 2)
     }
 
     @Test func saveAndLoadMidHordeKeepsGoingIdentically() throws {
