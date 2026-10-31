@@ -14,6 +14,13 @@ Known Craft project page: **Highway Holdout — Zombie TD Game**, root block ID 
 4. Building a new milestone? Read only that milestone's section of `docs/PHASE1-PLAN.md`.
 Do NOT scan the whole codebase. If MAP + the feature note aren't enough, MAP is wrong — fix it.
 
+## Build chunks (so the owner can start fresh chats)
+The owner avoids long-running chats. Work is split into **build chunks** tracked in `docs/BUILD-QUEUE.md`.
+- **Labels show dependencies.** Number = wave, letter = track (e.g. 1A, 2A, 1B, 2B, 3B). Any chunk in wave 1 can be done at any time; a wave-2 chunk needs **all** wave-1 chunks done; wave 3 needs all of waves 1–2. If a different dependency is truly needed, write it in the chunk's "Needs" line. (Older "Milestone 1A–1E" names in `PHASE1-PLAN.md` are a separate, earlier scheme; say "chunk" vs "milestone" to avoid mixing them up.)
+- **After finishing any chunk, always write up the next big chunk:** add or update its entry in `BUILD-QUEUE.md` with label, goal, needs, scope, what NOT to build, exit check, and a short start prompt the owner can paste, like "Implement chunk 2A" in a new chat.
+- **When the owner asks "what's left?"** (any time), read `BUILD-QUEUE.md` and answer: done / ready now / blocked (and by which chunks).
+- **Record status in Craft** (Highway Holdout page, see "Look here first") whenever a chunk is started, finished, or blocked, and keep `BUILD-QUEUE.md` the same. Verify the Craft write; never claim it synced unchecked.
+
 ## Architecture rules (never break these)
 - `Core/` (Swift package `HoldoutCore`) is the game simulation. It imports only Foundation.
   Never import SpriteKit, SwiftUI, UIKit, or Observation in Core.
