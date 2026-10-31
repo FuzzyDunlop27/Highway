@@ -1,4 +1,4 @@
-// Purpose: Top resource bar: food, scrap (amount/cap and per-minute rate), and survivors (count/housing, idle). Notes: docs/features/hud-ui.md
+// Purpose: Top bar: food, scrap (amount/cap, per-minute rate), survivors (count/housing, idle), and the horde chip. Notes: docs/features/hud-ui.md
 import SwiftUI
 import HoldoutCore
 
@@ -11,6 +11,7 @@ struct HUDView: View {
                 chip("food", content: content, amount: "\(r.food)/\(r.foodCap)", detail: rate(r.foodPerMin))
                 chip("scrap", content: content, amount: "\(r.scrap)/\(r.scrapCap)", detail: rate(r.scrapPerMin))
                 chip("survivors", content: content, amount: "\(r.survivors)/\(r.housing)", detail: "\(r.idleSurvivors) idle")
+                HordeChipView(store: store)
             }
             .accessibilityIdentifier("hud")
         }

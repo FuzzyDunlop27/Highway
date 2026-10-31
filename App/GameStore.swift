@@ -14,6 +14,11 @@ final class GameStore {
     private(set) var loadError: String?
     /// Latest resource numbers for the HUD (only reassigned when they change).
     private(set) var resources: ResourceSnapshot?
+    /// Horde day, countdown, warned edges, zombies left (reassigned only when the HUD would show something different).
+    private(set) var hordeStatus: HordeStatus?
+    /// Horde start / held / HQ fell message shown over the map (HordeBannerView hides it after a few seconds).
+    private(set) var banner: HordeBanner?
+    @ObservationIgnored private var bannerCount = 0
     /// The selected building as of the last frame (for the selection bar's live progress).
     private(set) var selectedBuilding: Building?
     /// A short message for the player, e.g. why demolishing failed. The UI clears it.
@@ -110,18 +115,34 @@ final class GameStore {
 
     // MARK: Every frame
 
-    /// Called by the scene once per frame with real seconds since the last frame.
-    func advance(realSeconds: Double) {
-        guard let loop else { return }
+    /// Called by the scene once per frame with real seconds since the last frame. Returns what happened in Core
+    /// since the last frame (the scene draws these as effects); banner-worthy events also set `banner`.
+    @discardableResult
+    func advance(realSeconds: Double) -> [SimEvent] {
+        guard let loop else { return [] }
         loop.advance(realSeconds: realSeconds)
+        let events = loop.drainEvents()
+        for event in events {
+            if let next = HordeBanner(event: event, id: bannerCount + 1) {
+                bannerCount += 1
+                banner = next
+            }
+        }
         refresh()
         if lifecycle.autosaveDue(afterRealSeconds: realSeconds) { save() }
+        return events
+    }
+
+    func dismissBanner(id: Int) {
+        if banner?.id == id { banner = nil }
     }
 
     private func refresh() {
         guard let loop else { return }
         let snapshot = loop.resources
         if snapshot != resources { resources = snapshot }
+        let horde = loop.hordeStatus
+        if !horde.looksSameOnHUD(as: hordeStatus) { hordeStatus = horde }
         placement.refresh(loop: loop)
         let selected: Building? = if case .selected(let id) = placement.mode { loop.state.base.building(id) } else { nil }
         if selected != selectedBuilding { selectedBuilding = selected }
@@ -164,7 +185,12 @@ final class GameStore {
     func confirmPlacement() {
         guard let command = placement.pendingCommand else { return }
         if case .success(let outcome) = send(command) {
-            if case .placed(let id) = outcome { placement.select(id) } else { placement.cancel() }
+            if case .placed(let id) = outcome {
+                // 1×1 defenses keep the ghost so a line of walls is quick to lay; anything else selects what was placed.
+                if let content, !placement.staysPlacingAfterConfirm(content: content) { placement.select(id) }
+            } else {
+                placement.cancel()
+            }
             refresh()
         }
     }
@@ -181,6 +207,19 @@ final class GameStore {
             refresh()
         }
     }
+
+    /// Repairs the selected building, or rebuilds it if it is rubble (cost and time come from Core).
+    func repairSelected() {
+        guard case .selected(let id) = placement.mode else { return }
+        send(.repair(id: id))
+    }
+
+    #if DEBUG
+    /// Testing commands from the debug menu (DEBUG builds only).
+    func sendDebug(_ command: Command) {
+        send(command)
+    }
+    #endif
 
     func deselect() {
         placement.select(nil)

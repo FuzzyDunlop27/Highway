@@ -6,6 +6,7 @@ struct GameRootView: View {
     let store: GameStore
     @State private var scene: GameScene
     @State private var showBuildMenu = false
+    @State private var buildTab = BuildMenuView.Tab.buildings
 
     init(store: GameStore) {
         self.store = store
@@ -28,6 +29,10 @@ struct GameRootView: View {
                     if let notice = store.notice {
                         NoticeBanner(text: notice) { store.notice = nil }
                     }
+                    if let banner = store.banner {
+                        HordeBannerView(store: store, banner: banner)
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                    }
                     Spacer()
                     bottomBar
                 }
@@ -36,6 +41,7 @@ struct GameRootView: View {
             }
             .animation(.easeInOut(duration: 0.15), value: store.placement.mode)
             .animation(.easeInOut(duration: 0.15), value: showBuildMenu)
+            .animation(.easeInOut(duration: 0.25), value: store.banner)
         }
     }
 
@@ -47,7 +53,7 @@ struct GameRootView: View {
             SelectionBarView(store: store)
         case .idle:
             if showBuildMenu {
-                BuildMenuView(store: store) { defId in
+                BuildMenuView(store: store, tab: $buildTab) { defId in
                     showBuildMenu = false
                     store.beginPlacing(defId: defId)
                 } onClose: {

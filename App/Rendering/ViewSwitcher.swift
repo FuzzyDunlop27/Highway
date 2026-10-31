@@ -3,15 +3,18 @@ import SpriteKit
 import HoldoutCore
 
 extension GameScene {
-    /// Draws the map for `style` from scratch; buildings, ghost, and selection are re-made on the next frame.
+    /// Draws the map for `style` from scratch; buildings, zombies, warnings, ghost, and selection are re-made on the next frame.
     func apply(_ style: ArtStyle) {
         guard let loop = store.loop else { return }
         world.removeAllChildren()
         buildingNodes.removeAll()
         ghost = nil
         selection = nil
+        zombies.reset()
+        hordeWarning.reset()
         self.style = style
         world.addChild(TerrainNodeFactory.make(map: loop.map, style: style, art: art))
+        effects.reset(in: world)
         cameraController?.configure(mapSize: style.geometry.mapSize, minScale: style.view.minScale)
     }
 

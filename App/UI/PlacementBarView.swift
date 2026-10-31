@@ -1,4 +1,4 @@
-// Purpose: Bottom bars: Confirm/Cancel while placing or moving, and Move/Demolish for a selected building. Notes: docs/features/hud-ui.md
+// Purpose: Bottom bars: Confirm/Cancel while placing or moving; Move/Demolish, health, and Repair/Rebuild for a selected building. Notes: docs/features/hud-ui.md
 import SwiftUI
 import HoldoutCore
 
@@ -43,16 +43,33 @@ struct SelectionBarView: View {
             HStack(spacing: 12) {
                 Image(uiImage: ArtRegistry.shared.menuImage(for: def))
                     .resizable().scaledToFit().frame(width: 60, height: 44)
+                let maxHp = def.level(building.level)?.hp ?? 0
+                let isDamaged = building.isComplete && building.hp < maxHp
+                let isWreck = building.isRubble && building.constructionTicksLeft == 0
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(def.displayName) · Level \(building.level)").font(.headline).foregroundStyle(Kit.ink)
-                    if building.isComplete {
+                    if isWreck {
+                        Text("Destroyed").font(.caption.bold()).foregroundStyle(Kit.danger)
+                    } else if !building.isComplete {
+                        KitProgressBar(value: building.constructionProgress).frame(width: 140)
+                    } else if isDamaged {
+                        HStack(spacing: 6) {
+                            KitProgressBar(value: Double(building.hp) / Double(max(maxHp, 1)), fill: "ui_progress_danger",
+                                           label: "Health").frame(width: 110)
+                            Text("\(building.hp)/\(maxHp)").font(.caption.monospacedDigit()).foregroundStyle(Kit.danger)
+                        }
+                    } else {
                         Text(def.workers > 0 ? "Workers \(building.staffed)/\(def.workers)" : "Ready")
                             .font(.caption.monospacedDigit()).foregroundStyle(Kit.muted)
-                    } else {
-                        KitProgressBar(value: building.constructionProgress).frame(width: 140)
                     }
                 }
                 Spacer()
+                if isWreck || isDamaged {
+                    // Core has no repair-cost preview yet, so the button shows no price (Core checks and charges it).
+                    Button { store.repairSelected() } label: { KitLabel(glyph: "build", title: isWreck ? "Rebuild" : "Repair") }
+                        .buttonStyle(KitButtonStyle(kind: .primary))
+                        .accessibilityIdentifier("repairButton")
+                }
                 Button { store.beginMoving() } label: { KitLabel(glyph: "move", title: "Move") }
                     .buttonStyle(KitButtonStyle(kind: .secondary))
                 Button { confirmDemolish = true } label: { KitLabel(glyph: "demolish", title: "Demolish") }
@@ -71,19 +88,21 @@ struct SelectionBarView: View {
     }
 }
 
-/// Kit progress bar (track + teal fill clipped to `value`, 0...1).
+/// Kit progress bar (track + fill clipped to `value`, 0...1). `fill`: ui_progress_teal / _amber / _danger.
 struct KitProgressBar: View {
     let value: Double
+    var fill = "ui_progress_teal"
+    var label = "Building"
 
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 Kit.surface("ui_progress_track", corner: 6)
-                Kit.surface("ui_progress_teal", corner: 6)
+                Kit.surface(fill, corner: 6)
                     .frame(width: max(12, geo.size.width * min(max(value, 0), 1)))
             }
         }
         .frame(height: 10)
-        .accessibilityLabel("Building \(Int(value * 100)) percent")
+        .accessibilityLabel("\(label) \(Int(value * 100)) percent")
     }
 }
