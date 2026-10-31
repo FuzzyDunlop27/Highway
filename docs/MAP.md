@@ -66,6 +66,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] STATUS.md         Where we left off, next step, open questions
 │  ├─ [x] MAP.md            This file
 │  ├─ [x] DECISIONS.md      Why things are the way they are
+│  ├─ [x] BUILD-QUEUE.md    Build chunks (1A, 2A, 1B…): dependencies, status, start prompts
 │  ├─ [x] GAME-DESIGN.md    What the game is; Phase 1 content list
 │  ├─ [x] PHASE1-PLAN.md    Stack, milestones 1A–1E, exit checks, kickoff prompts
 │  ├─ [x] PHASE1-TASKS.md   Task-by-task plan for what's left (1V two views → 1E), owner decisions
@@ -80,6 +81,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  SpriteKit scene, ArtRegistry/placeholders, node factories
+│     ├─ [ ] zombie-walk-animation.md  ZWALK-1 SPEC: limb walk frames for zombies (not built)
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
 ├─ Content/                 ALL tuning data, loaded at runtime. No numbers in Swift.

@@ -20,20 +20,45 @@ final class ZombieNode {
     private var frame: DirectionalSprite.Frame?
     private var healthBar: SKSpriteNode?
 
-    // Look only (not game tuning): bob height/time, bar size, flash.
-    private static let bobPoints: CGFloat = 1.5
-    private static let bobSeconds = 0.22
+    // Look only (not game tuning): walk-cycle size/time, bar size, flash.
+    private static let hopPoints: CGFloat = 4       // body lifts this much on each step
+    private static let rockRadians: CGFloat = 0.1  // shamble: leans left, then right, around the feet
+    private static let strideTiles = 0.3           // ground covered per step, so faster zombies step faster
+    private static let stepSecondsRange = 0.28...0.55
     private static let barHeight: CGFloat = 3
     private static let flashKey = "hitFlash"
+    private static let walkKey = "walk"
     static let category = "zombie"
 
+    private let seed: Int
+    private var walking = false
+
     init(seed: Int) {
+        self.seed = seed
         root.addChild(bobber)
-        // Each zombie starts its bob at a different moment so a crowd doesn't bounce in step.
-        let up = SKAction.moveBy(x: 0, y: Self.bobPoints, duration: Self.bobSeconds)
-        up.timingMode = .easeInEaseOut
-        let bob = SKAction.sequence([up, up.reversed()])
-        bobber.run(.sequence([.wait(forDuration: Double(seed % 7) * Self.bobSeconds / 7), .repeatForever(bob)]))
+    }
+
+    /// Starts or stops the shamble: hop up and down on every step while leaning left, then right (stops while attacking).
+    private func setWalking(_ on: Bool, speed: Double) {
+        guard on != walking else { return }
+        walking = on
+        guard on else {
+            bobber.removeAction(forKey: Self.walkKey)
+            bobber.run(.group([.move(to: .zero, duration: 0.08), .rotate(toAngle: 0, duration: 0.08)]))
+            return
+        }
+        let step = min(max(Self.strideTiles / max(speed, 0.05), Self.stepSecondsRange.lowerBound), Self.stepSecondsRange.upperBound)
+        func half(_ lean: CGFloat) -> SKAction {
+            let up = SKAction.group([.moveTo(y: Self.hopPoints, duration: step / 2), .rotate(toAngle: lean, duration: step)])
+            up.timingMode = .easeOut
+            let down = SKAction.moveTo(y: 0, duration: step / 2)
+            down.timingMode = .easeIn
+            return .sequence([up, down])
+        }
+        // Each zombie starts at a different moment so a crowd doesn't step in unison.
+        let offset = Double(seed % 7) * step / 7
+        bobber.run(.sequence([.wait(forDuration: offset),
+                              .repeatForever(.sequence([half(Self.rockRadians), half(-Self.rockRadians)]))]), withKey: Self.walkKey)
     }
 
     /// Where shots hit: the body's middle.
@@ -70,6 +95,7 @@ final class ZombieNode {
         }
         body?.zRotation = next.rotation
         frame = next
+        setWalking(zombie.attacking == nil, speed: def?.speed ?? 0.6)
         updateHealth(zombie, def: def)
     }
 

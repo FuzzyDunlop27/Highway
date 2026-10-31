@@ -25,7 +25,7 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - `App/Rendering/Nodes/TerrainNodeFactory.swift` — ground tiles + decorations.
 - `App/Rendering/Nodes/BuildingNodeFactory.swift` — one building: sprite, scaffolding + progress bar, rubble, health bar when damaged; finished defenses go to `DefenseNodeFactory`.
 - `App/Rendering/Nodes/DefenseNodeFactory.swift` — walls (mirrored in iso for a north-south line), flat traps, towers (base + turret top that aims; faded when unstaffed), muzzle point.
-- `App/Rendering/Nodes/ZombieNodeFactory.swift` — `ZombieNode`: facing sprite, walk bob, health bar when hurt, hit flash.
+- `App/Rendering/Nodes/ZombieNodeFactory.swift` — `ZombieNode`: facing sprite, shamble walk cycle (hop + lean, step rate from zombie speed, stops while attacking), health bar when hurt, hit flash.
 - `App/Rendering/Nodes/FXNodeFactory.swift` — tracer, muzzle flash, goo splat, dust puff, building shake, trap flash (each removes itself).
 - `App/Rendering/Nodes/BarNodeFactory.swift` — the small progress/health bars.
 - `App/Rendering/Nodes/GhostNodeFactory.swift` — placement ghost (projected tile polygons), the selection outline, and the range ring (projected circle) of a selected tower/HQ.
@@ -74,3 +74,4 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - 2026-10-31 — 1V: two views (isometric + top-down), presentation.json, projection math in Core, depth sorting, iso placeholder blocks, view switching, namespaced art import.
 - 2026-10-31 — Owner abandoned the 8-bit variant; created a fresh Blender miniature-style study and ten PNG samples (40 image checks passed). App artwork remains unchanged.
 - 2026-10-31 — Created (1A App half): scene, ArtRegistry with generated placeholders, terrain/building/ghost factories.
+- 2026-10-31 — Zombies now shamble: a 4 pt hop and ±0.1 rad lean per step (was a barely visible 1.5 pt bob that never stopped); step time from `speed`; idle while bashing. Single sprite per facing, so it's a procedural walk; real frame animation would need new art.

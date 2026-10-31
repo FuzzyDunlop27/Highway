@@ -14,6 +14,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Zombies shamble instead of floating:** each step hops and leans left/right around the feet, faster for runners, stopped while bashing a wall (`ZombieNodeFactory.swift`). Built OK; not yet eyeballed in the simulator.
 - **Wall tool:** walls are now drawn, not placed one by one. Drag a straight or L-shaped line, see how many walls and the total cost (skipped tiles shown red / "already built"), tap Build to place it all at once (nothing if you can't afford it all). Two fingers move the map. Core `planLine`/`placeLine` with 6 tests (119 pass). Checked in the simulator.
 - Starting walls now fully enclose the HQ (D-023): 28-wall ring in `Content/maps/phase1_exit.json`. Headless run: day 1 breaks one wall then is held. New games only.
 - **Isometric placement (D-022) done.** Placing/moving now stays in isometric: tile grid around the ghost (unbuildable tiles red), green/red footprint + reason, ghost held above the finger while dragging, buildings/trees in front of the ghost fade and restore. Checked on iPhone 18 Pro simulator: 1×1 (repeated walls at the map edge), 2×2 (shelter inside the walls, scavenger post behind the HQ), 3×3 (move HQ + Cancel = no change), invalid spots blocked with reasons, no view flip on Confirm/Cancel. Auto top-down turned off (`presentation.json`), old saved setting ignored (verified by forcing it on); manual top-down button kept. Also: 1×1 builds show a faded picture instead of the oversized 2×2 scaffold; selection bar fits on iPhone (no wrapped HP/Demolish). 113 tests pass.
@@ -47,6 +48,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Core tests read the repo's `Content/` folder; the App passes its bundled copy (D-010).
 
 ## Open questions (owner decides)
+- **ZWALK-1** zombie limb animation: spec + paste-ready prompt in `docs/features/zombie-walk-animation.md` (Blender walk frames, ~36 sprites). Build when credits allow?
 - View direction is decided in D-022 (implementation pending). Iso facings remain 4 for units/zombies and 8 for turrets; changing those is a separate choice.
 - Final game name (Highway Holdout is a working title).
 - Balance: should survivors eat food (upkeep), so food stays useful after ~60 min? (`resources.json foodUpkeepPerSurvivorPerMin`, currently 0; Core rejects non-zero until upkeep is built)
