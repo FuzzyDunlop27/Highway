@@ -6,13 +6,14 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 ## Files involved
 - `Core/Sources/HoldoutCore/Systems/Construction/PlacementRules.swift` — ground check + rule check; `PlacementProblem`, `PlacementCheck`.
 - `Core/Sources/HoldoutCore/Systems/Construction/ConstructionSystem.swift` — place, move, demolish, build countdown.
+- `Core/Sources/HoldoutCore/Systems/Construction/RepairSystem.swift` — repair damaged buildings, rebuild rubble (`Command.repair`).
 - `Core/Sources/HoldoutCore/Model/Building.swift`, `Model/GridPoint.swift`, `Model/NewGame.swift` (starting layout).
 - `Core/Sources/HoldoutCore/Content/BuildingDefs.swift`, `Content/MapDef.swift`.
 - `Content/maps/phase1_exit.json` — the map.
-- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/PlacementRulesTests.swift`, `ConstructionSystemTests.swift`
+- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`
 
 ## Data files
-- `Content/buildings.json` → `footprint`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `startingLayout`.
+- `Content/buildings.json` → `footprint`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `rules.repair`, `rules.rubble`, `startingLayout`.
 - `Content/maps/phase1_exit.json` → `rows` + `legend` (`buildable`), `decorations`, `startingPositions`, `spawnEdges`.
 
 ## Key rules
@@ -23,10 +24,19 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 - Moving is free and instant (finished or not); it may overlap its own old tiles.
 - Demolish refunds `demolishRefundPct` of `invested`, clamped to caps. The HQ can't be demolished. Starting-layout buildings were free, so they refund nothing.
 - Ramps, side roads and the town road are buildable so players can wall them off; the highway itself isn't.
-- Not yet (1C): build slots, queue, builders, upgrades. Not yet (1B): repair, rubble.
+- Not yet (1C): build slots, queue, builders, upgrades.
+
+## Repair (1B)
+- `Command.repair(id)` works on a **damaged finished** building (hp < its level's max, not under construction) or on **rubble**. Buildings keep their level.
+- Damaged: cost = level cost × `rules.repair.costPctOfLevelCost` % × missing-hp fraction, **rounded up** per resource; time = max(`minSeconds`, `buildSeconds` × `timePctOfBuildTime` % × missing fraction).
+- Rubble: cost = `invested` × `rules.rubble.rebuildCostPctOfInvested` % (rounded down); free starting buildings (invested 0) use their level cost instead. Time = `buildSeconds` × `rebuildTimePctOfInvested` % (the field name says "invested" but it is a share of build time).
+- On success: pay at once, hp = max, not rubble, construction timer = the time, cost added to `invested` (so it raises town value and demolish refunds). Like construction, the building does nothing until the timer ends.
+- Errors (nothing changes): `unknownBuildingID`, `nothingToRepair` (full hp, or still being built/repaired), `notEnoughResources(needed:)`.
+- 0-hp buildings become rubble in `HordeResolution` (see hordes.md). No builder limit until 1C.
 
 ## Known issues
-- (none yet)
+- Repairing a damaged building takes it offline for the repair time (`isComplete` is false). For the HQ or a Storage that briefly lowers caps/housing, and the economy trims stock above the lower cap, so resources can be lost. Open question for the lead/owner (see STATUS).
 
 ## Change log
+- 2026-10-31 — Added repair / rubble rebuild (`RepairSystem`, 1B).
 - 2026-10-31 — Built placement rules, place/move/demolish, build timers, Phase 1 map (1A).

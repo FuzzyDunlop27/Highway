@@ -22,12 +22,13 @@ Farms make food, Scavenger Posts make scrap, Shelters raise the survivor cap, HQ
 - Stock is whole numbers; fractions wait in `productionCarry`. At the cap, stock stops and the carry is dropped (overflow is lost). Stock never sits above the cap (demolishing a Storage trims it).
 - Cap = `baseCap` + `storageAdded` of finished buildings. Housing = `housing` of finished buildings.
 - **Auto-staffing (1A only):** survivors fill worker slots of finished buildings in build order (oldest first). 1C replaces this with job assignment (D-011).
-- Survivor arrival: the timer runs while housing is free; at `intervalSeconds` a survivor joins if food ≥ `foodCost` (food is spent), else it waits until food is enough. Housing full resets the timer.
+- Survivor arrival: the timer runs while housing is free; at `intervalSeconds` a survivor joins if food ≥ `foodCost` (food is spent), else it waits until food is enough. Housing full resets the timer. While a horde is attacking the timer holds still (`pausedDuringHorde`).
 - `foodUpkeepPerSurvivorPerMin` must stay 0: the loader rejects other values until upkeep is built.
-- Not yet: Agriculture multiplier (1C), offline efficiency (1D), pausing arrival during hordes (1B).
+- Not yet: Agriculture multiplier (1C), offline efficiency (1D).
 
 ## Known issues
 - (none yet)
 
 ## Change log
+- 2026-10-31 — Survivor arrival pauses while a horde is active (1B).
 - 2026-10-31 — Built production, caps, housing, survivor arrival, auto-staffing (1A).
