@@ -20,10 +20,11 @@ final class PlacementOverlay {
         faded = []
     }
 
-    /// Call every frame. `def`/`origin` describe the ghost, or nil when nothing is being placed or moved.
+    /// Call every frame. `def`/`origin` describe the ghost (nil when nothing is being placed or moved). With no
+    /// `ghostNode` (wall tool before a line is drawn) only the grid shows.
     func sync(def: BuildingDef?, origin: GridPoint, ghostNode: SKNode?, loop: GameLoop, style: ArtStyle,
               world: SKNode, buildings: [BuildingID: SKNode]) {
-        guard let def, let ghostNode else {
+        guard let def else {
             restoreFaded()
             reset()
             return
@@ -35,6 +36,7 @@ final class PlacementOverlay {
             world.addChild(node)
             grid = (key, node)
         }
+        guard let ghostNode else { restoreFaded(); return }
         fadeOccluders(of: ghostNode, depth: style.geometry.depth(origin: origin, width: def.width, height: def.height),
                       world: world, buildings: buildings)
     }

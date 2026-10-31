@@ -56,6 +56,8 @@ struct GameRootView: View {
         switch store.placement.mode {
         case .placing, .moving:
             PlacementBarView(store: store)
+        case .drawingLine:
+            WallLineBarView(store: store)
         case .selected:
             SelectionBarView(store: store)
         case .idle:

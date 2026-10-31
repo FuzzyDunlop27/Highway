@@ -11,6 +11,7 @@ Lets the player look around the map and place, move, select, and demolish buildi
 - `App/Input/PlacementMessages.swift` — Core `PlacementProblem` / `CommandError` → short player text.
 - `App/Rendering/GameScene.swift` — turns UIKit gestures (tap, pan, pinch) into the calls above; ignores touches during a view fade.
 - `App/Rendering/PlacementOverlay.swift` — placement grid + fading of buildings that hide the ghost.
+- `App/Rendering/Nodes/WallLineNodeFactory.swift` + `App/UI/WallLineBarView.swift` — the wall tool's preview and bar (plan from Core `GameLoop.planLine`).
 - `App/Input/HitTesting.swift` — isometric taps: the front-most building drawn under the finger wins (tall roofs), else the ground tile.
 - `App/Rendering/Nodes/GhostNodeFactory.swift` — draws the ghost (green tiles = ok, red = blocked).
 
@@ -18,6 +19,7 @@ Lets the player look around the map and place, move, select, and demolish buildi
 - None directly. Validity comes from Core (`GameLoop.checkPlacement` / `checkMove`), which reads `buildings.json` and the map.
 
 ## Key rules
+- **Wall tool** (any `category: "wall"` 1×1, i.e. wood and metal walls): one finger drags out a line from where the drag starts to where it ends (straight, or an L with one corner along the longer side first); a tap plans a single wall. Planned walls show see-through on green tiles; red tiles (blocked, over the limit) and tiles that already have this wall are skipped and not charged. The bar shows count, total cost, and what's skipped; **Build** places the whole line at once (disabled if you can't afford all of it), **Done** leaves. After Build the tool stays open. Two fingers pan the map (always, in every mode). No building fading in the wall tool.
 - Tap a building → select it (bottom bar: Move, Demolish, close). Tap empty ground → deselect.
 - Placing and moving happen in **isometric** (D-022). Top-down is only a manual fallback (view button); the old auto-flip is off (`presentation.json autoTopDownWhilePlacing: false`) and the pre-D-022 saved setting is ignored (UserDefaults key bumped to `.v2`). Long-press the view button to turn auto-flip back on for testing.
 - While placing: a tile grid around the ghost (`PlacementOverlay.gridRadius` tiles), tiles that can never be built on tinted red, the footprint green/red, the reason in the bar.
@@ -36,6 +38,7 @@ Lets the player look around the map and place, move, select, and demolish buildi
 - (none yet)
 
 ## Change log
+- 2026-10-31 — Wall tool: drag a line, see count + cost, Build all at once; two-finger pan.
 - 2026-10-31 — D-022 isometric placement: grid, lifted drag, occluder fading; auto top-down off (old saved setting reset).
 - 2026-10-31 — Recorded owner-approved isometric placement direction and staged rollout (D-022); documentation only, implementation pending.
 - 2026-10-31 — 1B: keep placing after confirming a 1×1 defense; range ring on a selected tower.

@@ -26,6 +26,9 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 - Ramps, side roads and the town road are buildable so players can wall them off; the highway itself isn't.
 - Not yet (1C): build slots, queue, builders, upgrades.
 
+## Wall lines
+- `GameLoop.planLine(defId:from:to:)` → `LinePlan` (path, buildable / alreadyBuilt / blocked tiles, total cost, problem, canBuild); `Command.placeLine` builds every buildable tile at once → `.placedLine(ids)`, or nothing if it can't afford the whole line. Path: straight, or an L along the longer axis first. Limit: tiles beyond the HQ-level cap are blocked (`problem = limitReached`) but the rest can still be built. Code: `Systems/Construction/WallLinePlanner.swift`; tests `WallLinePlannerTests.swift`.
+
 ## Repair (1B)
 - `Command.repair(id)` works on a **damaged finished** building (hp < its level's max, not under construction) or on **rubble**. Buildings keep their level.
 - Damaged: cost = level cost × `rules.repair.costPctOfLevelCost` % × missing-hp fraction, **rounded up** per resource; the building heals **at once** and keeps working (D-020). `minSeconds`/`timePctOfBuildTime` are kept for 1C, when repairs need builders.
@@ -37,6 +40,7 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 ## Known issues
 
 ## Change log
+- 2026-10-31 — Wall lines: planLine + placeLine (all-or-nothing on cost).
 - 2026-10-31 — Added repair / rubble rebuild (`RepairSystem`, 1B).
 - 2026-10-31 — Damaged buildings now heal at once instead of going offline (a repaired Storage was deleting stock).
 - 2026-10-31 — Built placement rules, place/move/demolish, build timers, Phase 1 map (1A).

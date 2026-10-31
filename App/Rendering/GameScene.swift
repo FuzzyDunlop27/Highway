@@ -12,6 +12,8 @@ final class GameScene: SKScene {
     var cameraController: CameraController?
     var buildingNodes: [BuildingID: (signature: BuildingNodeFactory.Signature, node: SKNode)] = [:]
     var ghost: (key: GhostKey, node: SKNode)?
+    var wallLine: (plan: LinePlan, node: SKNode)?
+    private var lineDragStart: GridPoint?
     var selection: (key: SelectionKey, node: SKNode)?
     let zombies = ZombieLayer()
     let effects = EventPlayer()
@@ -55,7 +57,13 @@ final class GameScene: SKScene {
         cameraController.center(on: start, viewSize: size)
 
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
-        view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        let onePan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        onePan.maximumNumberOfTouches = 1
+        view.addGestureRecognizer(onePan)
+        // Two fingers always move the map (the only way to pan while drawing a wall line).
+        let twoPan = UIPanGestureRecognizer(target: self, action: #selector(handleTwoFingerPan))
+        twoPan.minimumNumberOfTouches = 2
+        view.addGestureRecognizer(twoPan)
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(handlePinch)))
     }
 
@@ -80,9 +88,17 @@ final class GameScene: SKScene {
         }
         hordeWarning.sync(edges: store.hordeStatus?.warningEdges ?? [], map: loop.map, style: style, parent: world)
         syncGhost(loop: loop, style: style)
-        let placing = store.placement.ghostDefId.flatMap { loop.content.buildingDef($0) }
-        placementOverlay.sync(def: placing, origin: store.placement.ghostOrigin, ghostNode: ghost?.node, loop: loop,
-                              style: style, world: world, buildings: buildingNodes.mapValues(\.node))
+        syncWallLine(loop: loop, style: style)
+        let placement = store.placement
+        if case .drawingLine(let defId) = placement.mode {
+            placementOverlay.sync(def: loop.content.buildingDef(defId), origin: placement.lineEnd ?? store.viewCenterTile,
+                                  ghostNode: nil, loop: loop, style: style, world: world,  // walls are low: no fading
+                                  buildings: buildingNodes.mapValues(\.node))
+        } else {
+            let placing = placement.ghostDefId.flatMap { loop.content.buildingDef($0) }
+            placementOverlay.sync(def: placing, origin: placement.ghostOrigin, ghostNode: ghost?.node, loop: loop,
+                                  style: style, world: world, buildings: buildingNodes.mapValues(\.node))
+        }
         syncSelection(loop: loop, style: style)
     }
 
@@ -125,6 +141,23 @@ final class GameScene: SKScene {
         ghost = (key, node)
     }
 
+    private func syncWallLine(loop: GameLoop, style: ArtStyle) {
+        let placement = store.placement
+        guard case .drawingLine(let defId) = placement.mode, let plan = placement.linePlan,
+              let def = loop.content.buildingDef(defId) else {
+            wallLine?.node.removeFromParent()
+            wallLine = nil
+            return
+        }
+        guard wallLine?.plan != plan else { return }
+        wallLine?.node.removeFromParent()
+        let node = WallLineNodeFactory.make(plan: plan, def: def,
+                                            existingWalls: DefenseNodeFactory.wallTiles(loop.state.base.buildings, content: loop.content),
+                                            style: style, art: art)
+        world.addChild(node)
+        wallLine = (plan, node)
+    }
+
     private func syncSelection(loop: GameLoop, style: ArtStyle) {
         let selected = store.selectedBuilding
         let key = selected.map { SelectionKey(id: $0.id, origin: $0.origin, level: $0.level) }
@@ -161,6 +194,10 @@ final class GameScene: SKScene {
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard let view, let loop = store.loop, let cameraController, !isSwitchingView else { return }
         let location = gesture.location(in: view)
+        if store.placement.isDrawingLine {
+            drawLine(gesture, location: location, view: view, loop: loop)
+            return
+        }
         switch gesture.state {
         case .began:
             let translation = gesture.translation(in: view)
@@ -184,6 +221,28 @@ final class GameScene: SKScene {
         default:
             isDraggingGhost = false
         }
+    }
+
+    /// Wall tool: one finger draws a line from where the drag started to where the finger is now.
+    private func drawLine(_ gesture: UIPanGestureRecognizer, location: CGPoint, view: SKView, loop: GameLoop) {
+        switch gesture.state {
+        case .began:
+            let t = gesture.translation(in: view)
+            lineDragStart = tile(atViewPoint: CGPoint(x: location.x - t.x, y: location.y - t.y))
+            fallthrough
+        case .changed:
+            if let start = lineDragStart, let end = tile(atViewPoint: location) {
+                store.placement.setLine(from: start, to: end, loop: loop)
+            }
+        default:
+            lineDragStart = nil
+        }
+    }
+
+    @objc private func handleTwoFingerPan(_ gesture: UIPanGestureRecognizer) {
+        guard let view, let cameraController, !isSwitchingView else { return }
+        cameraController.pan(byViewDelta: gesture.translation(in: view), viewSize: size)
+        gesture.setTranslation(.zero, in: view)
     }
 
     @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {

@@ -10,6 +10,8 @@ final class PlacementController {
         case selected(BuildingID)
         case placing(defId: String)
         case moving(BuildingID)
+        /// Wall tool: the player drags out a line of walls, sees the plan and its cost, then builds it in one go.
+        case drawingLine(defId: String)
     }
 
     private(set) var mode: Mode = .idle
@@ -20,13 +22,21 @@ final class PlacementController {
     /// Core's answer for the ghost's current spot (problem + red tiles).
     private(set) var check: PlacementCheck?
 
+    /// Wall tool: the line being drawn (start and end tile) and Core's plan for it.
+    private(set) var lineStart: GridPoint?
+    private(set) var lineEnd: GridPoint?
+    private(set) var linePlan: LinePlan?
+
     var isPositioning: Bool { ghostDefId != nil }
+    var isDrawingLine: Bool { if case .drawingLine = mode { true } else { false } }
 
     /// The Command that "Confirm" would send, if the ghost is showing.
     var pendingCommand: Command? {
         switch mode {
         case .placing(let defId): .placeBuilding(defId: defId, at: ghostOrigin)
         case .moving(let id): .moveBuilding(id: id, to: ghostOrigin)
+        case .drawingLine(let defId):
+            if let lineStart, let lineEnd { .placeLine(defId: defId, from: lineStart, to: lineEnd) } else { nil }
         default: nil
         }
     }
@@ -54,6 +64,35 @@ final class PlacementController {
         mode = id.map { .selected($0) } ?? .idle
         ghostDefId = nil
         check = nil
+        clearLine()
+    }
+
+    // MARK: Wall tool
+
+    /// Walls are drawn as lines, not placed one by one (buildings.json category "wall").
+    static func usesLineTool(_ def: BuildingDef) -> Bool { def.category == "wall" && def.width == 1 && def.height == 1 }
+
+    func beginLine(defId: String) {
+        select(nil)
+        mode = .drawingLine(defId: defId)
+    }
+
+    func setLine(from start: GridPoint, to end: GridPoint, loop: GameLoop) {
+        let s = Self.clampedTile(start, map: loop.map), e = Self.clampedTile(end, map: loop.map)
+        if s != lineStart { lineStart = s }
+        if e != lineEnd { lineEnd = e }
+        refresh(loop: loop)
+    }
+
+    /// Forget the drawn line but stay in the wall tool (after Build, ready for the next line).
+    func clearLine() {
+        lineStart = nil
+        lineEnd = nil
+        linePlan = nil
+    }
+
+    private static func clampedTile(_ t: GridPoint, map: MapDef) -> GridPoint {
+        GridPoint(x: min(max(t.x, 0), map.width - 1), y: min(max(t.y, 0), map.height - 1))
     }
 
     /// Cancel goes back to the building that was being moved, or to nothing.
@@ -100,6 +139,10 @@ final class PlacementController {
             newCheck = moveCheck
         case .selected(let id):
             if loop.state.base.building(id) == nil { select(nil) }
+            return
+        case .drawingLine(let defId):
+            let plan = lineStart.flatMap { s in lineEnd.map { loop.planLine(defId: defId, from: s, to: $0) } }
+            if plan != linePlan { linePlan = plan }
             return
         case .idle:
             return

@@ -167,7 +167,9 @@ final class GameStore {
     /// `drawnBuilding`: the building whose picture was tapped (isometric roofs), checked before the ground tile.
     func tapped(tile: GridPoint, drawnBuilding: BuildingID? = nil) {
         guard let loop else { return }
-        if placement.isPositioning {
+        if placement.isDrawingLine {
+            placement.setLine(from: tile, to: tile, loop: loop)  // a tap is a one-wall line; drag for more
+        } else if placement.isPositioning {
             placement.moveGhost(centeredOn: tile, loop: loop)
         } else {
             placement.select(drawnBuilding ?? loop.building(at: tile)?.id)
@@ -176,8 +178,12 @@ final class GameStore {
     }
 
     func beginPlacing(defId: String) {
-        guard let loop else { return }
-        placement.beginPlacing(defId: defId, around: viewCenterTile, loop: loop)
+        guard let loop, let def = loop.content.buildingDef(defId) else { return }
+        if PlacementController.usesLineTool(def) {
+            placement.beginLine(defId: defId)  // walls: drag out a line, see the cost, then Build
+        } else {
+            placement.beginPlacing(defId: defId, around: viewCenterTile, loop: loop)
+        }
     }
 
     func beginMoving() {
@@ -188,7 +194,9 @@ final class GameStore {
     func confirmPlacement() {
         guard let command = placement.pendingCommand else { return }
         if case .success(let outcome) = send(command) {
-            if case .placed(let id) = outcome {
+            if case .placedLine = outcome {
+                placement.clearLine()  // stay in the wall tool for the next line
+            } else if case .placed(let id) = outcome {
                 // 1×1 defenses keep the ghost so a line of walls is quick to lay; anything else selects what was placed.
                 if let content, !placement.staysPlacingAfterConfirm(content: content) { placement.select(id) }
             } else {

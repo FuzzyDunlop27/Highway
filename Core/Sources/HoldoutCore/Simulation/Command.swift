@@ -5,6 +5,9 @@ import Foundation
 public enum Command: Equatable, Sendable {
     /// Pay the level-1 cost and start building `defId` with its top-left tile at `at`.
     case placeBuilding(defId: String, at: GridPoint)
+    /// Build a whole line of 1×1 pieces (walls) from one tile to another at once: straight, or an L with one corner.
+    /// Tiles that are blocked or already hold this piece are skipped. All or nothing on cost (see `GameLoop.planLine`).
+    case placeLine(defId: String, from: GridPoint, to: GridPoint)
     /// Move a building (finished or not) for free; its new spot must be valid.
     case moveBuilding(id: BuildingID, to: GridPoint)
     /// Remove a building and refund a share of what was paid (buildings.json demolishRefundPct).
@@ -23,6 +26,7 @@ public enum Command: Equatable, Sendable {
 
 public enum CommandOutcome: Equatable, Sendable {
     case placed(BuildingID)
+    case placedLine([BuildingID])
     case moved
     case demolished(refund: Cost)
     case speedSet

@@ -104,3 +104,7 @@ _Append-only. Newest at the bottom. Add an entry for any non-obvious choice, so 
 ## D-023 — Starting walls fully enclose the HQ (2026-10-31) [Accepted]
 **Decision:** A new game starts with a closed ring of 28 wood walls (x 20–28, y 16–22) around the HQ and watchtower, instead of two 6-wall rows. `buildings.json startingLayout` wall count 12 → 28 (under the HQ-1 cap of 40).
 **Why:** The owner wants walls to matter from the first horde. With gaps, zombies walked around the walls. Now day 1 has to break through a wall to reach the HQ. Existing saves keep their own walls; only new games change.
+
+## D-024 — Walls are drawn as lines and built all at once (2026-10-31) [Accepted]
+**Decision:** Walls use a wall tool instead of the single-building ghost. You drag a line (straight or one-corner L), the bar shows the count and total cost, and Build places the whole line in one command (`Command.placeLine`). Blocked tiles, tiles past the limit, and existing walls are skipped and not charged. If you can't afford the whole line, nothing is built. Two-finger pan always moves the map, because one finger draws.
+**Why:** The owner found wall building awkward and wanted to plan a wall and see its cost before committing. Building all-or-nothing avoids half-built lines when resources run out partway.

@@ -45,6 +45,8 @@ loop.state.base.zombies    // [Zombie]: id, defId, x/y in tiles (tile middle = +
 loop.hordeStatus           // HordeStatus: day, secondsUntilNext, warningEdges, isActive, zombiesAlive, zombiesToSpawn
 loop.drainEvents()         // [SimEvent] since last call: hordeWarning/Started/Ended, zombieSpawned/Died, shot, trapHit,
                            // buildingDamaged/Destroyed — draw these as effects, once per frame
+loop.planLine(defId: "wall_wood", from: a, to: b)  // LinePlan: tiles, buildable, skipped, cost, canBuild
+loop.send(.placeLine(defId: "wall_wood", from: a, to: b)) // -> .placedLine(ids), all at once
 loop.send(.repair(id: id)) // repair damage or rebuild rubble (Building.isRubble); -> .repairStarted(cost:)
 loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food: 500))) ; loop.send(.debugKillAllZombies)
 ```

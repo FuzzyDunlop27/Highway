@@ -41,6 +41,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | What draws in front of what | `App/Rendering/DepthSort.swift` |
 | Placeholder blocks/boxes look | `App/Rendering/PlaceholderArt.swift` |
 | How to draw isometric art (for ChatGPT/Blender) | `docs/graphics-spec-iso.md`, `docs/art-templates/` |
+| Wall tool (drag a line, cost, Build) | `App/Input/PlacementController.swift` (`.drawingLine`), `App/Rendering/Nodes/WallLineNodeFactory.swift`, `App/UI/WallLineBarView.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
 | Tap-to-place, ghost preview, invalid-spot red | `App/Input/PlacementController.swift` (logic), `App/Rendering/Nodes/GhostNodeFactory.swift` (look) |
 | Text shown when a spot is invalid | `App/Input/PlacementMessages.swift` |
 | Confirm/Cancel and Move/Demolish bars | `App/UI/PlacementBarView.swift` |

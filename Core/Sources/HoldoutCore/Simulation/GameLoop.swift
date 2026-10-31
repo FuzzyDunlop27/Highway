@@ -71,6 +71,10 @@ public final class GameLoop {
             let result = ConstructionSystem.place(defId: defId, at: at, state: &state, content: content)
             Staffing.assign(&state, content: content)
             return result
+        case .placeLine(let defId, let from, let to):
+            let result = WallLinePlanner.place(defId: defId, from: from, to: to, state: &state, content: content)
+            Staffing.assign(&state, content: content)
+            return result
         case .moveBuilding(let id, let to):
             return ConstructionSystem.move(id: id, to: to, state: &state, content: content)
         case .demolish(let id):
@@ -99,6 +103,11 @@ public final class GameLoop {
     /// "Can I place `defId` with its top-left tile here?" — for the ghost preview. Includes cost and limits.
     public func checkPlacement(defId: String, at origin: GridPoint) -> PlacementCheck {
         ConstructionSystem.checkPlace(defId: defId, at: origin, state: state, content: content)
+    }
+
+    /// What `.placeLine` would build from `from` to `to`: path, buildable/skipped tiles, total cost (wall tool preview).
+    public func planLine(defId: String, from: GridPoint, to: GridPoint) -> LinePlan {
+        WallLinePlanner.plan(defId: defId, from: from, to: to, state: state, content: content)
     }
 
     /// "Can building `id` move here?" — ground only (moving is free). Nil if `id` doesn't exist.
