@@ -5,9 +5,24 @@ enum SaveMigrations {
     /// One step: edit the raw JSON of a save at version `key` so it matches version `key + 1`.
     typealias Step = @Sendable (inout [String: Any]) throws -> Void
 
-    /// Add an entry here whenever `SaveCodec.currentVersion` goes up. Version 1 is the first, so none yet.
-    /// Example for a future v2: `1: { json in json["state"] = ... }`
-    static let steps: [Int: Step] = [:]
+    /// Add an entry here whenever `SaveCodec.currentVersion` goes up.
+    static let steps: [Int: Step] = [
+        // v1 → v2 (milestone 1B): bases get zombies + horde clock; buildings get isRubble.
+        1: { json in
+            guard var state = json["state"] as? [String: Any], var bases = state["bases"] as? [[String: Any]] else {
+                throw SaveError.corrupt("v1 save has no state.bases")
+            }
+            for i in bases.indices {
+                bases[i]["zombies"] = [Any]()
+                bases[i]["horde"] = ["day": 1, "warningEdges": [Any](), "nextZombieID": 1] as [String: Any]
+                if let buildings = bases[i]["buildings"] as? [[String: Any]] {
+                    bases[i]["buildings"] = buildings.map { b in var b = b; b["isRubble"] = false; return b }
+                }
+            }
+            state["bases"] = bases
+            json["state"] = state
+        },
+    ]
 
     /// Runs every step from `version` up to `target`. Throws if a step is missing.
     static func migrate(_ json: inout [String: Any], from version: Int, to target: Int,

@@ -43,9 +43,29 @@ struct SaveCodecTests {
         let current = try JSONSerialization.jsonObject(with: SaveCodec.encode(TestSupport.loop().state)) as! [String: Any]
         let old: [String: Any] = ["version": 0, "game": current["state"]!]
         let data = try JSONSerialization.data(withJSONObject: old)
-        let steps: [Int: SaveMigrations.Step] = [0: { json in json["state"] = json.removeValue(forKey: "game") }]
+        var steps = SaveMigrations.steps  // the real later steps still run after the pretend v0 → v1 one
+        steps[0] = { json in json["state"] = json.removeValue(forKey: "game") }
         let state = try SaveCodec.decode(data, migrations: steps)
         #expect(state == (try TestSupport.loop().state))
         #expect(throws: SaveError.missingMigration(from: 0)) { try SaveCodec.decode(data, migrations: [:]) }
+    }
+
+    @Test func version1SaveMigratesToVersion2() throws {
+        // Build a v1 save: today's JSON without the 1B fields.
+        let loop = try TestSupport.loop()
+        loop.send(.placeBuilding(defId: "farm", at: TestSupport.grassSpot))
+        var json = try JSONSerialization.jsonObject(with: SaveCodec.encode(loop.state)) as! [String: Any]
+        var state = json["state"] as! [String: Any]
+        var bases = state["bases"] as! [[String: Any]]
+        bases[0].removeValue(forKey: "zombies")
+        bases[0].removeValue(forKey: "horde")
+        bases[0]["buildings"] = (bases[0]["buildings"] as! [[String: Any]]).map { b in var b = b; b.removeValue(forKey: "isRubble"); return b }
+        state["bases"] = bases
+        json["state"] = state
+        json["version"] = 1
+        let decoded = try SaveCodec.decode(JSONSerialization.data(withJSONObject: json))
+        #expect(decoded == loop.state)
+        #expect(decoded.base.horde == .initial && decoded.base.zombies.isEmpty)
+        #expect(decoded.base.buildings.allSatisfy { !$0.isRubble })
     }
 }

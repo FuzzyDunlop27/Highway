@@ -12,6 +12,10 @@ public struct Base: Codable, Equatable, Sendable {
     /// Ticks counted toward the next survivor arriving.
     public var survivorArrivalTicks: Int
     public var nextBuildingID: BuildingID
+    /// Zombies on the map right now (only during a horde).
+    public var zombies: [Zombie]
+    /// Horde clock, day count, and the horde in progress.
+    public var horde: HordeState
 
     public init(mapId: String, stock: Cost) {
         self.mapId = mapId
@@ -20,6 +24,8 @@ public struct Base: Codable, Equatable, Sendable {
         self.productionCarry = [:]
         self.survivorArrivalTicks = 0
         self.nextBuildingID = 1
+        self.zombies = []
+        self.horde = .initial
     }
 
     public func building(_ id: BuildingID) -> Building? { buildings.first { $0.id == id } }

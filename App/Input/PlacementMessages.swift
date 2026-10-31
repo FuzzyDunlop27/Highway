@@ -22,6 +22,8 @@ enum PlacementMessages {
         case .unknownBuildingID: "That building no longer exists."
         case .cannotDemolish(let defId): "The \(name(defId, content)) can't be demolished."
         case .invalidSpeed(let speed): "Speed \(speed)x isn't available."
+        case .nothingToRepair: "It doesn't need repairs."
+        case .notEnoughResources(let needed): "Not enough resources. Costs \(costText(needed))."
         }
     }
 

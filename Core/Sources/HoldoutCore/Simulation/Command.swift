@@ -11,6 +11,14 @@ public enum Command: Equatable, Sendable {
     case demolish(id: BuildingID)
     /// Change game speed; must be one of economy.json speedOptions (0 = pause).
     case setSpeed(Int)
+    /// Repair a damaged building or rebuild rubble (buildings.json rules.repair / rules.rubble cost and time).
+    case repair(id: BuildingID)
+    /// Testing only (the App shows these in DEBUG builds): start the next horde now.
+    case debugStartHorde
+    /// Testing only: add food/scrap (clamped to caps).
+    case debugAddResources(Cost)
+    /// Testing only: remove every zombie (counts as killed, no loot).
+    case debugKillAllZombies
 }
 
 public enum CommandOutcome: Equatable, Sendable {
@@ -18,6 +26,8 @@ public enum CommandOutcome: Equatable, Sendable {
     case moved
     case demolished(refund: Cost)
     case speedSet
+    case repairStarted(cost: Cost)
+    case debugDone
 }
 
 public enum CommandError: Error, Equatable, Sendable {
@@ -27,4 +37,7 @@ public enum CommandError: Error, Equatable, Sendable {
     /// This building type can't be demolished (the HQ).
     case cannotDemolish(defId: String)
     case invalidSpeed(Int)
+    /// The building is at full health and not rubble.
+    case nothingToRepair(BuildingID)
+    case notEnoughResources(needed: Cost)
 }

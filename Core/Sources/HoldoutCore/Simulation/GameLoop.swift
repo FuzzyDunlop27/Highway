@@ -8,6 +8,11 @@ public final class GameLoop {
     public private(set) var state: GameState
     /// Real time not yet turned into a tick (not saved; less than one tick).
     private var leftoverSeconds: Double = 0
+    /// What happened since the App last called `drainEvents()` (not saved; capped so tests needn't drain).
+    public private(set) var events: [SimEvent] = []
+    /// Zombie path costs toward the HQ, rebuilt only when buildings change (not saved; derived from state).
+    public let flowFields = FlowFieldCache()
+    private static let maxQueuedEvents = 5_000
 
     public enum LoopError: Error, Equatable { case unknownMap(String) }
 
@@ -41,8 +46,19 @@ public final class GameLoop {
             ConstructionSystem.tick(&state)
             Staffing.assign(&state, content: content)
             EconomySystem.tick(&state, content: content)
+            HordeSystem.tick(&state, content: content, events: &events)
+            ZombieMovement.tick(&state, content: content, fields: flowFields, events: &events)
+            TowerFiring.tick(&state, content: content, fields: flowFields, events: &events)
+            HordeResolution.tick(&state, content: content, events: &events)
             state.tick += 1
         }
+        if events.count > Self.maxQueuedEvents { events.removeFirst(events.count - Self.maxQueuedEvents) }
+    }
+
+    /// Returns and clears everything that happened since the last call (the App draws these as effects).
+    public func drainEvents() -> [SimEvent] {
+        defer { events.removeAll(keepingCapacity: true) }
+        return events
     }
 
     // MARK: Commands
@@ -63,6 +79,18 @@ public final class GameLoop {
             guard content.economy.speedOptions.contains(speed) else { return .failure(.invalidSpeed(speed)) }
             state.speed = speed
             return .success(.speedSet)
+        case .repair(let id):
+            return RepairSystem.repair(id: id, state: &state, content: content)
+        case .debugStartHorde:
+            HordeSystem.startNow(&state, content: content, events: &events)
+            return .success(.debugDone)
+        case .debugAddResources(let amount):
+            state.base.stock = state.base.stock + amount
+            StorageRules.clampToCaps(&state.base, content: content)
+            return .success(.debugDone)
+        case .debugKillAllZombies:
+            state.base.zombies.removeAll()
+            return .success(.debugDone)
         }
     }
 
@@ -77,6 +105,9 @@ public final class GameLoop {
     public func checkMove(id: BuildingID, to origin: GridPoint) -> PlacementCheck? {
         ConstructionSystem.checkMove(id: id, to: origin, state: state, content: content)
     }
+
+    /// Day, countdown, warned edges, and zombies left, for the HUD.
+    public var hordeStatus: HordeStatus { HordeStatus.make(state: state, content: content) }
 
     /// Resources, caps, survivors, housing, and current rates for the HUD.
     public var resources: ResourceSnapshot { ResourceSnapshot.make(state: state, content: content) }
