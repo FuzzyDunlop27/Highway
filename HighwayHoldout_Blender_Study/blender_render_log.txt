@@ -1,0 +1,37 @@
+MODELED bld_hq
+MODELED bld_shelter
+MODELED bld_farm
+MODELED def_watchtower_base
+MODELED def_wall_wood
+MODELED dec_car_wreck
+MODELED unit_survivor
+MODELED unit_defender
+MODELED def_watchtower_gunner
+MODELED zmb_walker
+Info: Saved as "HighwayHoldout_Blender_Study.blend"
+RENDERING hero
+00:21.653  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/01_roadside_diorama.png'
+RENDERING sprite bld_hq
+00:24.964  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/bld_hq_2x.png'
+RENDERING sprite bld_shelter
+00:26.591  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/bld_shelter_2x.png'
+RENDERING sprite bld_farm
+00:28.360  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/bld_farm_2x.png'
+RENDERING sprite def_watchtower_base
+00:28.847  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/def_watchtower_base_2x.png'
+RENDERING sprite def_wall_wood
+00:29.148  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/def_wall_wood_2x.png'
+RENDERING sprite dec_car_wreck
+00:30.068  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/dec_car_wreck_2x.png'
+RENDERING sprite unit_survivor
+00:30.282  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/unit_survivor_2x.png'
+RENDERING sprite unit_defender
+00:30.487  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/unit_defender_2x.png'
+RENDERING sprite def_watchtower_gunner
+00:30.697  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/def_watchtower_gunner_2x.png'
+RENDERING sprite zmb_walker
+00:30.919  render           | Saved: '/Users/rick/Documents/AI/Highway/HighwayHoldout_Blender_Study/renders/zmb_walker_2x.png'
+BLENDER_STUDY_COMPLETE
+Blender 5.2.3 LTS (hash e13b728c6880 built 2026-10-22 01:31:22)
+
+Blender quit

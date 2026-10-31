@@ -1,0 +1,45 @@
+# STATUS — where we left off
+
+_Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
+
+**Last updated:** 2026-10-31 (1V done)
+
+## Current phase / milestone
+- **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
+- **Milestone 1A — Foundation** — DONE (2026-10-31).
+- **Milestone 1V — Two views** — DONE (2026-10-31). Exit check passed in the simulator. Next: **1B Defense** (`docs/PHASE1-TASKS.md`).
+- Milestones: 1A Foundation → **1V Two views (owner: isometric + top-down for placing)** → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
+  Don't start the next one until the current one's exit check passes.
+
+## Last thing done
+- Isometric view now shows **real art**: rendered from the Blender study's 3D models with `tools/blender/render_iso_sprites.py` (HQ, shelter, farm, walls, watchtower + gunner, car wreck, tree, rubble, units with facings), plus Claude stand-in models in the same style for scavenger, workshop, barracks, storage, scaffolding, rubble and the 5 ground tiles (D-019). Menus use ChatGPT's **UI kit** (`HighwayHoldout_UI_Kit/`): dark resource chips, kit build cards with 3/4 pictures, kit buttons/panels/glyphs. Checked in the simulator (screenshots in the shared notes folder, app-iso-art-screenshots/). 52 Core tests pass.
+- 1V Two views: the game opens in **isometric** (Tropico style, labeled 3D placeholder blocks until iso art exists) and flips to **top-down** (real art) while placing/moving, then back. HUD button (top right) flips by hand; long-press it to turn the auto-flip off. New `Content/presentation.json`; projection math in Core with 6 new tests (52 pass); depth sorting, roof taps, per-view camera bounds; `tools/import_art.py --view topdown|iso` (art now in `Art/TopDown`, `Art/Iso`, `Art/UI`); isometric art guide `docs/graphics-spec-iso.md` + diamond templates in `docs/art-templates/`.
+- 1V exit check (iPhone 18 Pro): opened in iso on the 1A save, Build → flipped to top-down with the ghost, Confirm → flipped back with the new farm, roof tap selected the HQ, manual toggle both ways, Move → top-down, Cancel → back, zoomed out to the whole diamond.
+- Art study: owner abandoned the 8-bit experiment. Built `HighwayHoldout_Blender_Study/` from fresh 3D geometry: editable Blender diorama, ten model collections, ten transparent PNG samples and Claude handoff. All 40 PNG checks passed; no app artwork or gameplay was changed. See D-017 and `renders/01_roadside_diorama.png` in the study folder.
+- 1A App half: `HighwayHoldout.xcodeproj` (created once by an agent, D-014), SpriteKit map in SwiftUI, ArtRegistry with labeled placeholders (D-015), camera pan/zoom/bounds, ghost placement (snap, red when invalid, confirm), select/move/demolish, HUD resource bar, build menu, save on background + every 30 s, load on launch.
+- Imported all 57 ChatGPT PNGs with `tools/import_art.py` (all of them are finished now).
+- Exit check (iPhone 18 Pro simulator): placed a farm and a scavenger post, moved the farm, watched them build and food/scrap tick, then went home, force-quit, and relaunched. The town and its resources were back and still ticking. Also checked the red ghost, demolish with refund, and the HQ refusal.
+- Build: `xcodebuild … build` succeeds with no code warnings; `cd Core && swift test` passes all 46 tests.
+- Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
+
+## Next step
+- **1B Defense** per `docs/PHASE1-TASKS.md` (Core session first, then App). Waiting for the owner to play 1V for a few minutes and say go.
+- Art: isometric art can now be made against `docs/graphics-spec-iso.md` (the Blender study needs re-rendering with that camera) and imported with `--view iso`.
+
+## Decided
+- The 8-bit art experiment is abandoned at the owner's request. The app still uses the original imported pack; the Blender study is a separate proposed visual direction.
+- Xcode project exists (D-014); `App/` is a synced folder; agents never edit `.pbxproj`.
+- How to run: open `HighwayHoldout.xcodeproj`, pick an iPhone simulator, press Run (or the `xcodebuild` command in AGENTS.md).
+- Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 17.0 (see `docs/research/tech-findings.md`).
+- Landscape only for Phase 1.
+- Core tests read the repo's `Content/` folder; the App passes its bundled copy (D-010).
+
+## Open questions (owner decides)
+- Two views built (isometric normal, top-down for building, auto-flip on). Iso facings default to 4 for units/zombies and 8 for turrets (`presentation.json`); say if you want 8 for everything.
+- Final game name (Highway Holdout is a working title).
+- Balance: should survivors eat food (upkeep), so food stays useful after ~60 min? (`resources.json foodUpkeepPerSurvivorPerMin`, currently 0; Core rejects non-zero until upkeep is built)
+- Balance: should defenders/survivors ever die permanently? (currently knocked out for 2 min, `units.json`)
+- Balance: Horde Alert ON by default? (`offline.json hordeAlert.defaultEnabled`, currently true; Time factor stays OFF)
+- Art: `--view topdown` still trims and refits sprites (and caps a tile at 96 px @3x); `--view iso` doesn't trim. Should top-down stop trimming too before 1B's units/turrets? (Owner/1E call.)
+- Art: `tools/import_art.py` also writes `App/AppIconLayers/*.png`, which end up as loose files in the app bundle. They're harmless and small; move them out of `App/` if that matters.
+

@@ -1,0 +1,10 @@
+{
+  "scenes": [
+    "01_ROADSIDE_DIORAMA",
+    "02_TRANSPARENT_SPRITE_STAGE"
+  ],
+  "objects": 574,
+  "missing_model_collections": [],
+  "external_images": [],
+  "active_camera": "Diorama hero camera"
+}

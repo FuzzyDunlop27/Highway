@@ -1,0 +1,15 @@
+{
+  "_notes": "Global simulation and setback rules. ticksPerSecond = fixed Core ticks per in-game second at 1x. speedOptions = allowed game speeds (0 = pause). autosaveSeconds = real seconds between autosaves (also saves on background). maxFrameSeconds = the most real time one App frame may simulate; a longer gap (e.g. a hitch) is cut to this so the game never jumps ahead (offline time is handled separately in 1D). hqFall: when HQ HP hits 0 the horde ends at once; stored food and scrap each lose resourceLossPct percent (rounded down; survivors are never lost); other buildings at 0 HP become rubble (repair rules in buildings.json); the HQ itself is restored at hqRestoreHpPct of max HP instead of becoming rubble. Offline-credit rules live in offline.json.",
+  "schemaVersion": 1,
+  "ticksPerSecond": 10,
+  "speedOptions": [0, 1, 2],
+  "autosaveSeconds": 30,
+  "maxFrameSeconds": 0.25,
+  "hqFall": {
+    "endsHorde": true,
+    "resourceLossPct": 25,
+    "affects": ["food", "scrap"],
+    "hqRestoreHpPct": 25,
+    "destroyedBuildingsBecomeRubble": true
+  }
+}

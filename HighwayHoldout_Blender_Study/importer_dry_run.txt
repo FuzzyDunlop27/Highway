@@ -1,0 +1,12 @@
+  ok      bld_farm.png -> bld_farm
+  ok      bld_hq.png -> bld_hq
+  ok      bld_shelter.png -> bld_shelter
+  ok      dec_car_wreck.png -> dec_car_wreck
+  ok      def_wall_wood.png -> def_wall_wood
+  ok      def_watchtower_base.png -> def_watchtower_base
+  ok      def_watchtower_gunner.png -> def_watchtower_gunner
+  ok      unit_defender.png -> unit_defender
+  ok      unit_survivor.png -> unit_survivor
+  ok      zmb_walker.png -> zmb_walker
+
+Imported 10 of 10 file(s), 0 warning(s). Output: /Users/rick/Documents/AI/Highway/App/Assets.xcassets

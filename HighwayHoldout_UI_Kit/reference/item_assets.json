@@ -1,0 +1,114 @@
+[
+  {
+    "name": "ui_item_food",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Food dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_scrap",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Scrap dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_wood",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Wood dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_medicine",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Medicine dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_fuel",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Fuel dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_ammo",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Ammo dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_tools",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Tools dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_knowledge",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Knowledge dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_water",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Water dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_battery",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Battery dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_cloth",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Cloth dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_radio",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Radio dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_survivors",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Survivors dimensional inventory icon"
+  },
+  {
+    "name": "ui_item_defender",
+    "width": 512,
+    "height": 512,
+    "category": "item",
+    "template": false,
+    "description": "Defender dimensional inventory icon"
+  }
+]

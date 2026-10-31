@@ -1,0 +1,32 @@
+{
+  "_notes": "Phase 1 research stub. Researched at the Workshop (needs workshop staffed); one item at a time. researchSeconds is at Workshop L1; Workshop researchSpeedMultiplier (buildings.json) divides it. Results are stored on the survivor Group (Knowledge), not the Base, so they carry to future bases. requiredHq = minimum HQ level to start. effect types: unlockBuilding (id), towerRangeBonusTiles (added to range of listed towers), productionMultiplier (multiplies productionPerMin of listed buildings).",
+  "schemaVersion": 1,
+  "researchRequires": { "building": "workshop", "level": 1 },
+  "concurrentResearch": 1,
+  "items": [
+    {
+      "id": "metal_fortification",
+      "displayName": "Metal Fortification",
+      "cost": { "scrap": 300, "food": 100 },
+      "researchSeconds": 600,
+      "requiredHq": 2,
+      "effect": { "type": "unlockBuilding", "building": "wall_metal" }
+    },
+    {
+      "id": "marksmanship",
+      "displayName": "Marksmanship",
+      "cost": { "scrap": 250, "food": 150 },
+      "researchSeconds": 600,
+      "requiredHq": 1,
+      "effect": { "type": "towerRangeBonusTiles", "towers": ["watchtower", "mg_nest"], "value": 1 }
+    },
+    {
+      "id": "agriculture",
+      "displayName": "Agriculture",
+      "cost": { "scrap": 150, "food": 250 },
+      "researchSeconds": 600,
+      "requiredHq": 1,
+      "effect": { "type": "productionMultiplier", "buildings": ["farm"], "value": 1.25 }
+    }
+  ]
+}

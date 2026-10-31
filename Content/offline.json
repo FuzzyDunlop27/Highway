@@ -1,0 +1,23 @@
+{
+  "_notes": "Time factor (offline catch-up) and Horde Alert rules. timeFactor applies only when the player's setting is ON (default OFF). On launch: credit = min(realSecondsAway, maxOfflineCreditHours * 3600); if the device clock went backwards, credit = 0. Credit is simulated in bulk with catchUpStepSeconds steps; no combat ever runs during catch-up and the horde clock does not move. queuesThatProgress = timers that advance during catch-up. productionEfficiency multiplies building output while away (1.0 = same as playing); output still stops at storage caps. Scavenging run rewards wait at the post (not capped until collected). welcomeBackMinAwaySeconds = shortest absence that shows the summary. hordeAlert: on backgrounding (and setting ON), schedule ONE local notification at a seeded-random time inside notifyWindowMinutes after leaving, moved out of quiet hours (local time, 24h). If the app is next opened after that time, one bonus horde (hordes.json bonusHorde) waits at a map edge. Works whether or not the time factor is ON.",
+  "schemaVersion": 1,
+  "timeFactor": {
+    "defaultEnabled": false,
+    "maxOfflineCreditHours": 12,
+    "catchUpStepSeconds": 1,
+    "productionEfficiency": 1.0,
+    "queuesThatProgress": ["construction", "upgrade", "repair", "training", "research", "scavengingRuns", "survivorArrival"],
+    "combatWhileAway": false,
+    "hordeClockAdvancesWhileAway": false,
+    "clockBackwardsGrantsNothing": true,
+    "welcomeBackMinAwaySeconds": 120
+  },
+  "hordeAlert": {
+    "defaultEnabled": true,
+    "minAwayMinutes": 30,
+    "notifyWindowMinutes": [45, 180],
+    "maxPerAbsence": 1,
+    "quietHours": { "startHour": 22, "endHour": 8 },
+    "notificationText": "A horde has been spotted near the highway. It's waiting for you."
+  }
+}

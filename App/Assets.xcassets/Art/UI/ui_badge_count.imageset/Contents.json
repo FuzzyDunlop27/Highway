@@ -1,0 +1,13 @@
+{
+  "images": [
+    {
+      "filename": "ui_badge_count@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

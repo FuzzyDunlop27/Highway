@@ -1,0 +1,1527 @@
+{
+  "passed": 169,
+  "failed": 0,
+  "checks": [
+    {
+      "asset": "tile_grass",
+      "file": "tile_grass@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "tile_grass",
+      "file": "tile_grass@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "tile_grass",
+      "file": "tile_grass@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "tile_dirt",
+      "file": "tile_dirt@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "tile_dirt",
+      "file": "tile_dirt@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "tile_dirt",
+      "file": "tile_dirt@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "tile_asphalt",
+      "file": "tile_asphalt@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "tile_asphalt",
+      "file": "tile_asphalt@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "tile_asphalt",
+      "file": "tile_asphalt@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "tile_asphalt_line",
+      "file": "tile_asphalt_line@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "tile_asphalt_line",
+      "file": "tile_asphalt_line@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "tile_asphalt_line",
+      "file": "tile_asphalt_line@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "tile_concrete",
+      "file": "tile_concrete@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "tile_concrete",
+      "file": "tile_concrete@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "tile_concrete",
+      "file": "tile_concrete@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "dec_rubble",
+      "file": "dec_rubble@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "dec_rubble",
+      "file": "dec_rubble@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "dec_rubble",
+      "file": "dec_rubble@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "dec_tree_dead",
+      "file": "dec_tree_dead@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "dec_tree_dead",
+      "file": "dec_tree_dead@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "dec_tree_dead",
+      "file": "dec_tree_dead@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "dec_car_wreck",
+      "file": "dec_car_wreck@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        32
+      ]
+    },
+    {
+      "asset": "dec_car_wreck",
+      "file": "dec_car_wreck@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        64
+      ]
+    },
+    {
+      "asset": "dec_car_wreck",
+      "file": "dec_car_wreck@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        96
+      ]
+    },
+    {
+      "asset": "bld_shelter",
+      "file": "bld_shelter@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_shelter",
+      "file": "bld_shelter@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_shelter",
+      "file": "bld_shelter@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_farm",
+      "file": "bld_farm@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_farm",
+      "file": "bld_farm@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_farm",
+      "file": "bld_farm@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_scavenger",
+      "file": "bld_scavenger@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_scavenger",
+      "file": "bld_scavenger@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_scavenger",
+      "file": "bld_scavenger@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_workshop",
+      "file": "bld_workshop@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_workshop",
+      "file": "bld_workshop@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_workshop",
+      "file": "bld_workshop@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_hq",
+      "file": "bld_hq@1x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "bld_hq",
+      "file": "bld_hq@2x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_hq",
+      "file": "bld_hq@3x.png",
+      "pass": true,
+      "size": [
+        288,
+        288
+      ]
+    },
+    {
+      "asset": "bld_barracks",
+      "file": "bld_barracks@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_barracks",
+      "file": "bld_barracks@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_barracks",
+      "file": "bld_barracks@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_storage",
+      "file": "bld_storage@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_storage",
+      "file": "bld_storage@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_storage",
+      "file": "bld_storage@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_construction_2x2",
+      "file": "bld_construction_2x2@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_construction_2x2",
+      "file": "bld_construction_2x2@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_construction_2x2",
+      "file": "bld_construction_2x2@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_construction_3x3",
+      "file": "bld_construction_3x3@1x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "bld_construction_3x3",
+      "file": "bld_construction_3x3@2x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "bld_construction_3x3",
+      "file": "bld_construction_3x3@3x.png",
+      "pass": true,
+      "size": [
+        288,
+        288
+      ]
+    },
+    {
+      "asset": "bld_rubble_2x2",
+      "file": "bld_rubble_2x2@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "bld_rubble_2x2",
+      "file": "bld_rubble_2x2@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "bld_rubble_2x2",
+      "file": "bld_rubble_2x2@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "def_wall_wood",
+      "file": "def_wall_wood@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_wall_wood",
+      "file": "def_wall_wood@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_wall_wood",
+      "file": "def_wall_wood@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_wall_metal",
+      "file": "def_wall_metal@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_wall_metal",
+      "file": "def_wall_metal@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_wall_metal",
+      "file": "def_wall_metal@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_watchtower_base",
+      "file": "def_watchtower_base@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_watchtower_base",
+      "file": "def_watchtower_base@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_watchtower_base",
+      "file": "def_watchtower_base@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "unit_survivor",
+      "file": "unit_survivor@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "unit_survivor",
+      "file": "unit_survivor@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "unit_survivor",
+      "file": "unit_survivor@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "unit_defender",
+      "file": "unit_defender@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "unit_defender",
+      "file": "unit_defender@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "unit_defender",
+      "file": "unit_defender@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "file": "def_watchtower_gunner@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "file": "def_watchtower_gunner@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "file": "def_watchtower_gunner@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_mg_nest_base",
+      "file": "def_mg_nest_base@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_mg_nest_base",
+      "file": "def_mg_nest_base@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_mg_nest_base",
+      "file": "def_mg_nest_base@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_mg_nest_gun",
+      "file": "def_mg_nest_gun@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_mg_nest_gun",
+      "file": "def_mg_nest_gun@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_mg_nest_gun",
+      "file": "def_mg_nest_gun@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_spikes",
+      "file": "def_spikes@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_spikes",
+      "file": "def_spikes@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_spikes",
+      "file": "def_spikes@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "def_barbwire",
+      "file": "def_barbwire@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "def_barbwire",
+      "file": "def_barbwire@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "def_barbwire",
+      "file": "def_barbwire@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "zmb_walker",
+      "file": "zmb_walker@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "zmb_walker",
+      "file": "zmb_walker@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "zmb_walker",
+      "file": "zmb_walker@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "zmb_runner",
+      "file": "zmb_runner@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "zmb_runner",
+      "file": "zmb_runner@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "zmb_runner",
+      "file": "zmb_runner@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "zmb_brute",
+      "file": "zmb_brute@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "zmb_brute",
+      "file": "zmb_brute@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "zmb_brute",
+      "file": "zmb_brute@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "fx_muzzle_flash",
+      "file": "fx_muzzle_flash@1x.png",
+      "pass": true,
+      "size": [
+        16,
+        16
+      ]
+    },
+    {
+      "asset": "fx_muzzle_flash",
+      "file": "fx_muzzle_flash@2x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "fx_muzzle_flash",
+      "file": "fx_muzzle_flash@3x.png",
+      "pass": true,
+      "size": [
+        48,
+        48
+      ]
+    },
+    {
+      "asset": "fx_tracer",
+      "file": "fx_tracer@1x.png",
+      "pass": true,
+      "size": [
+        16,
+        4
+      ]
+    },
+    {
+      "asset": "fx_tracer",
+      "file": "fx_tracer@2x.png",
+      "pass": true,
+      "size": [
+        32,
+        8
+      ]
+    },
+    {
+      "asset": "fx_tracer",
+      "file": "fx_tracer@3x.png",
+      "pass": true,
+      "size": [
+        48,
+        12
+      ]
+    },
+    {
+      "asset": "fx_goo_splat",
+      "file": "fx_goo_splat@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "fx_goo_splat",
+      "file": "fx_goo_splat@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "fx_goo_splat",
+      "file": "fx_goo_splat@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "fx_dust_puff",
+      "file": "fx_dust_puff@1x.png",
+      "pass": true,
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "asset": "fx_dust_puff",
+      "file": "fx_dust_puff@2x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "fx_dust_puff",
+      "file": "fx_dust_puff@3x.png",
+      "pass": true,
+      "size": [
+        96,
+        96
+      ]
+    },
+    {
+      "asset": "icon_food",
+      "file": "icon_food@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_food",
+      "file": "icon_food@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_food",
+      "file": "icon_food@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_scrap",
+      "file": "icon_scrap@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_scrap",
+      "file": "icon_scrap@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_scrap",
+      "file": "icon_scrap@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_survivors",
+      "file": "icon_survivors@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_survivors",
+      "file": "icon_survivors@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_survivors",
+      "file": "icon_survivors@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_defender",
+      "file": "icon_defender@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_defender",
+      "file": "icon_defender@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_defender",
+      "file": "icon_defender@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_build",
+      "file": "icon_build@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_build",
+      "file": "icon_build@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_build",
+      "file": "icon_build@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_upgrade",
+      "file": "icon_upgrade@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_upgrade",
+      "file": "icon_upgrade@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_upgrade",
+      "file": "icon_upgrade@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_demolish",
+      "file": "icon_demolish@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_demolish",
+      "file": "icon_demolish@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_demolish",
+      "file": "icon_demolish@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_horde_alert",
+      "file": "icon_horde_alert@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_horde_alert",
+      "file": "icon_horde_alert@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_horde_alert",
+      "file": "icon_horde_alert@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_clock",
+      "file": "icon_clock@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_clock",
+      "file": "icon_clock@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_clock",
+      "file": "icon_clock@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_speed",
+      "file": "icon_speed@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_speed",
+      "file": "icon_speed@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_speed",
+      "file": "icon_speed@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_pause",
+      "file": "icon_pause@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_pause",
+      "file": "icon_pause@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_pause",
+      "file": "icon_pause@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_settings",
+      "file": "icon_settings@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_settings",
+      "file": "icon_settings@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_settings",
+      "file": "icon_settings@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_medicine",
+      "file": "icon_medicine@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_medicine",
+      "file": "icon_medicine@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_medicine",
+      "file": "icon_medicine@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_fuel",
+      "file": "icon_fuel@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_fuel",
+      "file": "icon_fuel@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_fuel",
+      "file": "icon_fuel@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_ammo",
+      "file": "icon_ammo@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_ammo",
+      "file": "icon_ammo@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_ammo",
+      "file": "icon_ammo@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "icon_knowledge",
+      "file": "icon_knowledge@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "icon_knowledge",
+      "file": "icon_knowledge@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "icon_knowledge",
+      "file": "icon_knowledge@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "ui_level_badge",
+      "file": "ui_level_badge@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        64
+      ]
+    },
+    {
+      "asset": "ui_level_badge",
+      "file": "ui_level_badge@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        128
+      ]
+    },
+    {
+      "asset": "ui_level_badge",
+      "file": "ui_level_badge@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        192
+      ]
+    },
+    {
+      "asset": "veh_rv",
+      "file": "veh_rv@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        32
+      ]
+    },
+    {
+      "asset": "veh_rv",
+      "file": "veh_rv@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        64
+      ]
+    },
+    {
+      "asset": "veh_rv",
+      "file": "veh_rv@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        96
+      ]
+    },
+    {
+      "asset": "veh_pickup",
+      "file": "veh_pickup@1x.png",
+      "pass": true,
+      "size": [
+        64,
+        32
+      ]
+    },
+    {
+      "asset": "veh_pickup",
+      "file": "veh_pickup@2x.png",
+      "pass": true,
+      "size": [
+        128,
+        64
+      ]
+    },
+    {
+      "asset": "veh_pickup",
+      "file": "veh_pickup@3x.png",
+      "pass": true,
+      "size": [
+        192,
+        96
+      ]
+    },
+    {
+      "asset": "app_icon_bg",
+      "file": "app_icon_bg@1x.png",
+      "pass": true,
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "asset": "app_icon_bg",
+      "file": "app_icon_bg@2x.png",
+      "pass": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "asset": "app_icon_bg",
+      "file": "app_icon_bg@3x.png",
+      "pass": true,
+      "size": [
+        768,
+        768
+      ]
+    },
+    {
+      "asset": "app_icon_fg",
+      "file": "app_icon_fg@1x.png",
+      "pass": true,
+      "size": [
+        256,
+        256
+      ]
+    },
+    {
+      "asset": "app_icon_fg",
+      "file": "app_icon_fg@2x.png",
+      "pass": true,
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "asset": "app_icon_fg",
+      "file": "app_icon_fg@3x.png",
+      "pass": true,
+      "size": [
+        768,
+        768
+      ]
+    },
+    {
+      "asset": "app_icon",
+      "file": "app_icon.png",
+      "pass": true,
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

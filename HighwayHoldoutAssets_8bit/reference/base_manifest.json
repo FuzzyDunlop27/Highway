@@ -1,0 +1,1051 @@
+{
+  "title": "Highway Holdout \u2014 Phase 1",
+  "version": "1.0.0",
+  "palette": {
+    "grass": "#6B7A4B",
+    "dirt": "#8A6F4E",
+    "asphalt": "#4A4D52",
+    "concrete": "#9A9890",
+    "rubble": "#7A746B",
+    "wood": "#B9844A",
+    "metal": "#7D8C96",
+    "orange": "#F2A03D",
+    "yellow": "#F5C842",
+    "skin": "#8FAF6A",
+    "clothes": "#5B5470",
+    "goo": "#A6E04F",
+    "red": "#D9483B",
+    "dark": "#1E2126",
+    "light": "#EDE6D6",
+    "ink": "#1A1A1A"
+  },
+  "coordinate_system": "PNG/SVG origin top-left; game anchors centered",
+  "assets": [
+    {
+      "name": "tile_grass",
+      "filename": "tile_grass.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "tile",
+      "description": "Dusty patchy grass",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "505be67a7b1fce9fe4207c0cfdee2fa1641f747d0992bc56856e1baf28267249"
+    },
+    {
+      "name": "tile_dirt",
+      "filename": "tile_dirt.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "tile",
+      "description": "Packed dirt and pebbles",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "a3d9e5f9b7948bacb726dba83f8e2feb50da570972e664f89c52dbdcf39d4de1"
+    },
+    {
+      "name": "tile_asphalt",
+      "filename": "tile_asphalt.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "tile",
+      "description": "Cracked highway asphalt",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "869ae2506485c5ff76fdd560dee48b816ca1937333aff95c3496691f9b7ebdf5"
+    },
+    {
+      "name": "tile_asphalt_line",
+      "filename": "tile_asphalt_line.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "tile",
+      "description": "Asphalt with east\u2013west dashed lane marking",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "654192682bf38e26bce5941e446c25eb78aa7566e63a67bc4945de1da854cada"
+    },
+    {
+      "name": "tile_concrete",
+      "filename": "tile_concrete.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "tile",
+      "description": "Cracked concrete",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "d1fc65592a9d20267bf1700370b44a82309d5beacffa2e2447c05152b8b4618a"
+    },
+    {
+      "name": "dec_rubble",
+      "filename": "dec_rubble.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "dec",
+      "description": "Scattered brick, broken planks and bent rebar",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "5fdc00b2d24dfad01132a151f8612d19029878fa28213eeeb7ad4f19746734bb"
+    },
+    {
+      "name": "dec_tree_dead",
+      "filename": "dec_tree_dead.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "dec",
+      "description": "Leafless tree viewed from overhead",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "9e2463250fc6f317504f774635e4099d49150f9958d99606c3d0f640b96dce78"
+    },
+    {
+      "name": "dec_car_wreck",
+      "filename": "dec_car_wreck.png",
+      "width": 256,
+      "height": 128,
+      "priority": "P2",
+      "category": "dec",
+      "description": "Rusted abandoned east-facing sedan",
+      "opaque": false,
+      "rotates": false,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "472d1f197255c3c263ee2331dd04af4bb19fb44d467e97ff9d3464480b12b374"
+    },
+    {
+      "name": "bld_shelter",
+      "filename": "bld_shelter.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "bld",
+      "description": "Boarded house with patched roof and chimney",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "e3bbc6d4eea66ab729fb5f748d4d22785ea07d8a8300c56f0aca1f9b2887a067"
+    },
+    {
+      "name": "bld_farm",
+      "filename": "bld_farm.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "bld",
+      "description": "Raised vegetable beds and a makeshift greenhouse",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "4f07fd74935788213268e329ef89be022b176f52ed665bba355fce2fe2465b03"
+    },
+    {
+      "name": "bld_scavenger",
+      "filename": "bld_scavenger.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "bld",
+      "description": "Garage with pickup truck, scrap and tool emblem",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "75c173acc4914639a9816ee9da0371afcad9ab3e709b368138964691db9dabb6"
+    },
+    {
+      "name": "bld_workshop",
+      "filename": "bld_workshop.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "bld",
+      "description": "Open workshop with workbench, tools and warm welding spark",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "091542e004b2cc344fbb4a65898a5b06cdb7639c676e90821763fa6e807bddc3"
+    },
+    {
+      "name": "bld_hq",
+      "filename": "bld_hq.png",
+      "width": 384,
+      "height": 384,
+      "priority": "P1",
+      "category": "bld",
+      "description": "Fortified gas station headquarters, antenna, pumps and warm windows",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "54d3d0cbd93e9c329b3717abb96489fb36f95f4f0fd01df72673eadb2c5f5675"
+    },
+    {
+      "name": "bld_barracks",
+      "filename": "bld_barracks.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "bld",
+      "description": "Warm canvas tent, sandbag perimeter and rifle rack",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "658b2c2f055a64a653c409208d372c52e4fcae15028561a8ed0f219cd4684bcd"
+    },
+    {
+      "name": "bld_storage",
+      "filename": "bld_storage.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "bld",
+      "description": "Two stacked shipping containers with locking bars",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "5befead86c4ce7698a4a5c06aa937ff8d03ad6519be76a5b25cd2444f21207b3"
+    },
+    {
+      "name": "bld_construction_2x2",
+      "filename": "bld_construction_2x2.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "bld",
+      "description": "Timber scaffold with folded tarp and construction cone",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "3e29f37855f896c56809a9baf670600f72c8eff4869b66d7a32fcb6b0f1ec18f"
+    },
+    {
+      "name": "bld_construction_3x3",
+      "filename": "bld_construction_3x3.png",
+      "width": 384,
+      "height": 384,
+      "priority": "P2",
+      "category": "bld",
+      "description": "Large timber scaffold with folded tarp and construction cone",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "15940aa6a9a772e8a4922ceb139b1c0ec616fb3c33f9986187e765a3e1a21b41"
+    },
+    {
+      "name": "bld_rubble_2x2",
+      "filename": "bld_rubble_2x2.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "bld",
+      "description": "Collapsed walls, rubble, planks and bent rebar",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "9fbed62b2fe8755e161f2248370a9b6a999c01a01ab0fdcc452cac1c03139ced"
+    },
+    {
+      "name": "def_wall_wood",
+      "filename": "def_wall_wood.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "def",
+      "description": "Solid plank barricade; repeat on adjacent grid cells",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "e01e42ef0ab19f2e37f1d89b756d534383f2cfa10a2dd511e7bd233b67c161a7"
+    },
+    {
+      "name": "def_wall_metal",
+      "filename": "def_wall_metal.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "def",
+      "description": "Corrugated steel barricade, rebar posts and hazard plate",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "2953146f63ad7a54b5e1dc4d6f3901d0a3eb1faae395852d412adb22a6a69795"
+    },
+    {
+      "name": "def_watchtower_base",
+      "filename": "def_watchtower_base.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "def",
+      "description": "Overhead timber watchtower platform with ladder opening",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "5662834fdc6617b6162ab9a8fa616e0add545cb8dc5769ee10dbc9bf2f11c49d"
+    },
+    {
+      "name": "unit_survivor",
+      "filename": "unit_survivor.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "unit",
+      "description": "Overhead civilian worker with green backpack",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": 0.55,
+      "sha256": "aa19900d0cae2a43294ab447c01c5930d5014381dd4fe8bcbd105fd81194736d"
+    },
+    {
+      "name": "unit_defender",
+      "filename": "unit_defender.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "unit",
+      "description": "Overhead rifle defender with orange armband",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": 0.55,
+      "sha256": "095cabd9ab339982708d175e8721ba247c14eb51a4fb1bc4d8dd54c23eb1a468"
+    },
+    {
+      "name": "def_watchtower_gunner",
+      "filename": "def_watchtower_gunner.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "def",
+      "description": "Centered overhead gunner with long east-facing rifle",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "b1aed75fa74dcb505ba751941f8740d7ffe0cc3098e823e325a70a59595bb972"
+    },
+    {
+      "name": "def_mg_nest_base",
+      "filename": "def_mg_nest_base.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "def",
+      "description": "Overhead sandbag emplacement ring",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "22f0c754ec77755ece3a190553fc9068943f62890407267b2d610e1902fa13bc"
+    },
+    {
+      "name": "def_mg_nest_gun",
+      "filename": "def_mg_nest_gun.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "def",
+      "description": "Centered tripod-mounted machine gun, barrel east",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "73ad58a0575a0fc9411e53e60597d1620d948603655c9ab52bb9871d2d186a36"
+    },
+    {
+      "name": "def_spikes",
+      "filename": "def_spikes.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "def",
+      "description": "Three low nail boards with sharpened metal stakes",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "dbbe52873ece4c0c88400b2aa5407d36c9d84554170c17c7d0a988c3d561f7ac"
+    },
+    {
+      "name": "def_barbwire",
+      "filename": "def_barbwire.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "def",
+      "description": "Overhead barbed wire coil on wooden mounting slats",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "335484674912d2acabf2b493ec04555fb33a2a3f81d20449f4af31a12a0ffe3a"
+    },
+    {
+      "name": "zmb_walker",
+      "filename": "zmb_walker.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "zmb",
+      "description": "Cartoon overhead walker with two arms reaching east",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": 0.55,
+      "sha256": "ba051404a580014931351b8740c0ea6452fbdfc727810cebd94acb189b5b07d7"
+    },
+    {
+      "name": "zmb_runner",
+      "filename": "zmb_runner.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "zmb",
+      "description": "Lean overhead runner with torn purple clothing",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": 0.5,
+      "sha256": "1bcf32d09d854f211932bbe36735080a7bbabc7d2976f84dde22612bb4a3ee9e"
+    },
+    {
+      "name": "zmb_brute",
+      "filename": "zmb_brute.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "zmb",
+      "description": "Broad hulking overhead zombie with torn purple clothing",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": 0.85,
+      "sha256": "eadd85baae2182408b6ba89c0c102867a5f41ea30289a1f3402ea5753366211c"
+    },
+    {
+      "name": "fx_muzzle_flash",
+      "filename": "fx_muzzle_flash.png",
+      "width": 64,
+      "height": 64,
+      "priority": "P2",
+      "category": "fx",
+      "description": "East-facing yellow-orange muzzle burst",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "258fef21a5aea272a94e1cec8d32ec7bea68a8ac9077c9679c33a10d21fc072e"
+    },
+    {
+      "name": "fx_tracer",
+      "filename": "fx_tracer.png",
+      "width": 64,
+      "height": 16,
+      "priority": "P2",
+      "category": "fx",
+      "description": "Thin horizontal bullet streak; long axis east",
+      "opaque": false,
+      "rotates": true,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "d02f3a1ce61cfef73e6f7939e9d9d1e193859cc39a3d506d8107684dde4f673e"
+    },
+    {
+      "name": "fx_goo_splat",
+      "filename": "fx_goo_splat.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P1",
+      "category": "fx",
+      "description": "Cartoon green goo splat, no gore",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "4bcc13233a083b11037080af10cb483f209a65c48a72d95cde8ebd038dfc57f4"
+    },
+    {
+      "name": "fx_dust_puff",
+      "filename": "fx_dust_puff.png",
+      "width": 128,
+      "height": 128,
+      "priority": "P2",
+      "category": "fx",
+      "description": "Translucent soft-edged cel-shaded dust puff",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "af4d79dc8f188c53f0d56d00560126dc9eb7ed1db23bb6e555ff0a4feb9b645b"
+    },
+    {
+      "name": "icon_food",
+      "filename": "icon_food.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Food HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "1b85f09f4f5d6e6a95a831cee6152a379c18bd7e39a5b71bf5c12691e8905a57"
+    },
+    {
+      "name": "icon_scrap",
+      "filename": "icon_scrap.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Scrap HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "023bffe51799092a59d36c66cc822d58ad8c3eecf6e3e2d7cdc96d4f1c646461"
+    },
+    {
+      "name": "icon_survivors",
+      "filename": "icon_survivors.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Survivors HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "8e2a839a40d7fe2a8f2ad2aa7d9b3f00f390d98523b222de67aed417c6ff8b6c"
+    },
+    {
+      "name": "icon_defender",
+      "filename": "icon_defender.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Defender HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "74a9c70c79026026bf416a8e121c84c37ab82f910acc391ad3edc2e54b760438"
+    },
+    {
+      "name": "icon_build",
+      "filename": "icon_build.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Build HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "44c246e7d4d2c0e1f298ffda5980e00ded817b7e417c8178d51b6211ccb85b9b"
+    },
+    {
+      "name": "icon_upgrade",
+      "filename": "icon_upgrade.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Upgrade HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "d79aa904bfaed493f2aab3c736ba6cf70b5d84d5621dd758aae271641832c68f"
+    },
+    {
+      "name": "icon_demolish",
+      "filename": "icon_demolish.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Demolish HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "afeeffcd8339eee1b13410ec03e82c34edc9492c23b99dce93758153df48ee18"
+    },
+    {
+      "name": "icon_horde_alert",
+      "filename": "icon_horde_alert.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P1",
+      "category": "icon",
+      "description": "Horde alert HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "73f993ca6e791658848e2124fb9456082af7a6a6d186b51d41e8f56fe3bbdd2c"
+    },
+    {
+      "name": "icon_clock",
+      "filename": "icon_clock.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Clock HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "c1d79f036580de23e272f4fcf24b9f471f852e922a7e81ab3e6842479b15b617"
+    },
+    {
+      "name": "icon_speed",
+      "filename": "icon_speed.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Speed HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "41a1c41d390e335a8cd036fef587aa70cb3365e6bb39854bc1531a6fa5c0e04d"
+    },
+    {
+      "name": "icon_pause",
+      "filename": "icon_pause.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Pause HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "687a8897f41e26fcb7442a6d8ee70831a0f6ab7edcfcc330948317a40defb1be"
+    },
+    {
+      "name": "icon_settings",
+      "filename": "icon_settings.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "icon",
+      "description": "Settings HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "550b74da7d87012c8027888ccba529ba3bd5a696c5bdb7a8c256e3f1b2ba17dc"
+    },
+    {
+      "name": "icon_medicine",
+      "filename": "icon_medicine.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P3",
+      "category": "icon",
+      "description": "Medicine HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "bc3535257754c9ea3c190d27aafcc4c32b451291c579b5d0c783aa06473fb0c6"
+    },
+    {
+      "name": "icon_fuel",
+      "filename": "icon_fuel.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P3",
+      "category": "icon",
+      "description": "Fuel HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "14fcfa86faeb3b03de731c4d9c595a66a6112165263be7c30a30bea4d1c0e24c"
+    },
+    {
+      "name": "icon_ammo",
+      "filename": "icon_ammo.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P3",
+      "category": "icon",
+      "description": "Ammo HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "b4386c816f3d6ea8996b69ba5906c72cc4e840228f99c41e369216cbfe17b13f"
+    },
+    {
+      "name": "icon_knowledge",
+      "filename": "icon_knowledge.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P3",
+      "category": "icon",
+      "description": "Knowledge HUD icon",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "aa10606e997d33d21f63b3330df2dbb2dd72e94bc5a7ba53a505c30d70373a65"
+    },
+    {
+      "name": "ui_level_badge",
+      "filename": "ui_level_badge.png",
+      "width": 256,
+      "height": 256,
+      "priority": "P2",
+      "category": "ui",
+      "description": "Blank chevron shield; put the level number in its lower center",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "5d22a1255df31d5f81784ef715b611c7d776c924a0bc4368df94fd876ac8dbf3"
+    },
+    {
+      "name": "veh_rv",
+      "filename": "veh_rv.png",
+      "width": 256,
+      "height": 128,
+      "priority": "P3",
+      "category": "veh",
+      "description": "Armored RV with roof equipment, top-down, facing east",
+      "opaque": false,
+      "rotates": false,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "e464dee1dfb9dad50d62879b9a5995547a39f32e59d958bc0e6ef5033e57c1cf"
+    },
+    {
+      "name": "veh_pickup",
+      "filename": "veh_pickup.png",
+      "width": 256,
+      "height": 128,
+      "priority": "P3",
+      "category": "veh",
+      "description": "Salvage pickup with crate in bed, top-down, facing east",
+      "opaque": false,
+      "rotates": false,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "fa5bdf23aa9c888fda7cb5b1b936cc09be6d17ead976e6c0400f1fd615b7e6dd"
+    },
+    {
+      "name": "app_icon_bg",
+      "filename": "app_icon_bg.png",
+      "width": 1024,
+      "height": 1024,
+      "priority": "P2",
+      "category": "app",
+      "description": "Opaque dusk landscape and highway layer",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "1f30dda8c384293c29616a6d7ce659743578eee95d46bf56e3a0bf53522482c7"
+    },
+    {
+      "name": "app_icon_fg",
+      "filename": "app_icon_fg.png",
+      "width": 1024,
+      "height": 1024,
+      "priority": "P2",
+      "category": "app",
+      "description": "Transparent watchtower, gas station and zombie silhouettes layer",
+      "opaque": false,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "a67d48eb94fe95f61234f202d008e626cb440376e5e32e49ed546a545f06179e"
+    },
+    {
+      "name": "app_icon",
+      "filename": "app_icon.png",
+      "width": 1024,
+      "height": 1024,
+      "priority": "P2",
+      "category": "app",
+      "description": "Opaque full-bleed dusk watchtower app icon",
+      "opaque": true,
+      "rotates": false,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "nominal_figure_fraction": null,
+      "sha256": "0f0dfeab1f0c9deb7315d3fceab1a17d57f0640eaed920cda1bd5b9fb7bce65d"
+    }
+  ]
+}

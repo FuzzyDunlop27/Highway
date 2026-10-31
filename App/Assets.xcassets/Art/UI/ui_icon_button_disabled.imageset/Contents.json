@@ -1,0 +1,13 @@
+{
+  "images": [
+    {
+      "filename": "ui_icon_button_disabled@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

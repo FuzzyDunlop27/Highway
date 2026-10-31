@@ -1,0 +1,942 @@
+[
+  {
+    "name": "ui_panel_light",
+    "width": 512,
+    "height": 512,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 24,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 256.0,
+    "description": "Light menu panel, empty center"
+  },
+  {
+    "name": "ui_panel_dark",
+    "width": 512,
+    "height": 512,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 24,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 256.0,
+    "description": "Dark menu panel, empty center"
+  },
+  {
+    "name": "ui_panel_drawer",
+    "width": 512,
+    "height": 512,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 24,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 256.0,
+    "description": "Drawer menu panel, empty center"
+  },
+  {
+    "name": "ui_panel_dialog",
+    "width": 512,
+    "height": 512,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 24,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 256.0,
+    "description": "Dialog menu panel, empty center"
+  },
+  {
+    "name": "ui_resource_chip",
+    "width": 384,
+    "height": 112,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 18,
+      "left": 22,
+      "bottom": 20,
+      "right": 22
+    },
+    "logical_width": 192.0,
+    "logical_height": 56.0,
+    "description": "Dark HUD resource container"
+  },
+  {
+    "name": "ui_item_card_normal",
+    "width": 256,
+    "height": 320,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 18,
+      "bottom": 20,
+      "right": 18
+    },
+    "logical_width": 128.0,
+    "logical_height": 160.0,
+    "description": "Inventory/build card: normal"
+  },
+  {
+    "name": "ui_item_card_selected",
+    "width": 256,
+    "height": 320,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 18,
+      "bottom": 20,
+      "right": 18
+    },
+    "logical_width": 128.0,
+    "logical_height": 160.0,
+    "description": "Inventory/build card: selected"
+  },
+  {
+    "name": "ui_item_card_pressed",
+    "width": 256,
+    "height": 320,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 18,
+      "bottom": 20,
+      "right": 18
+    },
+    "logical_width": 128.0,
+    "logical_height": 160.0,
+    "description": "Inventory/build card: pressed"
+  },
+  {
+    "name": "ui_item_card_disabled",
+    "width": 256,
+    "height": 320,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 18,
+      "bottom": 20,
+      "right": 18
+    },
+    "logical_width": 128.0,
+    "logical_height": 160.0,
+    "description": "Inventory/build card: disabled"
+  },
+  {
+    "name": "ui_item_card_locked",
+    "width": 256,
+    "height": 320,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 18,
+      "bottom": 20,
+      "right": 18
+    },
+    "logical_width": 128.0,
+    "logical_height": 160.0,
+    "description": "Inventory/build card: locked"
+  },
+  {
+    "name": "ui_button_primary_normal",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Primary action / normal"
+  },
+  {
+    "name": "ui_button_primary_pressed",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Primary action / pressed"
+  },
+  {
+    "name": "ui_button_primary_disabled",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Primary action / disabled"
+  },
+  {
+    "name": "ui_button_secondary_normal",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Secondary action / normal"
+  },
+  {
+    "name": "ui_button_secondary_pressed",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Secondary action / pressed"
+  },
+  {
+    "name": "ui_button_secondary_disabled",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Secondary action / disabled"
+  },
+  {
+    "name": "ui_button_danger_normal",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Danger action / normal"
+  },
+  {
+    "name": "ui_button_danger_pressed",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Danger action / pressed"
+  },
+  {
+    "name": "ui_button_danger_disabled",
+    "width": 512,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 24,
+      "bottom": 24,
+      "right": 24
+    },
+    "logical_width": 256.0,
+    "logical_height": 64.0,
+    "description": "Danger action / disabled"
+  },
+  {
+    "name": "ui_icon_button_normal",
+    "width": 128,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 20,
+      "bottom": 22,
+      "right": 20
+    },
+    "logical_width": 64.0,
+    "logical_height": 64.0,
+    "description": "Square icon button / normal"
+  },
+  {
+    "name": "ui_icon_button_pressed",
+    "width": 128,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 20,
+      "bottom": 22,
+      "right": 20
+    },
+    "logical_width": 64.0,
+    "logical_height": 64.0,
+    "description": "Square icon button / pressed"
+  },
+  {
+    "name": "ui_icon_button_selected",
+    "width": 128,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 20,
+      "bottom": 22,
+      "right": 20
+    },
+    "logical_width": 64.0,
+    "logical_height": 64.0,
+    "description": "Square icon button / selected"
+  },
+  {
+    "name": "ui_icon_button_disabled",
+    "width": 128,
+    "height": 128,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 20,
+      "left": 20,
+      "bottom": 22,
+      "right": 20
+    },
+    "logical_width": 64.0,
+    "logical_height": 64.0,
+    "description": "Square icon button / disabled"
+  },
+  {
+    "name": "ui_tab_normal",
+    "width": 384,
+    "height": 112,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 18,
+      "left": 22,
+      "bottom": 18,
+      "right": 22
+    },
+    "logical_width": 192.0,
+    "logical_height": 56.0,
+    "description": "Category tab / normal"
+  },
+  {
+    "name": "ui_tab_selected",
+    "width": 384,
+    "height": 112,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 18,
+      "left": 22,
+      "bottom": 18,
+      "right": 22
+    },
+    "logical_width": 192.0,
+    "logical_height": 56.0,
+    "description": "Category tab / selected"
+  },
+  {
+    "name": "ui_progress_track",
+    "width": 512,
+    "height": 32,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 7,
+      "left": 7,
+      "bottom": 7,
+      "right": 7
+    },
+    "logical_width": 256.0,
+    "logical_height": 16.0,
+    "description": "Progress track"
+  },
+  {
+    "name": "ui_progress_teal",
+    "width": 512,
+    "height": 32,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 7,
+      "left": 7,
+      "bottom": 7,
+      "right": 7
+    },
+    "logical_width": 256.0,
+    "logical_height": 16.0,
+    "description": "Full progress fill; clip to value"
+  },
+  {
+    "name": "ui_progress_amber",
+    "width": 512,
+    "height": 32,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 7,
+      "left": 7,
+      "bottom": 7,
+      "right": 7
+    },
+    "logical_width": 256.0,
+    "logical_height": 16.0,
+    "description": "Full progress fill; clip to value"
+  },
+  {
+    "name": "ui_progress_danger",
+    "width": 512,
+    "height": 32,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 7,
+      "left": 7,
+      "bottom": 7,
+      "right": 7
+    },
+    "logical_width": 256.0,
+    "logical_height": 16.0,
+    "description": "Full progress fill; clip to value"
+  },
+  {
+    "name": "ui_toggle_off",
+    "width": 144,
+    "height": 80,
+    "category": "control",
+    "template": false,
+    "cap_insets_pt": null,
+    "logical_width": 72.0,
+    "logical_height": 40.0,
+    "description": "Toggle visual only: off"
+  },
+  {
+    "name": "ui_toggle_on",
+    "width": 144,
+    "height": 80,
+    "category": "control",
+    "template": false,
+    "cap_insets_pt": null,
+    "logical_width": 72.0,
+    "logical_height": 40.0,
+    "description": "Toggle visual only: on"
+  },
+  {
+    "name": "ui_checkbox_off",
+    "width": 64,
+    "height": 64,
+    "category": "control",
+    "template": false,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Checkbox visual only: off"
+  },
+  {
+    "name": "ui_checkbox_on",
+    "width": 64,
+    "height": 64,
+    "category": "control",
+    "template": false,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Checkbox visual only: on"
+  },
+  {
+    "name": "ui_badge_count",
+    "width": 112,
+    "height": 64,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 15,
+      "left": 17,
+      "bottom": 15,
+      "right": 17
+    },
+    "logical_width": 56.0,
+    "logical_height": 32.0,
+    "description": "Blank quantity or notification badge"
+  },
+  {
+    "name": "ui_badge_warning",
+    "width": 80,
+    "height": 80,
+    "category": "control",
+    "template": false,
+    "cap_insets_pt": null,
+    "logical_width": 40.0,
+    "logical_height": 40.0,
+    "description": "Blank warning badge; pair with alert glyph"
+  },
+  {
+    "name": "ui_search_field",
+    "width": 512,
+    "height": 112,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 18,
+      "left": 22,
+      "bottom": 18,
+      "right": 22
+    },
+    "logical_width": 256.0,
+    "logical_height": 56.0,
+    "description": "Search field background"
+  },
+  {
+    "name": "ui_separator",
+    "width": 512,
+    "height": 8,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 0,
+      "left": 0,
+      "bottom": 0,
+      "right": 0
+    },
+    "logical_width": 256.0,
+    "logical_height": 4.0,
+    "description": "Horizontal separator"
+  },
+  {
+    "name": "ui_scroll_track",
+    "width": 16,
+    "height": 256,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 4,
+      "left": 3,
+      "bottom": 4,
+      "right": 3
+    },
+    "logical_width": 8.0,
+    "logical_height": 128.0,
+    "description": "Scrollbar track"
+  },
+  {
+    "name": "ui_scroll_thumb",
+    "width": 16,
+    "height": 96,
+    "category": "surface",
+    "template": false,
+    "cap_insets_pt": {
+      "top": 4,
+      "left": 3,
+      "bottom": 4,
+      "right": 3
+    },
+    "logical_width": 8.0,
+    "logical_height": 48.0,
+    "description": "Scrollbar thumb"
+  },
+  {
+    "name": "ui_glyph_close",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Close monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_back",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Back monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_chevron_right",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Chevron right monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_check",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Check monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_plus",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Plus monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_minus",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Minus monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_search",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Search monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_filter",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Filter monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_sort",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Sort monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_grid",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Grid monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_list",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "List monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_lock",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Lock monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_info",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Info monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_alert",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Alert monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_settings",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Settings monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_pause",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Pause monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_play",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Play monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_speed",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Speed monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_inventory",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Inventory monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_build",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Build monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_upgrade",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Upgrade monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_demolish",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Demolish monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_home",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Home monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_view_iso",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "View iso monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_view_topdown",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "View topdown monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_move",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Move monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_clock",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Clock monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_sound",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Sound monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_map",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Map monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_star",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Star monochrome template glyph"
+  },
+  {
+    "name": "ui_glyph_shield",
+    "width": 64,
+    "height": 64,
+    "category": "glyph",
+    "template": true,
+    "cap_insets_pt": null,
+    "logical_width": 32.0,
+    "logical_height": 32.0,
+    "description": "Shield monochrome template glyph"
+  }
+]

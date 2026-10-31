@@ -1,0 +1,253 @@
+{
+  "_notes": "Phase 1 buildings and defenses. id = graphics-spec name without prefix; sprite = exact asset id (defenses with turrets list base + turret). footprint = [w, h] in tiles. levels[n]: cost = {scrap, food} to build (L1) or upgrade to that level (L2/L3); buildSeconds = in-game seconds at 1x; hp = max HP at that level; requiredHq = min HQ level; effects vary by type: productionPerMin (at full staff, scales linearly with workers staffed), storageAdded (added to food+scrap caps), housing (survivor cap), range (tiles), damage (per shot), fireRate (shots/sec), slowPct (move-speed reduction while on tile), dps (spike damage per second to each zombie on tile). workers = survivors assigned to run it (towers fire only when staffed; a garrisoned defender counts as the worker and applies units.json garrison.towerDamageMultiplier). maxCountByHq = how many may exist at HQ 1/2/3. requires = other prerequisites (building id + level, or research id). startingLayout = what a fresh map places (positions come from the map file). rules = global construction/repair/rubble formulas.",
+  "schemaVersion": 1,
+  "rules": {
+    "constructionSlotsByHq": [2, 3, 4],
+    "buildersPerJob": 1,
+    "_buildersNote": "each active construction/upgrade/repair borrows this many idle survivors until done",
+    "constructionQueueLength": 6,
+    "_queueNote": "cost is paid when a job STARTS, not when queued; a queued job auto-starts when a slot, a free builder and the resources are available (also during offline catch-up)",
+    "buildDuringHorde": true,
+    "demolishRefundPct": 50,
+    "repair": {
+      "costPctOfLevelCost": 50,
+      "timePctOfBuildTime": 25,
+      "minSeconds": 2,
+      "_formula": "repairCost = levelCost * costPct * missingHpFraction; repairTime = max(minSeconds, buildSeconds * timePct * missingHpFraction)"
+    },
+    "rubble": {
+      "rebuildCostPctOfInvested": 50,
+      "rebuildTimePctOfInvested": 50,
+      "keepsLevel": true,
+      "rubbleSprite2x2": "bld_rubble_2x2",
+      "rubbleSprite1x1": "dec_rubble"
+    },
+    "constructionSprites": {
+      "2x2": "bld_construction_2x2",
+      "3x3": "bld_construction_3x3",
+      "1x1": "bld_construction_2x2",
+      "_1x1Note": "no 1x1 scaffold sprite in the graphics spec; walls/towers reuse the 2x2 one scaled down"
+    }
+  },
+  "startingLayout": [
+    { "id": "hq", "level": 1, "count": 1 },
+    { "id": "wall_wood", "level": 1, "count": 12 },
+    { "id": "watchtower", "level": 1, "count": 1, "staffed": true }
+  ],
+  "buildings": [
+    {
+      "id": "hq",
+      "displayName": "HQ",
+      "sprite": "bld_hq",
+      "category": "core",
+      "footprint": [3, 3],
+      "workers": 0,
+      "maxCountByHq": [1, 1, 1],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 0, "food": 0 }, "buildSeconds": 0, "hp": 1000, "requiredHq": 0,
+          "effects": { "housing": 8, "storageAdded": 0, "range": 4, "damage": 10, "fireRate": 1 } },
+        { "level": 2, "cost": { "scrap": 300, "food": 150 }, "buildSeconds": 180, "hp": 1600, "requiredHq": 1,
+          "effects": { "housing": 12, "storageAdded": 500, "range": 4, "damage": 15, "fireRate": 1 } },
+        { "level": 3, "cost": { "scrap": 1200, "food": 600 }, "buildSeconds": 900, "hp": 2400, "requiredHq": 2,
+          "effects": { "housing": 16, "storageAdded": 1000, "range": 4, "damage": 20, "fireRate": 1 } }
+      ]
+    },
+    {
+      "id": "shelter",
+      "displayName": "Shelter",
+      "sprite": "bld_shelter",
+      "category": "housing",
+      "footprint": [2, 2],
+      "workers": 0,
+      "maxCountByHq": [2, 4, 6],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 60, "food": 20 }, "buildSeconds": 60, "hp": 300, "requiredHq": 1, "effects": { "housing": 4 } },
+        { "level": 2, "cost": { "scrap": 150, "food": 50 }, "buildSeconds": 180, "hp": 450, "requiredHq": 2, "effects": { "housing": 7 } },
+        { "level": 3, "cost": { "scrap": 350, "food": 100 }, "buildSeconds": 420, "hp": 600, "requiredHq": 3, "effects": { "housing": 10 } }
+      ]
+    },
+    {
+      "id": "farm",
+      "displayName": "Farm",
+      "sprite": "bld_farm",
+      "category": "production",
+      "footprint": [2, 2],
+      "workers": 2,
+      "maxCountByHq": [2, 3, 4],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 50, "food": 0 }, "buildSeconds": 60, "hp": 300, "requiredHq": 1, "effects": { "productionPerMin": { "food": 10 } } },
+        { "level": 2, "cost": { "scrap": 150, "food": 30 }, "buildSeconds": 180, "hp": 450, "requiredHq": 2, "effects": { "productionPerMin": { "food": 20 } } },
+        { "level": 3, "cost": { "scrap": 350, "food": 80 }, "buildSeconds": 420, "hp": 600, "requiredHq": 3, "effects": { "productionPerMin": { "food": 35 } } }
+      ]
+    },
+    {
+      "id": "scavenger",
+      "displayName": "Scavenger Post",
+      "sprite": "bld_scavenger",
+      "category": "production",
+      "footprint": [2, 2],
+      "workers": 2,
+      "maxCountByHq": [2, 3, 4],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 50, "food": 30 }, "buildSeconds": 60, "hp": 300, "requiredHq": 1,
+          "effects": { "productionPerMin": { "scrap": 10 }, "runsUnlocked": ["quick", "long"], "runRewardMultiplier": 1.0 } },
+        { "level": 2, "cost": { "scrap": 150, "food": 60 }, "buildSeconds": 180, "hp": 450, "requiredHq": 2,
+          "effects": { "productionPerMin": { "scrap": 20 }, "runsUnlocked": ["quick", "long", "overnight"], "runRewardMultiplier": 1.0 } },
+        { "level": 3, "cost": { "scrap": 350, "food": 120 }, "buildSeconds": 420, "hp": 600, "requiredHq": 3,
+          "effects": { "productionPerMin": { "scrap": 35 }, "runsUnlocked": ["quick", "long", "overnight"], "runRewardMultiplier": 1.25 } }
+      ],
+      "runs": {
+        "_notes": "Scavenging runs: send idle survivors away for a fixed time. They are absent (not workers, not at risk) until return. One active run per post. Rewards wait at the post until collected; collecting is clamped to storage caps and any remainder stays at the post.",
+        "rewardsHeldUntilCollected": true,
+        "types": [
+          { "id": "quick", "displayName": "Quick Run", "durationSeconds": 300, "survivorsSent": 2, "cost": { "food": 10 }, "reward": { "scrap": 60, "food": 0 } },
+          { "id": "long", "displayName": "Long Run", "durationSeconds": 3600, "survivorsSent": 2, "cost": { "food": 50 }, "reward": { "scrap": 400, "food": 50 } },
+          { "id": "overnight", "displayName": "Overnight Run", "durationSeconds": 14400, "survivorsSent": 3, "cost": { "food": 100 }, "reward": { "scrap": 1200, "food": 200 } }
+        ]
+      }
+    },
+    {
+      "id": "workshop",
+      "displayName": "Workshop",
+      "sprite": "bld_workshop",
+      "category": "utility",
+      "footprint": [2, 2],
+      "workers": 2,
+      "maxCountByHq": [1, 1, 1],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 120, "food": 60 }, "buildSeconds": 120, "hp": 300, "requiredHq": 1, "effects": { "researchEnabled": true, "researchSpeedMultiplier": 1.0 } },
+        { "level": 2, "cost": { "scrap": 300, "food": 150 }, "buildSeconds": 300, "hp": 450, "requiredHq": 2, "effects": { "researchEnabled": true, "researchSpeedMultiplier": 1.5 } },
+        { "level": 3, "cost": { "scrap": 600, "food": 300 }, "buildSeconds": 600, "hp": 600, "requiredHq": 3, "effects": { "researchEnabled": true, "researchSpeedMultiplier": 2.0 } }
+      ]
+    },
+    {
+      "id": "barracks",
+      "displayName": "Barracks",
+      "sprite": "bld_barracks",
+      "category": "military",
+      "footprint": [2, 2],
+      "workers": 1,
+      "maxCountByHq": [1, 1, 1],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 120, "food": 80 }, "buildSeconds": 120, "hp": 400, "requiredHq": 1, "effects": { "maxDefenders": 4, "trainingQueueLength": 2, "trainTimeMultiplier": 1.0 } },
+        { "level": 2, "cost": { "scrap": 300, "food": 150 }, "buildSeconds": 300, "hp": 600, "requiredHq": 2, "effects": { "maxDefenders": 8, "trainingQueueLength": 3, "trainTimeMultiplier": 0.8 } },
+        { "level": 3, "cost": { "scrap": 600, "food": 300 }, "buildSeconds": 600, "hp": 800, "requiredHq": 3, "effects": { "maxDefenders": 12, "trainingQueueLength": 4, "trainTimeMultiplier": 0.6 } }
+      ]
+    },
+    {
+      "id": "storage",
+      "displayName": "Storage",
+      "sprite": "bld_storage",
+      "category": "utility",
+      "footprint": [2, 2],
+      "workers": 0,
+      "maxCountByHq": [1, 2, 3],
+      "levels": [
+        { "level": 1, "cost": { "scrap": 100, "food": 0 }, "buildSeconds": 90, "hp": 400, "requiredHq": 1, "effects": { "storageAdded": 500 } },
+        { "level": 2, "cost": { "scrap": 250, "food": 0 }, "buildSeconds": 240, "hp": 600, "requiredHq": 2, "effects": { "storageAdded": 1000 } },
+        { "level": 3, "cost": { "scrap": 600, "food": 0 }, "buildSeconds": 480, "hp": 800, "requiredHq": 3, "effects": { "storageAdded": 1500 } }
+      ]
+    }
+  ],
+  "defenses": [
+    {
+      "id": "wall_wood",
+      "displayName": "Wood Wall",
+      "sprite": "def_wall_wood",
+      "category": "wall",
+      "footprint": [1, 1],
+      "workers": 0,
+      "maxCountByHq": [40, 80, 120],
+      "blocksPath": "bashable",
+      "levels": [
+        { "level": 1, "cost": { "scrap": 10, "food": 0 }, "buildSeconds": 5, "hp": 200, "requiredHq": 1, "effects": {} },
+        { "level": 2, "cost": { "scrap": 15, "food": 0 }, "buildSeconds": 5, "hp": 350, "requiredHq": 2, "effects": {} },
+        { "level": 3, "cost": { "scrap": 25, "food": 0 }, "buildSeconds": 10, "hp": 500, "requiredHq": 3, "effects": {} }
+      ]
+    },
+    {
+      "id": "wall_metal",
+      "displayName": "Metal Wall",
+      "sprite": "def_wall_metal",
+      "category": "wall",
+      "footprint": [1, 1],
+      "workers": 0,
+      "maxCountByHq": [40, 80, 120],
+      "sharesCountWith": "wall_wood",
+      "blocksPath": "bashable",
+      "requires": { "research": "metal_fortification" },
+      "canReplace": "wall_wood",
+      "levels": [
+        { "level": 1, "cost": { "scrap": 30, "food": 0 }, "buildSeconds": 10, "hp": 800, "requiredHq": 1, "effects": {} },
+        { "level": 2, "cost": { "scrap": 50, "food": 0 }, "buildSeconds": 15, "hp": 1200, "requiredHq": 2, "effects": {} },
+        { "level": 3, "cost": { "scrap": 80, "food": 0 }, "buildSeconds": 20, "hp": 1600, "requiredHq": 3, "effects": {} }
+      ]
+    },
+    {
+      "id": "watchtower",
+      "displayName": "Watchtower",
+      "sprite": "def_watchtower_base",
+      "turretSprite": "def_watchtower_gunner",
+      "category": "tower",
+      "footprint": [1, 1],
+      "workers": 1,
+      "maxCountByHq": [2, 4, 6],
+      "targeting": "single_nearest_to_hq",
+      "levels": [
+        { "level": 1, "cost": { "scrap": 80, "food": 20 }, "buildSeconds": 60, "hp": 250, "requiredHq": 1, "effects": { "range": 6, "damage": 20, "fireRate": 1.0 } },
+        { "level": 2, "cost": { "scrap": 200, "food": 40 }, "buildSeconds": 120, "hp": 400, "requiredHq": 2, "effects": { "range": 6.5, "damage": 30, "fireRate": 1.0 } },
+        { "level": 3, "cost": { "scrap": 450, "food": 80 }, "buildSeconds": 300, "hp": 550, "requiredHq": 3, "effects": { "range": 7, "damage": 45, "fireRate": 1.0 } }
+      ]
+    },
+    {
+      "id": "mg_nest",
+      "displayName": "MG Nest",
+      "sprite": "def_mg_nest_base",
+      "turretSprite": "def_mg_nest_gun",
+      "category": "tower",
+      "footprint": [1, 1],
+      "workers": 1,
+      "maxCountByHq": [0, 2, 4],
+      "targeting": "single_nearest",
+      "requires": { "building": "workshop", "level": 1 },
+      "levels": [
+        { "level": 1, "cost": { "scrap": 150, "food": 30 }, "buildSeconds": 90, "hp": 300, "requiredHq": 2, "effects": { "range": 3.5, "damage": 6, "fireRate": 5 } },
+        { "level": 2, "cost": { "scrap": 300, "food": 60 }, "buildSeconds": 180, "hp": 450, "requiredHq": 2, "effects": { "range": 3.5, "damage": 8, "fireRate": 5 } },
+        { "level": 3, "cost": { "scrap": 600, "food": 120 }, "buildSeconds": 360, "hp": 600, "requiredHq": 3, "effects": { "range": 4, "damage": 11, "fireRate": 5 } }
+      ]
+    },
+    {
+      "id": "spikes",
+      "displayName": "Spike Trap",
+      "sprite": "def_spikes",
+      "category": "trap",
+      "footprint": [1, 1],
+      "workers": 0,
+      "maxCountByHq": [10, 20, 30],
+      "blocksPath": false,
+      "requires": { "building": "workshop", "level": 1 },
+      "durabilityLossPerZombieSecond": 2,
+      "levels": [
+        { "level": 1, "cost": { "scrap": 25, "food": 0 }, "buildSeconds": 10, "hp": 100, "requiredHq": 1, "effects": { "dps": 10 } },
+        { "level": 2, "cost": { "scrap": 40, "food": 0 }, "buildSeconds": 10, "hp": 150, "requiredHq": 2, "effects": { "dps": 15 } },
+        { "level": 3, "cost": { "scrap": 70, "food": 0 }, "buildSeconds": 15, "hp": 200, "requiredHq": 3, "effects": { "dps": 20 } }
+      ]
+    },
+    {
+      "id": "barbwire",
+      "displayName": "Barbed Wire",
+      "sprite": "def_barbwire",
+      "category": "trap",
+      "footprint": [1, 1],
+      "workers": 0,
+      "maxCountByHq": [10, 20, 30],
+      "blocksPath": false,
+      "durabilityLossPerZombieSecond": 1,
+      "levels": [
+        { "level": 1, "cost": { "scrap": 15, "food": 0 }, "buildSeconds": 5, "hp": 80, "requiredHq": 1, "effects": { "slowPct": 30 } },
+        { "level": 2, "cost": { "scrap": 25, "food": 0 }, "buildSeconds": 5, "hp": 120, "requiredHq": 2, "effects": { "slowPct": 40 } },
+        { "level": 3, "cost": { "scrap": 40, "food": 0 }, "buildSeconds": 10, "hp": 160, "requiredHq": 3, "effects": { "slowPct": 50 } }
+      ]
+    }
+  ]
+}

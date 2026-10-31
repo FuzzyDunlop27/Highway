@@ -1,0 +1,35 @@
+{
+  "_notes": "Phase 1 resources. starting = amount in a fresh game. baseCap = storage always available before HQ/Storage bonuses (HQ effects.storageAdded and Storage buildings add on top; see buildings.json). Survivors are capped by housing (HQ + Shelters), not storage. Production that would exceed a cap is lost. survivorArrival: a new survivor joins every intervalSeconds while housing is free and food >= foodCost (food is spent). foodUpkeepPerSurvivorPerMin is 0 in Phase 1 (knob kept for later). All times are in-game seconds at 1x speed.",
+  "schemaVersion": 1,
+  "resources": [
+    {
+      "id": "food",
+      "displayName": "Food",
+      "icon": "ui_item_food",
+      "starting": 150,
+      "baseCap": 500
+    },
+    {
+      "id": "scrap",
+      "displayName": "Scrap",
+      "icon": "ui_item_scrap",
+      "starting": 200,
+      "baseCap": 500
+    },
+    {
+      "id": "survivors",
+      "displayName": "Survivors",
+      "icon": "ui_item_survivors",
+      "starting": 6,
+      "baseCap": 0,
+      "capSource": "housing"
+    }
+  ],
+  "survivorArrival": {
+    "intervalSeconds": 60,
+    "foodCost": 10,
+    "requiresFreeHousing": true,
+    "pausedDuringHorde": true
+  },
+  "foodUpkeepPerSurvivorPerMin": 0
+}

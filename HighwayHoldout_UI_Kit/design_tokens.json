@@ -1,0 +1,40 @@
+{
+  "colors": {
+    "ink": "#15363B",
+    "navy": "#10282D",
+    "muted": "#5F7775",
+    "paper": "#F5F0E5",
+    "surface": "#E7DFCF",
+    "edge": "#C9BDA4",
+    "gold": "#DBAE63",
+    "coral": "#D17B56",
+    "teal": "#2F706C",
+    "pale": "#DDEAE1",
+    "danger": "#A84D43",
+    "disabled": "#DDD9CF",
+    "white": "#FFFCF5"
+  },
+  "base_spacing_pt": 4,
+  "spacing_pt": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "touch_target_min_pt": 44,
+  "text_roles_pt": {
+    "screen_title": 28,
+    "section_title": 20,
+    "body": 16,
+    "label": 14,
+    "caption": 12
+  },
+  "typeface": "System font (SF); Avenir Next is used only in preview mockups",
+  "resource_mappings": {
+    "food": "ui_item_food",
+    "scrap": "ui_item_scrap",
+    "survivors": "ui_item_survivors"
+  }
+}

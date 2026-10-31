@@ -1,0 +1,206 @@
+{
+  "passed": 40,
+  "failed": 0,
+  "checks": [
+    {
+      "asset": "bld_hq",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "bld_hq",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "bld_hq",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "bld_hq",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "bld_shelter",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "bld_shelter",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "bld_shelter",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "bld_shelter",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "bld_farm",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "bld_farm",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "bld_farm",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "bld_farm",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_base",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_base",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_base",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_base",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "def_wall_wood",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "def_wall_wood",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "def_wall_wood",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "def_wall_wood",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "dec_car_wreck",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "dec_car_wreck",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "dec_car_wreck",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "dec_car_wreck",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "unit_survivor",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "unit_survivor",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "unit_survivor",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "unit_survivor",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "unit_defender",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "unit_defender",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "unit_defender",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "unit_defender",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "def_watchtower_gunner",
+      "check": "embedded sRGB",
+      "passed": true
+    },
+    {
+      "asset": "zmb_walker",
+      "check": "dimensions",
+      "passed": true
+    },
+    {
+      "asset": "zmb_walker",
+      "check": "transparent background",
+      "passed": true
+    },
+    {
+      "asset": "zmb_walker",
+      "check": "padding at least 4px",
+      "passed": true
+    },
+    {
+      "asset": "zmb_walker",
+      "check": "embedded sRGB",
+      "passed": true
+    }
+  ]
+}

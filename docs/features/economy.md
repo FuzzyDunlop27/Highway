@@ -1,0 +1,33 @@
+# Feature: Economy
+
+## Purpose
+Farms make food, Scavenger Posts make scrap, Shelters raise the survivor cap, HQ/Storage raise storage caps, and new survivors arrive over time.
+
+## Files involved
+- `Core/Sources/HoldoutCore/Systems/Economy/EconomySystem.swift` — per-tick production + survivor arrival.
+- `Core/Sources/HoldoutCore/Systems/Economy/StorageRules.swift` — food/scrap caps and housing.
+- `Core/Sources/HoldoutCore/Systems/Economy/Staffing.swift` — 1A auto-staffing of worker slots.
+- `Core/Sources/HoldoutCore/Systems/Economy/ResourceSnapshot.swift` — HUD numbers.
+- `Core/Sources/HoldoutCore/Model/Base.swift` (stock, carry, arrival timer), `Model/Group.swift` (survivors).
+- `Core/Sources/HoldoutCore/Content/ResourceDefs.swift`, `EconomyDefs.swift`.
+- Tests: `Core/Tests/HoldoutCoreTests/Systems/Economy/EconomySystemTests.swift`
+
+## Data files
+- `Content/resources.json` → `starting`, `baseCap`, `survivorArrival.intervalSeconds` / `foodCost` / `requiresFreeHousing`.
+- `Content/buildings.json` → level `effects.productionPerMin`, `storageAdded`, `housing`; building `workers`.
+- `Content/economy.json` → `ticksPerSecond`, `speedOptions`, `maxFrameSeconds`.
+
+## Key rules
+- Output per minute = `productionPerMin × staffed / workers`; only finished buildings produce.
+- Stock is whole numbers; fractions wait in `productionCarry`. At the cap, stock stops and the carry is dropped (overflow is lost). Stock never sits above the cap (demolishing a Storage trims it).
+- Cap = `baseCap` + `storageAdded` of finished buildings. Housing = `housing` of finished buildings.
+- **Auto-staffing (1A only):** survivors fill worker slots of finished buildings in build order (oldest first). 1C replaces this with job assignment (D-011).
+- Survivor arrival: the timer runs while housing is free; at `intervalSeconds` a survivor joins if food ≥ `foodCost` (food is spent), else it waits until food is enough. Housing full resets the timer.
+- `foodUpkeepPerSurvivorPerMin` must stay 0: the loader rejects other values until upkeep is built.
+- Not yet: Agriculture multiplier (1C), offline efficiency (1D), pausing arrival during hordes (1B).
+
+## Known issues
+- (none yet)
+
+## Change log
+- 2026-10-31 — Built production, caps, housing, survivor arrival, auto-staffing (1A).

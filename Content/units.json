@@ -1,0 +1,39 @@
+{
+  "_notes": "Phase 1 units. survivor = worker (staffs buildings, builds, goes on scavenging runs). defender = trained at Barracks from an idle survivor (still counts toward housing). training: cost/time per defender at Barracks L1; Barracks trainTimeMultiplier (buildings.json) scales time. garrison: a defender placed in a tower counts as its worker and multiplies tower damage. patrol: a defender holding a spot fights with its own range/damage/fireRate. knockedOut: Phase 1 has no permanent unit death; a unit at 0 HP is out for knockedOutSeconds, then reappears at the HQ at full HP. duringHorde: survivor behavior while zombies are on the map.",
+  "schemaVersion": 1,
+  "units": [
+    {
+      "id": "survivor",
+      "displayName": "Survivor",
+      "sprite": "unit_survivor",
+      "hp": 40,
+      "speed": 1.2,
+      "canFight": false,
+      "duringHorde": "keep_working_flee_to_hq_if_attacked"
+    },
+    {
+      "id": "defender",
+      "displayName": "Defender",
+      "sprite": "unit_defender",
+      "icon": "icon_defender",
+      "hp": 120,
+      "speed": 1.2,
+      "canFight": true,
+      "range": 4,
+      "damage": 12,
+      "fireRate": 1.0,
+      "training": {
+        "at": "barracks",
+        "consumesSurvivors": 1,
+        "cost": { "food": 25, "scrap": 25 },
+        "trainSeconds": 60
+      },
+      "garrison": {
+        "allowedIn": ["watchtower", "mg_nest"],
+        "countsAsWorker": true,
+        "towerDamageMultiplier": 1.5
+      }
+    }
+  ],
+  "knockedOutSeconds": 120
+}

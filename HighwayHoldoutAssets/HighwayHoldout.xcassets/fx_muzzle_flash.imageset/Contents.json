@@ -1,0 +1,13 @@
+{
+  "images": [
+    {
+      "filename": "fx_muzzle_flash.png",
+      "idiom": "universal",
+      "scale": "1x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

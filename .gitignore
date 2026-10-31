@@ -1,0 +1,14 @@
+# macOS / Xcode
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+# SwiftPM build output
+.build/
+.swiftpm/
+# Blender autosave backups
+*.blend1
+# Python caches
+__pycache__/
+# Zips duplicate folders that are already committed (asset pack, Blender study)
+*.zip

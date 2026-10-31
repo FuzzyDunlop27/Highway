@@ -1,0 +1,52 @@
+[
+  {
+    "name": "ui_build_hq",
+    "width": 512,
+    "height": 384,
+    "logical_width": 128,
+    "logical_height": 96,
+    "category": "building_thumbnail",
+    "template": false,
+    "description": "Hq three-quarter menu illustration"
+  },
+  {
+    "name": "ui_build_shelter",
+    "width": 512,
+    "height": 384,
+    "logical_width": 128,
+    "logical_height": 96,
+    "category": "building_thumbnail",
+    "template": false,
+    "description": "Shelter three-quarter menu illustration"
+  },
+  {
+    "name": "ui_build_farm",
+    "width": 512,
+    "height": 384,
+    "logical_width": 128,
+    "logical_height": 96,
+    "category": "building_thumbnail",
+    "template": false,
+    "description": "Farm three-quarter menu illustration"
+  },
+  {
+    "name": "ui_build_watchtower",
+    "width": 512,
+    "height": 384,
+    "logical_width": 128,
+    "logical_height": 96,
+    "category": "building_thumbnail",
+    "template": false,
+    "description": "Watchtower three-quarter menu illustration"
+  },
+  {
+    "name": "ui_build_wall",
+    "width": 512,
+    "height": 384,
+    "logical_width": 128,
+    "logical_height": 96,
+    "category": "building_thumbnail",
+    "template": false,
+    "description": "Wall three-quarter menu illustration"
+  }
+]

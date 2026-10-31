@@ -1,0 +1,45 @@
+{
+  "_notes": "Horde schedule. The horde clock advances only while the app is open and not paused (scaled by game speed); it is frozen while any horde (regular or bonus) is active. Horde 1 arrives firstHordeSeconds into a fresh game; each later horde arrives intervalSeconds after the previous one ENDS. day = number of the regular horde (horde 1 = day 1). warningSeconds = spawn edges are revealed (arrows) this long before arrival; the countdown is always visible. BUDGET: threatBudget = round((baseBudget + budgetPerDay * (day - 1)) * townFactor); townFactor = clamp(1 + townValue / townValueDivisor, 1, townFactorMax); townValue = scrap + food spent on buildings/upgrades still standing (stored resources and starting layout do not count, so hoarding does not make hordes bigger). COMPOSITION: pick the bracket whose day range contains day; first spawn 'guaranteed' zombies (their threatCost comes out of the budget), then fill the remaining budget by weighted random (seeded) using 'weights'. A type whose threatCost exceeds the remaining budget is skipped. SPAWN: edgeCount edges chosen by seeded random from spawnEdges (ids defined in Content/maps/phase1_exit.json); zombies split evenly across edges, one every spawnIntervalSeconds per edge. completionBonus is paid when every zombie is dead. bonusHorde = the Horde Alert horde (see offline.json for notification timing).",
+  "schemaVersion": 1,
+  "schedule": {
+    "firstHordeSeconds": 270,
+    "intervalSeconds": 600,
+    "warningSeconds": 60,
+    "clockRunsOnlyWhileAppOpen": true,
+    "clockFrozenDuringHorde": true
+  },
+  "budget": {
+    "baseBudget": 5,
+    "budgetPerDay": 4,
+    "townValueDivisor": 10000,
+    "townFactorMax": 1.5
+  },
+  "composition": [
+    { "days": [1, 2],   "edgeCount": 1, "guaranteed": {},             "weights": { "walker": 100, "runner": 0,  "brute": 0 } },
+    { "days": [3, 4],   "edgeCount": 2, "guaranteed": { "brute": 1 }, "weights": { "walker": 70,  "runner": 30, "brute": 0 } },
+    { "days": [5, 8],   "edgeCount": 2, "guaranteed": { "brute": 1 }, "weights": { "walker": 55,  "runner": 30, "brute": 15 } },
+    { "days": [9, 999], "edgeCount": 3, "guaranteed": { "brute": 2 }, "weights": { "walker": 45,  "runner": 30, "brute": 25 } }
+  ],
+  "spawnEdges": ["highway_offramp_east", "highway_onramp_west", "side_road_north", "side_road_south"],
+  "spawnIntervalSeconds": 0.5,
+  "completionBonus": {
+    "scrapBase": 20, "scrapPerDay": 10,
+    "foodBase": 10, "foodPerDay": 5
+  },
+  "pathing": {
+    "openTileCost": 1,
+    "wallTileCostPerHp": 0.05,
+    "buildingTileCostPerHp": 0.05,
+    "_pathingNote": "flow-field cost of a wall/building tile = currentHp * costPerHp, times the zombie's pathCostWeight; so damaged walls attract more zombies"
+  },
+  "bonusHorde": {
+    "sizeMultiplier": 1.5,
+    "lootMultiplier": 2.0,
+    "usesDay": "current",
+    "advancesDay": false,
+    "maxWaiting": 1,
+    "waitsIndefinitely": true,
+    "spawnEdgeCount": 1,
+    "_bonusNote": "budget = regular budget for the current day * sizeMultiplier; lootMultiplier applies to zombie drops and completionBonus. It sits frozen at one edge until the player taps Engage. Ignoring it costs nothing."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "_notes": "Phase 1 zombies. hp = health. speed = tiles/sec at 1x. damageVsBuildingsPerSec = damage to any building/defense blocking or adjacent to it. damageVsUnitsPerSec = damage to a survivor/defender within attackRange tiles. wallBashMultiplier multiplies building damage against category 'wall' only (brutes wreck walls). threatCost = how much of the horde budget one zombie uses (see hordes.json). loot = dropped on death, auto-collected into storage (clamped to caps). pathCostWeight scales how strongly this type avoids walls in the flow field (lower = more willing to bash; 1.0 = default wall cost from hordes.json pathing).",
+  "schemaVersion": 1,
+  "zombies": [
+    {
+      "id": "walker",
+      "displayName": "Walker",
+      "sprite": "zmb_walker",
+      "hp": 60,
+      "speed": 0.6,
+      "damageVsBuildingsPerSec": 5,
+      "damageVsUnitsPerSec": 5,
+      "attackRange": 0.8,
+      "wallBashMultiplier": 1.0,
+      "threatCost": 1,
+      "pathCostWeight": 1.0,
+      "loot": { "scrap": 2, "food": 0 }
+    },
+    {
+      "id": "runner",
+      "displayName": "Runner",
+      "sprite": "zmb_runner",
+      "hp": 30,
+      "speed": 1.4,
+      "damageVsBuildingsPerSec": 3,
+      "damageVsUnitsPerSec": 4,
+      "attackRange": 0.8,
+      "wallBashMultiplier": 0.5,
+      "threatCost": 2,
+      "pathCostWeight": 1.5,
+      "loot": { "scrap": 1, "food": 1 }
+    },
+    {
+      "id": "brute",
+      "displayName": "Brute",
+      "sprite": "zmb_brute",
+      "hp": 500,
+      "speed": 0.35,
+      "damageVsBuildingsPerSec": 25,
+      "damageVsUnitsPerSec": 15,
+      "attackRange": 1.0,
+      "wallBashMultiplier": 3.0,
+      "threatCost": 10,
+      "pathCostWeight": 0.5,
+      "loot": { "scrap": 20, "food": 10 }
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "title": "Highway Holdout \u2014 fresh Blender style study",
+  "assets": [
+    {
+      "name": "bld_hq",
+      "width": 384,
+      "height": 384,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "orthographic 26.6 degrees from vertical",
+      "sha256": "930bf9a026cf66b00bf127dfd255c4a94f47b9fc012613bde2b6296f48595a0c",
+      "visible_bounds": [
+        32,
+        21,
+        352,
+        362
+      ]
+    },
+    {
+      "name": "bld_shelter",
+      "width": 256,
+      "height": 256,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "orthographic 26.6 degrees from vertical",
+      "sha256": "9ade2b032b768512495cdab4f4adc215cb4b5df9e468ac0cfc2e0def8197f41c",
+      "visible_bounds": [
+        40,
+        14,
+        216,
+        242
+      ]
+    },
+    {
+      "name": "bld_farm",
+      "width": 256,
+      "height": 256,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "orthographic 26.6 degrees from vertical",
+      "sha256": "207fd33ec6812362bfd1ff218def616f06c5d127dfcc796c78c40d0cd307ca6e",
+      "visible_bounds": [
+        17,
+        14,
+        239,
+        242
+      ]
+    },
+    {
+      "name": "def_watchtower_base",
+      "width": 128,
+      "height": 128,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "36cb051795a2dc2f5e133d64e0e3e17963b515031cb6879d7d38cd7164a0980d",
+      "visible_bounds": [
+        14,
+        14,
+        114,
+        123
+      ]
+    },
+    {
+      "name": "def_wall_wood",
+      "width": 128,
+      "height": 128,
+      "facing": null,
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "orthographic 26.6 degrees from vertical",
+      "sha256": "f4b1a77011c131f5f9606bf48d99825162e7cbdf40c63dd6ac1680d2292a21bd",
+      "visible_bounds": [
+        6,
+        36,
+        122,
+        92
+      ]
+    },
+    {
+      "name": "dec_car_wreck",
+      "width": 256,
+      "height": 128,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "b03b71c8bcf7bd309196d796b23060f27f3abe4d45c527e0835ea5d3bb8c0b53",
+      "visible_bounds": [
+        13,
+        9,
+        243,
+        119
+      ]
+    },
+    {
+      "name": "unit_survivor",
+      "width": 128,
+      "height": 128,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "0a376ed03eabbab8ef9a297fcb731ea34a4c57911534ae9d32834298037a5d7c",
+      "visible_bounds": [
+        41,
+        41,
+        87,
+        83
+      ]
+    },
+    {
+      "name": "unit_defender",
+      "width": 128,
+      "height": 128,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "23b132e35d2d1ce305d2a931e7e29751a775f5da3ee7a838e28a3102e467075f",
+      "visible_bounds": [
+        41,
+        45,
+        114,
+        83
+      ]
+    },
+    {
+      "name": "def_watchtower_gunner",
+      "width": 128,
+      "height": 128,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "23b132e35d2d1ce305d2a931e7e29751a775f5da3ee7a838e28a3102e467075f",
+      "visible_bounds": [
+        41,
+        45,
+        114,
+        83
+      ]
+    },
+    {
+      "name": "zmb_walker",
+      "width": 128,
+      "height": 128,
+      "facing": "east",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "camera": "pure overhead",
+      "sha256": "8fa953acb6b8b99cbbbb42919ae01a078cd4b12d7e09064eb5f1401e1ed7b648",
+      "visible_bounds": [
+        46,
+        43,
+        110,
+        85
+      ]
+    }
+  ],
+  "status": "10 sample assets; not the full Phase 1 pack",
+  "renderer": "Blender Cycles",
+  "source": "Original procedural mesh modeling; no v1/v2 geometry or images reused"
+}
