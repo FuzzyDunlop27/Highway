@@ -53,8 +53,8 @@ struct KitButtonStyle: ButtonStyle {
         configuration.label
             .font(.headline)
             .foregroundStyle(text)
-            .padding(.horizontal, 18)
-            .frame(minWidth: 96, minHeight: 44)
+            .padding(.horizontal, 14)
+            .frame(minWidth: 80, minHeight: 44)
             .background(Kit.surface("ui_button_\(kind.rawValue)_\(state)", corner: 16))
     }
 }
@@ -84,7 +84,8 @@ struct KitLabel: View {
     var body: some View {
         HStack(spacing: 6) {
             Image("UI/ui_glyph_\(glyph)").renderingMode(.template).resizable().scaledToFit().frame(width: 18, height: 18)
-            Text(title)
+            Text(title).lineLimit(1)
         }
+        .fixedSize()
     }
 }

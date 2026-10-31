@@ -28,7 +28,7 @@ final class GameStore {
     /// The view the player chose (HUD button); remembered between launches. Starts at presentation.json defaultView.
     private(set) var preferredView: ProjectionKind = .isometric
     /// Flip to top-down while placing or moving (presentation.json default; the player can turn it off).
-    private(set) var autoTopDownWhilePlacing = true
+    private(set) var autoTopDownWhilePlacing = false
     @ObservationIgnored let lifecycle = AppLifecycle()
     /// Tile at the middle of the screen; the scene updates it so new ghosts appear in view.
     @ObservationIgnored var viewCenterTile = GridPoint(x: 0, y: 0)
@@ -104,11 +104,14 @@ final class GameStore {
     }
 
     private static let preferredViewKey = "view.preferred"
-    private static let autoTopDownKey = "view.autoTopDownWhilePlacing"
+    /// v2: D-022 made isometric placement the default, so choices saved under the old key (auto-flip on by default)
+    /// are ignored; only a choice made after the change counts.
+    private static let autoTopDownKey = "view.autoTopDownWhilePlacing.v2"
 
     /// View choices are presentation, not game state, so they live in UserDefaults rather than the save.
     private func loadViewPreferences(_ presentation: PresentationContent) {
         let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "view.autoTopDownWhilePlacing")  // pre-D-022 setting
         preferredView = defaults.string(forKey: Self.preferredViewKey).flatMap(ProjectionKind.init) ?? presentation.defaultView
         autoTopDownWhilePlacing = defaults.object(forKey: Self.autoTopDownKey) as? Bool ?? presentation.autoTopDownWhilePlacing
     }

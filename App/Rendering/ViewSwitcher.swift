@@ -12,6 +12,7 @@ extension GameScene {
         selection = nil
         zombies.reset()
         hordeWarning.reset()
+        placementOverlay.reset()
         self.style = style
         world.addChild(TerrainNodeFactory.make(map: loop.map, style: style, art: art))
         effects.reset(in: world)

@@ -37,6 +37,9 @@ enum BuildingNodeFactory {
     }
 
     /// `variant` and `aim` only matter for defenses (see DefenseNodeFactory).
+    /// Look-only: how see-through a 1×1 building is while it is being built.
+    static let underConstructionAlpha: CGFloat = 0.45
+
     static func make(_ building: Building, content: GameContent, style: ArtStyle, art: ArtRegistry,
                      variant: Int = 0, aim: Double? = nil) -> SKNode {
         let root = SKNode()
@@ -53,6 +56,11 @@ enum BuildingNodeFactory {
             let rules = content.buildings.rules.rubble
             let id = def.width == 1 && def.height == 1 ? rules.rubbleSprite1x1 : rules.rubbleSprite2x2
             body = art.sprite(id, width: def.width, height: def.height, category: ArtCategory.decoration, style: style)
+            root.addChild(body)
+        } else if !building.isComplete && def.width == 1 && def.height == 1 {
+            // 1×1 builds (walls, towers, traps) show their own picture, faded, instead of the oversized 2×2 scaffold.
+            body = art.sprite(def.sprite, width: 1, height: 1, category: def.category, style: style)
+            body.alpha = Self.underConstructionAlpha
             root.addChild(body)
         } else if !building.isComplete {
             let scaffold = content.buildings.rules.constructionSprites["\(def.width)x\(def.height)"] ?? def.sprite

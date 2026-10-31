@@ -19,8 +19,6 @@ final class PlacementController {
     private(set) var ghostDefId: String?
     /// Core's answer for the ghost's current spot (problem + red tiles).
     private(set) var check: PlacementCheck?
-    /// Finger tile minus ghost origin while dragging the ghost, so it doesn't jump under the finger.
-    @ObservationIgnored private var dragOffset: GridPoint?
 
     var isPositioning: Bool { ghostDefId != nil }
 
@@ -56,7 +54,6 @@ final class PlacementController {
         mode = id.map { .selected($0) } ?? .idle
         ghostDefId = nil
         check = nil
-        dragOffset = nil
     }
 
     /// Cancel goes back to the building that was being moved, or to nothing.
@@ -83,16 +80,6 @@ final class PlacementController {
         return ghostOrigin.footprintTiles(width: def.width, height: def.height).contains(tile)
     }
 
-    func beginDrag(at tile: GridPoint) {
-        dragOffset = GridPoint(x: tile.x - ghostOrigin.x, y: tile.y - ghostOrigin.y)
-    }
-
-    func drag(to tile: GridPoint, loop: GameLoop) {
-        guard let offset = dragOffset, let defId = ghostDefId, let def = loop.content.buildingDef(defId) else { return }
-        setGhostOrigin(GridPoint(x: tile.x - offset.x, y: tile.y - offset.y), def: def, loop: loop)
-    }
-
-    func endDrag() { dragOffset = nil }
 
     private func setGhostOrigin(_ origin: GridPoint, def: BuildingDef, loop: GameLoop) {
         let clamped = Self.clamped(origin, def: def, map: loop.map)

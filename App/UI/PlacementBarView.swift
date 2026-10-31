@@ -40,14 +40,15 @@ struct SelectionBarView: View {
 
     var body: some View {
         if let building = store.selectedBuilding, let content = store.content, let def = content.buildingDef(building.defId) {
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 Image(uiImage: ArtRegistry.shared.menuImage(for: def))
-                    .resizable().scaledToFit().frame(width: 60, height: 44)
+                    .resizable().scaledToFit().frame(width: 48, height: 40)
                 let maxHp = def.level(building.level)?.hp ?? 0
                 let isDamaged = building.isComplete && building.hp < maxHp
                 let isWreck = building.isRubble && building.constructionTicksLeft == 0
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(def.displayName) · Level \(building.level)").font(.headline).foregroundStyle(Kit.ink)
+                    Text("\(def.displayName) · L\(building.level)").font(.headline).foregroundStyle(Kit.ink)
+                        .lineLimit(1).minimumScaleFactor(0.8)
                     if isWreck {
                         Text("Destroyed").font(.caption.bold()).foregroundStyle(Kit.danger)
                     } else if !building.isComplete {
@@ -55,8 +56,9 @@ struct SelectionBarView: View {
                     } else if isDamaged {
                         HStack(spacing: 6) {
                             KitProgressBar(value: Double(building.hp) / Double(max(maxHp, 1)), fill: "ui_progress_danger",
-                                           label: "Health").frame(width: 110)
+                                           label: "Health").frame(width: 70)
                             Text("\(building.hp)/\(maxHp)").font(.caption.monospacedDigit()).foregroundStyle(Kit.danger)
+                                .lineLimit(1).fixedSize()
                         }
                     } else {
                         Text(def.workers > 0 ? "Workers \(building.staffed)/\(def.workers)" : "Ready")

@@ -16,6 +16,9 @@ final class GameScene: SKScene {
     let zombies = ZombieLayer()
     let effects = EventPlayer()
     let hordeWarning = HordeWarningOverlay()
+    let placementOverlay = PlacementOverlay()
+    /// Look-only: while dragging, the ghost sits this many screen points above the finger so it stays visible.
+    static let dragLiftPoints: CGFloat = 56
     var isSwitchingView = false
     private var lastUpdateTime: TimeInterval?
     private var isDraggingGhost = false
@@ -77,6 +80,9 @@ final class GameScene: SKScene {
         }
         hordeWarning.sync(edges: store.hordeStatus?.warningEdges ?? [], map: loop.map, style: style, parent: world)
         syncGhost(loop: loop, style: style)
+        let placing = store.placement.ghostDefId.flatMap { loop.content.buildingDef($0) }
+        placementOverlay.sync(def: placing, origin: store.placement.ghostOrigin, ghostNode: ghost?.node, loop: loop,
+                              style: style, world: world, buildings: buildingNodes.mapValues(\.node))
         syncSelection(loop: loop, style: style)
     }
 
@@ -150,7 +156,8 @@ final class GameScene: SKScene {
         store.tapped(tile: tile, drawnBuilding: hit)
     }
 
-    /// One finger: drags the ghost if the touch started on it, otherwise pans the camera.
+    /// One finger: drags the ghost if the touch started on it (its tiles or its picture), otherwise pans the camera.
+    /// While dragging, the ghost is centered a little above the finger so the finger never hides it.
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard let view, let loop = store.loop, let cameraController, !isSwitchingView else { return }
         let location = gesture.location(in: view)
@@ -158,22 +165,23 @@ final class GameScene: SKScene {
         case .began:
             let translation = gesture.translation(in: view)
             let start = CGPoint(x: location.x - translation.x, y: location.y - translation.y)
-            if let startTile = tile(atViewPoint: start), store.placement.ghostCovers(startTile, loop: loop) {
+            let onGhostPicture = ghost?.node.calculateAccumulatedFrame().contains(convertPoint(fromView: start)) ?? false
+            if let startTile = tile(atViewPoint: start),
+               store.placement.ghostCovers(startTile, loop: loop) || onGhostPicture {
                 isDraggingGhost = true
-                store.placement.beginDrag(at: startTile)
             } else {
                 isDraggingGhost = false
             }
             fallthrough
         case .changed:
             if isDraggingGhost {
-                if let tile = tile(atViewPoint: location) { store.placement.drag(to: tile, loop: loop) }
+                let lifted = CGPoint(x: location.x, y: location.y - Self.dragLiftPoints)
+                if let tile = tile(atViewPoint: lifted) { store.placement.moveGhost(centeredOn: tile, loop: loop) }
             } else {
                 cameraController.pan(byViewDelta: gesture.translation(in: view), viewSize: size)
                 gesture.setTranslation(.zero, in: view)
             }
         default:
-            if isDraggingGhost { store.placement.endDrag() }
             isDraggingGhost = false
         }
     }

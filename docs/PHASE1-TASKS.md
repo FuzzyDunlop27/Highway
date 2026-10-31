@@ -6,7 +6,7 @@ _Every task follows AGENTS.md: Core logic gets Swift Testing tests, numbers go i
 
 ## Approved update — isometric placement first (2026-10-31, D-022)
 
-**Owner approved; implementation pending.** This supersedes the earlier requirement to switch automatically to top-down for building. Codex has documented the direction first so Claude can coordinate implementation; this update changes no app code or preferences.
+**Owner approved; DONE 2026-10-31** (all four steps; acceptance checks passed in the iPhone 18 Pro simulator, screenshots in the shared notes folder `iso-placement-screenshots/`). This supersedes the earlier requirement to switch automatically to top-down for building. Codex has documented the direction first so Claude can coordinate implementation; this update changes no app code or preferences.
 
 **Goal:** stay in the attractive isometric world while placing and moving buildings. Retain the existing top-down view and manual toggle as a testing fallback until placement feels good on an iPhone. Do not delete its renderer/assets yet or spend time producing a matching top-down art pack for this change.
 
