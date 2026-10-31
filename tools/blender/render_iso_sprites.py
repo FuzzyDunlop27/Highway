@@ -45,7 +45,7 @@ MODELS = {
     'dec_rubble': (extra_models.rubble_1x1, 1, 1, 'unit'),
     'unit_survivor': (lambda: characters.human(False), 1, 1, 'unit'),
     'unit_defender': (lambda: characters.human(True), 1, 1, 'unit'),
-    'zmb_walker': (characters.zombie, 1, 1, 'unit'),
+    'zmb_walker': (zombie_models.walker, 1, 1, 'unit'),
     'zmb_runner': (zombie_models.runner, 1, 1, 'unit'), 'zmb_brute': (zombie_models.brute, 1, 1, 'unit'),
     'def_wall_metal': (defense_models.wall_metal, 1, 1, 'fit'),
     'def_mg_nest_base': (defense_models.mg_nest_base, 1, 1, 'fit'),

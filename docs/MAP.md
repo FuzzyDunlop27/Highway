@@ -177,3 +177,12 @@ Create a note from `_TEMPLATE.md` the first time a feature is built. Planned nam
 `economy.md` · `construction.md` · `jobs.md` · `pathing.md` · `combat.md` · `hordes.md` ·
 `research.md` · `offline-catchup.md` · `save.md` · `rendering-art.md` · `input.md` ·
 `hud-ui.md` · `notifications.md` · `settings.md` · `balance.md` (which JSON knobs to turn)
+
+## Art delivery and review
+- `HighwayHoldout_UI_Kit/`: `README.md`, `CLAUDE_HANDOFF.md`, `QA.md`, `manifest.json`, design tokens, PNG/SVG/Blender sources, generation scripts and four previews.
+- `HighwayHoldout_UI_Kit.zip`: portable UI art handoff.
+- `docs/reviews/2026-10-31-art-and-build-review.md`: verified GitHub baseline, two presentation findings and prioritized remaining work.
+
+- Isometric placement direction and acceptance checks: `docs/PHASE1-TASKS.md` → Approved update — isometric placement first; decision D-022; implementation notes in `docs/features/input.md`.
+
+- Zombie detail pass: `tools/blender/zombie_details.py` supplies faces, costumes and materials to `tools/blender/zombie_models.py`; `HighwayHoldout_Iso_Art/zombie-review/` contains original sprites and `comparison.png`.

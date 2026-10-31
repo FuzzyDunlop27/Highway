@@ -1,5 +1,7 @@
 # Feature: Input (camera, placement, selection)
 
+> **Approved direction, implementation pending (D-022):** improve isometric placement with a ground grid, clear footprint/validity feedback, draggable preview and temporary occluder fading. Once verified on iPhone, disable auto-top-down switching; keep the manual top-down fallback during testing. Existing behavior described below is unchanged in code. See `docs/PHASE1-TASKS.md` → Approved update — isometric placement first.
+
 ## Purpose
 Lets the player look around the map and place, move, select, and demolish buildings with simple touches.
 
@@ -30,6 +32,7 @@ Lets the player look around the map and place, move, select, and demolish buildi
 - (none yet)
 
 ## Change log
+- 2026-10-31 — Recorded owner-approved isometric placement direction and staged rollout (D-022); documentation only, implementation pending.
 - 2026-10-31 — 1B: keep placing after confirming a 1×1 defense; range ring on a selected tower.
 - 2026-10-31 — 1V: auto top-down while placing/moving, iso roof taps, per-view camera limits from JSON.
 - 2026-10-31 — Created (1A): camera pan/zoom/bounds, ghost preview with snap + red tiles, confirm, move, demolish.

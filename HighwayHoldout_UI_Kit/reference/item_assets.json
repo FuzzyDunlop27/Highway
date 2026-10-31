@@ -5,7 +5,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Food dimensional inventory icon"
+    "description": "Food dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_scrap",
@@ -13,7 +15,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Scrap dimensional inventory icon"
+    "description": "Scrap dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_wood",
@@ -21,7 +25,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Wood dimensional inventory icon"
+    "description": "Wood dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_medicine",
@@ -29,7 +35,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Medicine dimensional inventory icon"
+    "description": "Medicine dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_fuel",
@@ -37,7 +45,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Fuel dimensional inventory icon"
+    "description": "Fuel dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_ammo",
@@ -45,7 +55,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Ammo dimensional inventory icon"
+    "description": "Ammo dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_tools",
@@ -53,7 +65,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Tools dimensional inventory icon"
+    "description": "Tools dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_knowledge",
@@ -61,7 +75,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Knowledge dimensional inventory icon"
+    "description": "Knowledge dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_water",
@@ -69,7 +85,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Water dimensional inventory icon"
+    "description": "Water dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_battery",
@@ -77,7 +95,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Battery dimensional inventory icon"
+    "description": "Battery dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_cloth",
@@ -85,7 +105,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Cloth dimensional inventory icon"
+    "description": "Cloth dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_radio",
@@ -93,7 +115,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Radio dimensional inventory icon"
+    "description": "Radio dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_survivors",
@@ -101,7 +125,9 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Survivors dimensional inventory icon"
+    "description": "Survivors dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   },
   {
     "name": "ui_item_defender",
@@ -109,6 +135,8 @@
     "height": 512,
     "category": "item",
     "template": false,
-    "description": "Defender dimensional inventory icon"
+    "description": "Defender dimensional inventory icon",
+    "logical_width": 256.0,
+    "logical_height": 256.0
   }
 ]

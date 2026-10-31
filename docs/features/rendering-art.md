@@ -1,9 +1,13 @@
 # Feature: Rendering & art
 
+> **Approved direction, implementation pending (D-022):** improve isometric placement with a ground grid, clear footprint/validity feedback, draggable preview and temporary occluder fading. Once verified on iPhone, disable auto-top-down switching; keep the manual top-down fallback during testing. Existing behavior described below is unchanged in code. See `docs/PHASE1-TASKS.md` → Approved update — isometric placement first.
+
 ## Purpose
 Draws the map, decorations, buildings, defenses, zombies, and combat effects with SpriteKit in two views: **isometric** (normal, Tropico style) and **top-down** (building view). Real art where it exists for that view; otherwise a labeled placeholder (3D block in iso, flat box top-down).
 
 ## Files involved
+- `tools/blender/zombie_details.py` — zombie facial sculpt, costume details and local surface materials; composed by `zombie_models.py`.
+- `HighwayHoldout_Iso_Art/zombie-review/` — before sprites and comparison of the first zombie detail pass.
 - `HighwayHoldout_Blender_Study/` — original 3D art-direction study, editable Blender scene/model libraries and ten transparent sprite samples; not installed into the app.
 - `Core/Sources/HoldoutCore/Presentation/GridProjection.swift` — pure tile ↔ screen math for both views (tested in Core; the simulation never uses it, D-016).
 - `Core/Sources/HoldoutCore/Content/PresentationDefs.swift` — Codable for `Content/presentation.json`.
@@ -63,6 +67,8 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - `import_art.py` trims and refits sprites; the ChatGPT hand-off note asks not to trim (keeps unit pivots consistent). Matters for 1B units; see STATUS open questions.
 
 ## Change log
+- 2026-10-31 — Refined all three zombie models with facial features, weathered costume details and distinct roadside/athletic/workwear styling; rendered and imported nine iso sprites. Existing poses, facing rules and gameplay preserved.
+- 2026-10-31 — Recorded owner-approved isometric placement direction and staged rollout (D-022); documentation only, implementation pending.
 - 2026-10-31 — 1B App: zombies (facings, bob, health bar, hit flash), defenses (wall direction, flat traps, aiming turrets, range ring), effects from SimEvents, rubble + building health bars, horde warning arrows.
 - 2026-10-31 — Real isometric art rendered from the Blender study (+ stand-in models, darker ground tiles); isometric view no longer shows blocks for 1A buildings.
 - 2026-10-31 — 1V: two views (isometric + top-down), presentation.json, projection math in Core, depth sorting, iso placeholder blocks, view switching, namespaced art import.

@@ -4,6 +4,10 @@
 Built by AI agents for a non-engineer owner, so keep changes small, explained, and easy to find.
 
 ## Look here first
+Before the local docs below, check **Craft → Highway Holdout** for shared project documentation and the latest Claude/Codex handoff in every project chat. Read the relevant status, decisions, and task notes; at the end of each work session, record what changed, verification, blockers, and the next step there so both agents can track progress. Keep repo docs consistent with those updates. If Craft is unavailable or its folder cannot be found, say so explicitly; use the existing project page if accessible, and never claim a sync succeeded without checking it.
+
+Known Craft project page: **Highway Holdout — Zombie TD Game**, root block ID `c6f9fd54-e7d4-463b-4d01-f2e85218f679`. Resolve the current folder through Craft rather than creating duplicate project pages or folders.
+
 1. `docs/STATUS.md` — where we left off and the current milestone.
 2. `docs/MAP.md` — what every folder/file is for, and "to change X, look in Y".
 3. The one feature note for your task in `docs/features/` (if it exists).

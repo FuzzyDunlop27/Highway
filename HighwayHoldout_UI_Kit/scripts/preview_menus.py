@@ -35,7 +35,7 @@ def pause():
     surface(im,'ui_panel_dialog',(613,58,694,774))
     roundbox(im,(883,107,1037,147),19,'pale');text(im,(960,126),'DAY 12',19,'teal','demi','mm')
     text(im,(960,180),'Paused',52,'ink','bold','ma')
-    text(im,(960,258),'Take a moment. The town can wait.',25,'muted','ma')
+    text(im,(960,258),'Take a moment. The town can wait.',25,'muted','regular','ma')
     button(im,(669,328,582,100),'Resume',icon='play',size=30)
     button(im,(669,447,582,94),'Settings','secondary',icon='settings',size=28)
     button(im,(669,560,582,94),'Main menu','secondary',icon='home',size=28)

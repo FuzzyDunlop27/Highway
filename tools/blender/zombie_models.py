@@ -2,6 +2,9 @@
 """Rounded, cartoony green zombies (no gore) modeled facing +X like the study's characters. The walker is about
 1.3 units tall; the runner is ~0.9x and thinner, the brute ~1.6x and much wider."""
 from geometry import box, sphere, beam, rod
+import bpy
+import characters
+from zombie_details import surfaces, finish_parts, walker_costume, runner_costume, brute_costume
 
 
 def _face(x, z, s, mouth=True):
@@ -12,7 +15,7 @@ def _face(x, z, s, mouth=True):
         box('gaping mouth', (x - .005, 0, z - .07 * s), (.02, .1 * s, .045 * s), 'black', .01)
 
 
-def runner():
+def _runner():
     """Lean sprinter: leaning far forward, mid-stride, one arm reaching and one swung back."""
     for y, hip, knee, foot, tilt in ((.11, (0, .11, .5), (.17, .11, .3), (.24, .11, .08), 0),
                                      (-.11, (0, -.11, .5), (-.1, -.11, .3), (-.3, -.11, .2), -.6)):
@@ -42,7 +45,7 @@ def runner():
     sphere('trailing hand', (-.16, -.24, .62), (.07, .055, .05), 'zombie', 1)
 
 
-def brute():
+def _brute():
     """Hulking zombie: short thick legs, a huge chest, small hunched head and knuckle-dragging fists."""
     for y in (-.3, .3):
         box('big worn boot', (.06, y, .12), (.5, .3, .24), 'black', .07)
@@ -73,3 +76,23 @@ def brute():
         box('blunt tooth', (.71, y, 1.72), (.05, .05, .07), 'cream', .015)
     for y in (-.22, .22):
         sphere('small ear', (.4, y * 1.15, 1.79), (.06, .05, .08), 'zombie', 1)
+
+
+def _detailed(make, costume):
+    surfaces()
+    before = set(bpy.data.objects)
+    make()
+    costume()
+    finish_parts(before)
+
+
+def walker():
+    _detailed(characters.zombie, walker_costume)
+
+
+def runner():
+    _detailed(_runner, runner_costume)
+
+
+def brute():
+    _detailed(_brute, brute_costume)

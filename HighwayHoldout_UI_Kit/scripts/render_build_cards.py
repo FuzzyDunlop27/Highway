@@ -1,4 +1,4 @@
-"""Render generous three-quarter thumbnails from the approved Blender study models."""
+"""Render generous three-quarter thumbnails from the Blender study models."""
 import bpy,sys,json
 from pathlib import Path
 from mathutils import Vector
@@ -19,6 +19,7 @@ data=bpy.data.cameras.new('Menu thumbnail camera');data.type='ORTHO';camera=bpy.
 records=[];loaded=[]
 for key,source in [('hq','bld_hq'),('shelter','bld_shelter'),('farm','bld_farm'),('watchtower','def_watchtower_base'),('wall','def_wall_wood')]:
     library=ROOT.parent/'HighwayHoldout_Blender_Study/models'/f'{source}.blend'
+    if not library.exists():library=ROOT/'source_blender/Build_Menu_Models.blend'
     with bpy.data.libraries.load(str(library),link=False) as (src,dst):dst.collections=[source]
     col=dst.collections[0];scene.collection.children.link(col);loaded.append(col);bpy.context.view_layer.update()
     camera.location=(6,-8,6);point_camera(camera,(0,0,.5));inv=camera.rotation_euler.to_matrix().transposed()
@@ -29,7 +30,7 @@ for key,source in [('hq','bld_hq'),('shelter','bld_shelter'),('farm','bld_farm')
     data.ortho_scale=max(xmax-xmin,(ymax-ymin)*4/3)*1.16
     name='ui_build_'+key;scene.render.filepath=str(ROOT/'png'/f'{name}.png')
     print('RENDER',name,flush=True);bpy.ops.render.render(write_still=True)
-    records.append(dict(name=name,width=512,height=384,logical_width=128,logical_height=96,category='building_thumbnail',template=False,description=key.capitalize()+' three-quarter menu illustration'))
+    records.append(dict(name=name,width=512,height=384,logical_width=256,logical_height=192,category='building_thumbnail',template=False,description=key.capitalize()+' three-quarter menu illustration'))
     col.hide_render=True
 loaded[0].hide_render=False
 bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'source_blender/Build_Menu_Models.blend'))

@@ -4,6 +4,22 @@ _Status: **1V done** (2026-10-31). Next: 1B. Written 2026-10-31 after 1A passed 
 _Milestone goals and exit checks come from `docs/PHASE1-PLAN.md`; this file breaks them into tasks an agent can run in order._
 _Every task follows AGENTS.md: Core logic gets Swift Testing tests, numbers go in `Content/*.json`, and the feature note, MAP, and STATUS are updated._
 
+## Approved update — isometric placement first (2026-10-31, D-022)
+
+**Owner approved; implementation pending.** This supersedes the earlier requirement to switch automatically to top-down for building. Codex has documented the direction first so Claude can coordinate implementation; this update changes no app code or preferences.
+
+**Goal:** stay in the attractive isometric world while placing and moving buildings. Retain the existing top-down view and manual toggle as a testing fallback until placement feels good on an iPhone. Do not delete its renderer/assets yet or spend time producing a matching top-down art pack for this change.
+
+**Implementation order:**
+1. Keep the current behavior working while improving isometric placement. Show a clear ground grid during placement/movement and a distinct footprint outline with valid/invalid feedback and a readable reason when blocked.
+2. Support accurate tile-snapped ghost dragging with explicit Confirm/Cancel. Preserve camera pan/pinch, Core placement validation, move/cancel semantics, and repeated 1×1 defense placement. Reuse existing ghost/input behavior where it already works.
+3. Temporarily fade buildings that obscure the placement footprint or ghost, so tiles behind tall structures such as HQ remain usable. Restore opacity on movement, Confirm, Cancel and leaving placement. Fading is presentation-only and must not affect collision or simulation.
+4. After the checks below pass, disable the automatic top-down switch for normal placement/movement. Review both the presentation default and persisted view preferences so existing installs do not silently retain the old auto-switch behavior. Keep the manual top-down fallback available during testing; removal is a later decision.
+
+**Acceptance checks:** on an iPhone-sized landscape screen, place and move 1×1, 2×2 and 3×3 footprints in open ground, behind HQ, beside walls and at map edges. Confirm invalid spots/costs remain blocked with clear feedback; Cancel makes no change; camera gestures and repeated wall placement still work; occluding buildings restore correctly; and Confirm/Cancel cause no automatic camera-view flip after rollout. Check fresh and existing preferences, manual top-down fallback, and app relaunch. Capture screenshots of the grid, a valid/invalid ghost and placement behind a faded building. Run the app build and relevant tests; add regression tests for changed logic per AGENTS.md.
+
+**Coordination:** finish outstanding 1B defense exit checks before declaring 1B complete. This is an explicitly approved placement improvement, not a new gameplay milestone. Claude should read this section before changing view/placement code and record implementation status in STATUS and input.md. The historical 1V checklist below records what was previously built; its auto-flip behavior is superseded by this update.
+
 ## Order
 | # | Milestone | What the owner gets | Size |
 |---|---|---|---|
@@ -18,10 +34,10 @@ _Every task follows AGENTS.md: Core logic gets Swift Testing tests, numbers go i
 ---
 
 ## Owner decisions
-**Decided (2026-10-31):** two views only. **Isometric ("full Tropico style")** is the normal view. **Top-down** is the building view, for easy placement on a clear grid. The in-between "3/4 top-down" option is dropped.
+**Earlier decision (superseded for placement by D-022 above):** two views only. **Isometric ("full Tropico style")** is the normal view. **Top-down** is the building view, for easy placement on a clear grid. The in-between "3/4 top-down" option is dropped.
 
 Still open (agent's recommendation first):
-1. **Flip to top-down automatically when placing/moving?** *Recommended: yes*, with a quick ~0.3 s cross-fade that keeps the same spot centered, and back to isometric on Confirm/Cancel. A HUD button also flips views by hand at any time, and a setting turns the auto-flip off.
+1. **Automatic top-down placement:** superseded by D-022. Improve and verify isometric placement first, then disable auto-flip; retain manual top-down for testing.
 2. **Facings for moving things in isometric:** 4 diagonal facings (draw 2, mirror 2) for survivors/zombies/defenders, and 8 for turret guns (draw 5, mirror 3). *Recommended.* In top-down they keep one image rotated by code.
 3. **Art import:** no trimming for isometric art (it depends on exact ground points). *Recommended.*
 4. **Art for each view:** the top-down view keeps using today's top-down pack (`HighwayHoldoutAssets/`). The isometric view needs its own pack, likely from the new Blender study (`HighwayHoldout_Blender_Study/`, whose samples are still overhead and must be re-rendered from the isometric camera in `docs/graphics-spec-iso.md`). Until then the isometric view uses labeled 3D placeholder blocks. *Recommended.*

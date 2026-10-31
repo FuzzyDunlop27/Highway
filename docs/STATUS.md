@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-10-31 (1V done)
+**Last updated:** 2026-10-31 (1B built; visual exit checks pending; UI kit packaged)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -12,6 +12,10 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- Zombie art detail pass: refined walker, runner and brute Blender models with distinct costumes, facial sculpt and surface detail; imported nine isometric sprites. Before/after: `HighwayHoldout_Iso_Art/zombie-review/comparison.png`. Sprite validation passed; review moving hordes at gameplay zoom next.
+- Documentation coordination (2026-10-31): owner designated **Craft → Highway Holdout** as shared documentation for Claude/Codex in every project chat. Persisted the read/update workflow and known Craft project-page ID in `AGENTS.md` (also read by `CLAUDE.md`). Connector currently exposes the project page but no matching folder; use that page for the handoff until the folder is visible. Documentation-only change; no app tests needed.
+- Owner approved isometric-first placement (D-022). Codex updated build/input/rendering docs before implementation: grid, footprint feedback, drag preview and occluder fading first; disable auto-top-down only after iPhone validation; retain manual top-down for testing. **Docs only; app behavior unchanged.**
+- Art/repo review: verified GitHub main at 860232a; independently passed 110 Core tests and simulator build. Packaged 89-asset UI kit with source files and four previews. See `docs/reviews/2026-10-31-art-and-build-review.md` for facing-wrap and metal-wall thumbnail findings and next work.
 - 1B Defense built (parallel agents, merged on main): pathing/flow field, zombie movement + wall bashing + traps, horde clock/composer/spawning/resolution/HQ fall, repair (+ cost preview), towers, App zombies/defenses/FX/horde HUD/banners/debug menu, iso art for 1B. 110 Core tests pass; app builds. Simulator: day-1 horde started, came down the north road, watchtower shot them, "Held!" (screenshots in shared notes app-1b-screenshots/). Headless probe: walled town → zombies from both edges target the weakened wall, breach it, tower holds.
 - **1B exit check not fully finished**: still to watch on screen a horde bash through a wall (walled save is set up in the simulator), check wall mirroring N-S, 1x1 stay-in-mode, range ring, ~150-zombie frame rate. Then update MAP (agents' lists in their reports) and close 1B.
 - Isometric view now shows **real art**: rendered from the Blender study's 3D models with `tools/blender/render_iso_sprites.py` (HQ, shelter, farm, walls, watchtower + gunner, car wreck, tree, rubble, units with facings), plus Claude stand-in models in the same style for scavenger, workshop, barracks, storage, scaffolding, rubble and the 5 ground tiles (D-019). Menus use ChatGPT's **UI kit** (`HighwayHoldout_UI_Kit/`): dark resource chips, kit build cards with 3/4 pictures, kit buttons/panels/glyphs. Checked in the simulator (screenshots in the shared notes folder, app-iso-art-screenshots/). 52 Core tests pass.
@@ -25,11 +29,12 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **1B Defense** per `docs/PHASE1-TASKS.md` (Core session first, then App). Waiting for the owner to play 1V for a few minutes and say go.
-- Art: isometric art can now be made against `docs/graphics-spec-iso.md` (the Blender study needs re-rendering with that camera) and imported with `--view iso`.
+- Claude: read **Approved update — isometric placement first** at the top of `PHASE1-TASKS.md` before touching placement/view switching. Implement its staged checklist; preserve the pending 1B exit checks. No matching top-down art refresh is needed for this direction.
+- Finish **1B Defense** visual exit checks listed above, then proceed to 1C. Fix the two presentation findings in the review and reconcile MAP with the merged implementation.
+- Art: isometric renders and the UI kit are integrated. Remaining menu thumbnails and real inventory/pause screens are recommended next; see the review and UI handoff.
 
 ## Decided
-- The 8-bit art experiment is abandoned at the owner's request. The app still uses the original imported pack; the Blender study is a separate proposed visual direction.
+- The 8-bit art experiment is abandoned at the owner's request. The app uses the original pack for top-down, Blender-derived isometric sprites, and the new UI kit.
 - Xcode project exists (D-014); `App/` is a synced folder; agents never edit `.pbxproj`.
 - How to run: open `HighwayHoldout.xcodeproj`, pick an iPhone simulator, press Run (or the `xcodebuild` command in AGENTS.md).
 - Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 17.0 (see `docs/research/tech-findings.md`).
@@ -37,7 +42,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Core tests read the repo's `Content/` folder; the App passes its bundled copy (D-010).
 
 ## Open questions (owner decides)
-- Two views built (isometric normal, top-down for building, auto-flip on). Iso facings default to 4 for units/zombies and 8 for turrets (`presentation.json`); say if you want 8 for everything.
+- View direction is decided in D-022 (implementation pending). Iso facings remain 4 for units/zombies and 8 for turrets; changing those is a separate choice.
 - Final game name (Highway Holdout is a working title).
 - Balance: should survivors eat food (upkeep), so food stays useful after ~60 min? (`resources.json foodUpkeepPerSurvivorPerMin`, currently 0; Core rejects non-zero until upkeep is built)
 - Balance: should defenders/survivors ever die permanently? (currently knocked out for 2 min, `units.json`)

@@ -26,7 +26,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - UI never changes game state; every action is a Core `Command` sent through `GameStore`.
 - `GameStore.resources` / `selectedBuilding` / `hordeStatus` are reassigned only when they change (the horde countdown only to the whole second), so SwiftUI doesn't redraw 60×/s.
 - Banners come from events drained in `GameStore.advance`; a newer banner replaces the one showing.
-- Repair/Rebuild sends `.repair(id:)`; Core decides cost and time. The button shows no price because Core has no repair-cost preview yet.
+- Repair/Rebuild sends `.repair(id:)`; Core decides cost and time. The button shows the current repair-cost preview.
 - The debug menu and `GameStore.sendDebug` exist only in DEBUG builds.
 - If `Content/` fails to load, a full-screen message shows the loader's error (file + problem) instead of the game.
 
@@ -34,6 +34,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - No speed buttons yet (pause/1x/2x is 1C).
 
 ## Change log
+- 2026-10-31 — Finished portable UI art delivery: 89 PNGs, editable sources, manifest/cap insets, four previews and Claude handoff; review recorded under docs/reviews. Inventory/pause previews remain design references.
 - 2026-10-31 — 1B App: horde chip + debug menu, horde banners, build menu tabs (Buildings / Defenses), health bar + Repair/Rebuild in the selection bar.
 - 2026-10-31 — Adopted ChatGPT's UI kit for the HUD chips, build cards, buttons, bars, glyphs, and view button.
 - 2026-10-31 — View toggle button + view preferences in GameStore (1V).
