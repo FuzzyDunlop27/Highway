@@ -20,6 +20,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Offline credit cap (12h), what progresses while away, Horde Alert timing | `Content/offline.json` |
 | Which number to change when it feels too slow/hard | `docs/features/balance.md` |
 | Map layout, roads, spawn edges | `Content/maps/phase1_exit.json` |
+| How zombies / defenses / effects look | `App/Rendering/Nodes/{Zombie,Defense,FX}NodeFactory.swift` |
+| Horde chip, banners, debug menu | `App/UI/HordeChipView.swift`, `HordeBannerView.swift`, `DebugMenuView.swift` |
+| Horde timing, size, mix, edges | `Content/hordes.json`; code `Core/.../Systems/Hordes/` (notes: `docs/features/hordes.md`) |
+| Zombie routes, bashing, traps | `docs/features/pathing.md`; code `Core/.../Systems/Pathing/`, `Systems/Combat/ZombieMovement.swift` |
 | Which zombie a tower shoots | `Core/Sources/HoldoutCore/Systems/Combat/TargetingSystem.swift` |
 | How zombies choose a route / pile up at walls | `Core/Sources/HoldoutCore/Systems/Pathing/FlowField.swift` |
 | What happens when HQ falls | `Core/Sources/HoldoutCore/Systems/Hordes/HordeOutcome.swift` |
@@ -103,7 +107,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] GridProjection.swift: tile ↔ screen math for both views (App uses it; not simulation)
+│  │  ├─ Presentation/      [x] GridProjection.swift (tile ↔ screen), Facing.swift (facing image choice) — App only
+│  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
 │  │  │  ├─ [x] ResourceDefs.swift (+ Cost) / BuildingDefs.swift / MapDef.swift / EconomyDefs.swift
@@ -112,15 +117,19 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ Economy/        [x] EconomySystem, StorageRules, Staffing, ResourceSnapshot
 │  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish, build timers)
 │  │  │  ├─ [ ] Jobs/           Assign survivors to work; defender training & garrison
-│  │  │  ├─ [ ] Pathing/        FlowField.swift — cost grid toward HQ; walls = high cost
-│  │  │  ├─ [ ] Combat/         TargetingSystem (nearest-to-HQ first), damage, traps, wall bashing
-│  │  │  ├─ [ ] Hordes/         Horde clock, waiting-at-edge hordes, HordeOutcome (HQ falls)
+│  │  │  ├─ Pathing/        [x] FlowField (Dijkstra cost to HQ; walls cost by hp), FlowFieldCache (rebuild on change)
+│  │  │  ├─ Combat/         [x] ZombieMovement, WallBashing, Traps (spikes/barbed wire), TargetingSystem, TowerFiring
+│  │  │  ├─ Hordes/         [x] HordeSystem (clock, warning, spawn), HordeComposer (size/mix/edges),
+│  │  │  │                  HordeResolution (deaths, loot, rubble), HordeOutcome (held bonus, HQ fall), HordeStatus
+│  │  │  ├─ Construction/   [x] RepairSystem (repair damage at once, rebuild rubble on a timer; cost preview)
 │  │  │  ├─ [ ] Research/       Knowledge items (stored on Group, not Base)
 │  │  │  └─ [ ] OfflineCatchUp/ Time-factor catch-up: resources/builds only, never attacks
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
 │     ├─ [x] TestSupport.swift  Finds repo Content/ via #filePath, builds test games
-│     ├─ [x] Presentation/GridProjectionTests.swift
+│     ├─ [x] Presentation/GridProjectionTests.swift, FacingTests.swift
+│     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
+│     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
 │     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
@@ -136,11 +145,18 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] DepthSort.swift      ZLayer draw order; front-to-back sorting
 │  │  ├─ [x] DirectionalSprite.swift  facing images (_se, _ne, … + mirroring) or rotate one image
 │  │  ├─ [x] ViewSwitcher.swift   fade between isometric and top-down, keep the spot centered
+│  │  ├─ [x] ZombieLayer.swift    one node per Core zombie, synced every frame
+│  │  ├─ [x] EventPlayer.swift    Core events → effects (capped), remembers tower aim
+│  │  ├─ [x] HordeWarningOverlay.swift  warning arrows + edge highlight at warned spawn edges
 │  │  └─ Nodes/                   One factory per entity type:
 │  │     ├─ [x] TerrainNodeFactory.swift   ground tiles + decorations; ZLayer draw order
-│  │     ├─ [x] BuildingNodeFactory.swift  buildings + (for now) defenses; scaffolding + progress bar
-│  │     ├─ [x] GhostNodeFactory.swift     placement ghost (green/red tile polygons) + selection outline
-│  │     └─ [ ] Defense/Unit/Zombie/FXNodeFactory.swift  (1B)
+│  │     ├─ [x] BuildingNodeFactory.swift  buildings; scaffolding, rubble, health bar; defenses → DefenseNodeFactory
+│  │     ├─ [x] DefenseNodeFactory.swift   walls turned to their line, flat traps, aiming turret tops
+│  │     ├─ [x] ZombieNodeFactory.swift    zombie facing image, bob, health bar, hit flash, crowd spread
+│  │     ├─ [x] FXNodeFactory.swift        tracer, muzzle flash, goo, dust, shake, trap flash
+│  │     ├─ [x] BarNodeFactory.swift       small progress / health bars
+│  │     ├─ [x] GhostNodeFactory.swift     placement ghost (green/red tile polygons), selection outline, range ring
+│  │     └─ [ ] UnitNodeFactory.swift      survivors/defenders (1C)
 │  ├─ Input/
 │  │  ├─ [x] CameraController.swift     Pan/pinch-zoom, bounds
 │  │  ├─ [x] PlacementController.swift  Mode (select/place/move), ghost spot, validity, Confirm command
@@ -150,6 +166,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] GameRootView.swift  SpriteView + overlays, view toggle button, ArtIcon, notice banner, load-error screen
 │  │  ├─ [x] HUDView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
+│  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
+│  │  ├─ [x] DebugMenuView.swift  DEBUG only (long-press horde chip): horde now, +500, kill all
 │  │  ├─ [ ] SettingsView.swift         (1D)
 │  │  └─ [ ] WelcomeBackView.swift      Summary after Time-factor catch-up (1D)
 │  ├─ Platform/

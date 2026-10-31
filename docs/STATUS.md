@@ -2,22 +2,23 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-10-31 (1B built; visual exit checks pending; UI kit packaged)
+**Last updated:** 2026-10-31 (1B done; isometric placement work next)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
 - **Milestone 1A — Foundation** — DONE (2026-10-31).
-- **Milestone 1V — Two views** — DONE (2026-10-31). Exit check passed in the simulator. Next: **1B Defense** (`docs/PHASE1-TASKS.md`).
+- **Milestone 1V — Two views** — DONE (2026-10-31).
+- **Milestone 1B — Defense** — DONE (2026-10-31). Next: isometric-first placement (D-022), then **1C Depth**.
 - Milestones: 1A Foundation → **1V Two views (owner: isometric + top-down for placing)** → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **1B Defense DONE (2026-10-31).** On-screen exit check passed in the simulator: zombies walked to a weakened wall in a walled town, broke through (rubble), poured in, the tower held ("Held!"); N–S walls draw mirrored correctly; repeated wall placement stays in placing mode; range ring shows as an ellipse; a day-40 horde (35 zombies, mostly brutes) ran at 60 fps / 1,416 nodes (simulator; 150 zombies isn't reachable with current content). Fixed the two review findings (4-facing wrap near east, test-first, via Core/Presentation/Facing.swift; metal-wall menu art). DEBUG builds now show FPS + node count. 113 tests pass. MAP reconciled with the 1B merge. Committed Codex's pending work and removed the merged agent worktrees.
 - Zombie art detail pass: refined walker, runner and brute Blender models with distinct costumes, facial sculpt and surface detail; imported nine isometric sprites. Before/after: `HighwayHoldout_Iso_Art/zombie-review/comparison.png`. Sprite validation passed; review moving hordes at gameplay zoom next.
 - Documentation coordination (2026-10-31): owner designated **Craft → Highway Holdout** as shared documentation for Claude/Codex in every project chat. Persisted the read/update workflow and known Craft project-page ID in `AGENTS.md` (also read by `CLAUDE.md`). Connector currently exposes the project page but no matching folder; use that page for the handoff until the folder is visible. Documentation-only change; no app tests needed.
 - Owner approved isometric-first placement (D-022). Codex updated build/input/rendering docs before implementation: grid, footprint feedback, drag preview and occluder fading first; disable auto-top-down only after iPhone validation; retain manual top-down for testing. **Docs only; app behavior unchanged.**
 - Art/repo review: verified GitHub main at 860232a; independently passed 110 Core tests and simulator build. Packaged 89-asset UI kit with source files and four previews. See `docs/reviews/2026-10-31-art-and-build-review.md` for facing-wrap and metal-wall thumbnail findings and next work.
 - 1B Defense built (parallel agents, merged on main): pathing/flow field, zombie movement + wall bashing + traps, horde clock/composer/spawning/resolution/HQ fall, repair (+ cost preview), towers, App zombies/defenses/FX/horde HUD/banners/debug menu, iso art for 1B. 110 Core tests pass; app builds. Simulator: day-1 horde started, came down the north road, watchtower shot them, "Held!" (screenshots in shared notes app-1b-screenshots/). Headless probe: walled town → zombies from both edges target the weakened wall, breach it, tower holds.
-- **1B exit check not fully finished**: still to watch on screen a horde bash through a wall (walled save is set up in the simulator), check wall mirroring N-S, 1x1 stay-in-mode, range ring, ~150-zombie frame rate. Then update MAP (agents' lists in their reports) and close 1B.
 - Isometric view now shows **real art**: rendered from the Blender study's 3D models with `tools/blender/render_iso_sprites.py` (HQ, shelter, farm, walls, watchtower + gunner, car wreck, tree, rubble, units with facings), plus Claude stand-in models in the same style for scavenger, workshop, barracks, storage, scaffolding, rubble and the 5 ground tiles (D-019). Menus use ChatGPT's **UI kit** (`HighwayHoldout_UI_Kit/`): dark resource chips, kit build cards with 3/4 pictures, kit buttons/panels/glyphs. Checked in the simulator (screenshots in the shared notes folder, app-iso-art-screenshots/). 52 Core tests pass.
 - 1V Two views: the game opens in **isometric** (Tropico style, labeled 3D placeholder blocks until iso art exists) and flips to **top-down** (real art) while placing/moving, then back. HUD button (top right) flips by hand; long-press it to turn the auto-flip off. New `Content/presentation.json`; projection math in Core with 6 new tests (52 pass); depth sorting, roof taps, per-view camera bounds; `tools/import_art.py --view topdown|iso` (art now in `Art/TopDown`, `Art/Iso`, `Art/UI`); isometric art guide `docs/graphics-spec-iso.md` + diamond templates in `docs/art-templates/`.
 - 1V exit check (iPhone 18 Pro): opened in iso on the 1A save, Build → flipped to top-down with the ghost, Confirm → flipped back with the new farm, roof tap selected the HQ, manual toggle both ways, Move → top-down, Cancel → back, zoomed out to the whole diamond.
@@ -30,7 +31,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 
 ## Next step
 - Claude: read **Approved update — isometric placement first** at the top of `PHASE1-TASKS.md` before touching placement/view switching. Implement its staged checklist; preserve the pending 1B exit checks. No matching top-down art refresh is needed for this direction.
-- Finish **1B Defense** visual exit checks listed above, then proceed to 1C. Fix the two presentation findings in the review and reconcile MAP with the merged implementation.
+- Isometric-first placement per PHASE1-TASKS "Approved update" (grid + footprint + reason → finger-offset drag → occluder fading → acceptance checklist → turn off auto top-down). Then 1C.
 - Art: isometric renders and the UI kit are integrated. Remaining menu thumbnails and real inventory/pause screens are recommended next; see the review and UI handoff.
 
 ## Decided

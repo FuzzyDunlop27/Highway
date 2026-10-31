@@ -13,12 +13,19 @@ struct GameRootView: View {
         _scene = State(initialValue: GameScene(store: store))
     }
 
+    #if DEBUG
+    /// DEBUG builds show frame rate and node count in the corner (performance checks with big hordes).
+    private static let spriteDebug: SpriteView.DebugOptions = [.showsFPS, .showsNodeCount]
+    #else
+    private static let spriteDebug: SpriteView.DebugOptions = []
+    #endif
+
     var body: some View {
         if let error = store.loadError {
             LoadErrorView(message: error)
         } else {
             ZStack {
-                SpriteView(scene: scene, options: [.ignoresSiblingOrder])
+                SpriteView(scene: scene, options: [.ignoresSiblingOrder], debugOptions: Self.spriteDebug)
                     .ignoresSafeArea()
                 VStack(spacing: 8) {
                     HUDView(store: store)
