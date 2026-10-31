@@ -65,8 +65,10 @@ struct SelectionBarView: View {
                 }
                 Spacer()
                 if isWreck || isDamaged {
-                    // Core has no repair-cost preview yet, so the button shows no price (Core checks and charges it).
-                    Button { store.repairSelected() } label: { KitLabel(glyph: "build", title: isWreck ? "Rebuild" : "Repair") }
+                    let price = store.loop?.repairCost(id: building.id).map { " · " + PlacementMessages.costText($0) } ?? ""
+                    Button { store.repairSelected() } label: {
+                        KitLabel(glyph: "build", title: (isWreck ? "Rebuild" : "Repair") + price)
+                    }
                         .buttonStyle(KitButtonStyle(kind: .primary))
                         .accessibilityIdentifier("repairButton")
                 }

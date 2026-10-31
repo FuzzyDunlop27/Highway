@@ -36,6 +36,13 @@ struct RepairSystemTests {
         #expect(loop.state.base.stock.scrap >= 800)
     }
 
+    @Test func repairCostPreviewMatchesWhatRepairCharges() throws {
+        let (loop, id) = try withFarm { $0.hp = 120 }
+        let preview = try #require(loop.repairCost(id: id))
+        #expect(loop.send(.repair(id: id)) == .success(.repairStarted(cost: preview)))
+        #expect(loop.repairCost(id: id) == nil)  // full health now
+    }
+
     private enum RepairTestError: Error { case notPlaced }
 
     @Test func damagedBuildingCostsAShareOfItsLevelCostAndTime() throws {

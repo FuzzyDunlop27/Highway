@@ -106,6 +106,12 @@ public final class GameLoop {
         ConstructionSystem.checkMove(id: id, to: origin, state: state, content: content)
     }
 
+    /// What `.repair(id:)` would cost right now, or nil if the building needs no repair (for the Repair button).
+    public func repairCost(id: BuildingID) -> Cost? {
+        guard let b = state.base.building(id), let level = content.buildingDef(b.defId)?.level(b.level) else { return nil }
+        return RepairSystem.quote(b, level: level, content: content)?.cost
+    }
+
     /// Day, countdown, warned edges, and zombies left, for the HUD.
     public var hordeStatus: HordeStatus { HordeStatus.make(state: state, content: content) }
 

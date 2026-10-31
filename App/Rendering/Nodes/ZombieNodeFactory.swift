@@ -42,10 +42,21 @@ final class ZombieNode {
         return CGPoint(x: root.position.x, y: root.position.y + body.frame.midY)
     }
 
+    /// Look-only: how far (tiles) a zombie may be drawn off its Core position, so packs don't stack on one spot.
+    static let crowdSpreadTiles = 0.35
+
+    /// A fixed offset per zombie in -spread/2...spread/2 (golden-ratio hash of the id; same every frame).
+    private static func crowdOffset(_ id: ZombieID, salt: Double) -> Double {
+        let f = (Double(id) * salt + salt).truncatingRemainder(dividingBy: 1)
+        return (f - 0.5) * crowdSpreadTiles
+    }
+
     func update(_ zombie: Zombie, def: ZombieDef?, style: ArtStyle, art: ArtRegistry) {
         let geometry = style.geometry
-        root.position = geometry.standingAnchor(gx: zombie.x, gy: zombie.y)
-        root.zPosition = ZLayer.sorted(depth: geometry.depth(gx: zombie.x, gy: zombie.y))
+        // Core walks every zombie down the same path line; spread them a little so a horde reads as a crowd.
+        let gx = zombie.x + Self.crowdOffset(zombie.id, salt: 0.618), gy = zombie.y + Self.crowdOffset(zombie.id, salt: 0.414)
+        root.position = geometry.standingAnchor(gx: gx, gy: gy)
+        root.zPosition = ZLayer.sorted(depth: geometry.depth(gx: gx, gy: gy))
         let baseId = def?.sprite ?? zombie.defId
         let angle = geometry.screenAngle(gx: zombie.x, gy: zombie.y, heading: zombie.heading)
         var next = DirectionalSprite.frame(baseId: baseId, screenAngle: angle, facings: style.view.facings,
