@@ -18,6 +18,7 @@ STUDY = REPO / 'HighwayHoldout_Blender_Study'
 sys.path[:0] = [str(STUDY / 'scripts'), str(HERE)]
 from geometry import init_materials, capture, point_camera  # noqa: E402
 import buildings, props, characters, staging, extra_models   # noqa: E402
+import defense_models, zombie_models  # noqa: E402
 
 OUT = REPO / 'HighwayHoldout_Iso_Art' / 'png'
 TILE_UNITS = 1.55          # study units per map tile (the HQ is ~4.6 units across its 3 tiles)
@@ -45,13 +46,21 @@ MODELS = {
     'unit_survivor': (lambda: characters.human(False), 1, 1, 'unit'),
     'unit_defender': (lambda: characters.human(True), 1, 1, 'unit'),
     'zmb_walker': (characters.zombie, 1, 1, 'unit'),
+    'zmb_runner': (zombie_models.runner, 1, 1, 'unit'), 'zmb_brute': (zombie_models.brute, 1, 1, 'unit'),
+    'def_wall_metal': (defense_models.wall_metal, 1, 1, 'fit'),
+    'def_mg_nest_base': (defense_models.mg_nest_base, 1, 1, 'fit'),
+    'def_spikes': (defense_models.spikes, 1, 1, 'fit'), 'def_barbwire': (defense_models.barbwire, 1, 1, 'fit'),
     'tile_grass': (lambda: extra_models.ground_tile('grass', 'grass'), 1, 1, 'tile'),
     'tile_dirt': (lambda: extra_models.ground_tile('dirt', 'pebbles'), 1, 1, 'tile'),
     'tile_asphalt': (lambda: extra_models.ground_tile('asphalt'), 1, 1, 'tile'),
     'tile_asphalt_line': (lambda: extra_models.ground_tile('asphalt', 'lane'), 1, 1, 'tile'),
     'tile_concrete': (lambda: extra_models.ground_tile('stone', 'cracks'), 1, 1, 'tile'),
 }
-GUNNER = (lambda: characters.human(True), 0.725, 2.08)  # maker, scale vs tower, deck height in tower units
+# Turret tops, rendered on their base's canvas: base name -> (top name, maker, scale vs base, height in base units)
+TURRETS = {
+    'def_watchtower_base': ('def_watchtower_gunner', lambda: characters.human(True), 0.725, 2.08),
+    'def_mg_nest_base': ('def_mg_nest_gun', defense_models.mg_gun, 1.2, defense_models.MG_PIVOT_Z),
+}
 
 
 def args():
@@ -127,8 +136,8 @@ def main():
     scene.collection.objects.link(cam)
     scene.camera = cam
     for name, (maker, w, h, kind) in MODELS.items():
-        if only and name not in only:
-            continue
+        if only and name not in only and TURRETS.get(name, ('',))[0] not in only:
+            continue  # asking for a turret top (e.g. def_mg_nest_gun) renders its base too, so they share a canvas
         col = capture(name, maker)
         bpy.context.scene.collection.children.unlink(col)
         lo, hi = bounds(col)
@@ -143,12 +152,12 @@ def main():
         else:
             base = place(scene, col, -center * scale, scale, 0)
             frames = [(f'{name}.png', [base])]
-            if name == 'def_watchtower_base':
-                maker_g, rel, deck = GUNNER
-                gcol = capture('def_watchtower_gunner', maker_g)
+            if name in TURRETS:
+                top, maker_g, rel, deck = TURRETS[name]
+                gcol = capture(top, maker_g)
                 bpy.context.scene.collection.children.unlink(gcol)
                 gloc = -center * scale + Vector((0, 0, deck * scale))
-                frames += [(f'def_watchtower_gunner_{f}.png', [place(scene, gcol, gloc, scale * rel, FACING[f])])
+                frames += [(f'{top}_{f}.png', [place(scene, gcol, gloc, scale * rel, FACING[f])])
                            for f in TURRET_FACINGS]
         scene.view_settings.exposure = TILE_EXPOSURE if kind == 'tile' else 0.5
         render_group(scene, cam, w, h, frames, opts.samples, margin=0 if kind == 'tile' else 0.04)

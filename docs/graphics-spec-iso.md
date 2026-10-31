@@ -2,6 +2,7 @@
 
 **What this is:** the game has two views (DECISIONS D-016). The **top-down** view (building mode) uses the art in `docs/graphics-spec-phase1.md`. The **isometric** view ("Tropico style", the normal view) uses the art described here. Same filenames, same palette and style rules (section 1–2 of the phase 1 spec); only the camera and canvas rules differ.
 **Status:** until isometric art exists, the game draws labeled 3D blocks. Any file with the right name replaces its block; partial delivery is fine.
+**Rendered so far:** every phase 1 building, defense (incl. MG nest gun facings), unit and zombie (walker, runner, brute), plus the ground tiles, all from Blender — see `HighwayHoldout_Iso_Art/README.md`. Still missing: fx_* (flat top-down effects are reused) and vehicles.
 
 ---
 
