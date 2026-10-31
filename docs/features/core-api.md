@@ -39,6 +39,14 @@ GridProjection(kind:tileWidth:tileHeight:mapWidth:mapHeight:)  // tile <-> scree
 
 // 7. Save (App writes the Data to disk; autosave every economy.json autosaveSeconds + on background)
 let data = try SaveCodec.encode(loop.state)
+
+// 8. Hordes (1B)
+loop.state.base.zombies    // [Zombie]: id, defId, x/y in tiles (tile middle = +0.5), hp, heading (grid radians), attacking
+loop.hordeStatus           // HordeStatus: day, secondsUntilNext, warningEdges, isActive, zombiesAlive, zombiesToSpawn
+loop.drainEvents()         // [SimEvent] since last call: hordeWarning/Started/Ended, zombieSpawned/Died, shot, trapHit,
+                           // buildingDamaged/Destroyed — draw these as effects, once per frame
+loop.send(.repair(id: id)) // repair damage or rebuild rubble (Building.isRubble); -> .repairStarted(cost:)
+loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food: 500))) ; loop.send(.debugKillAllZombies)
 ```
 - Grid: `x` right, `y` **down**, (0,0) = top-left tile. SpriteKit's y is up, so the App flips it.
 - A building's `origin` is its top-left tile; its size is `content.buildingDef(defId)!.footprint`.
@@ -55,12 +63,16 @@ let data = try SaveCodec.encode(loop.state)
 
 ## Key rules
 - Core reads no clock; time only enters through `advance(realSeconds:)` / `step(ticks:)`.
-- Content for zombies, units, hordes, research, offline is decoded and validated now but not used until 1B–1D.
+- Content for units, research, offline is decoded and validated now but not used until 1C–1D.
+- Tick order (GameLoop.step): construction → staffing → economy → HordeSystem (clock, warning, spawn) → ZombieMovement (flow field, bashing, traps) → TowerFiring → HordeResolution (deaths + loot, rubble, HQ fall, horde end).
+- `Building.isComplete` is false for rubble, so rubble produces, houses, stores, and fires nothing.
+- `GameLoop.flowFields` is a cache derived from the state (not saved); events are not saved either.
 - Tests read the repo's `Content/` via `#filePath` (D-010); the App passes its bundled copy.
 
 ## Known issues
 - (none yet)
 
 ## Change log
+- 2026-10-31 — 1B contract: Zombie, HordeState/ActiveHorde, Building.isRubble, SimEvent + drainEvents, hordeStatus, repair/debug commands, save v2 (migration from v1).
 - 2026-10-31 — Added `presentation.json` decoding (`GameContent.presentation`) and `Presentation/GridProjection` (1V; not used by the simulation).
 - 2026-10-31 — Created for milestone 1A (Core half).
