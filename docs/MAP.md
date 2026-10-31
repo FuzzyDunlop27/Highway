@@ -81,7 +81,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  SpriteKit scene, ArtRegistry/placeholders, node factories
-│     ├─ [ ] zombie-walk-animation.md  ZWALK-1 SPEC: limb walk frames for zombies (not built)
+│     ├─ [x] zombie-walk-animation.md  ZWALK-1: realistic walker limb prototype + remaining checks
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
 ├─ Content/                 ALL tuning data, loaded at runtime. No numbers in Swift.
@@ -207,3 +207,8 @@ Create a note from `_TEMPLATE.md` the first time a feature is built. Planned nam
 - Isometric placement direction and acceptance checks: `docs/PHASE1-TASKS.md` → Approved update — isometric placement first; decision D-022; implementation notes in `docs/features/input.md`.
 
 - Zombie detail pass: `tools/blender/zombie_details.py` supplies faces, costumes and materials to `tools/blender/zombie_models.py`; `HighwayHoldout_Iso_Art/zombie-review/` contains original sprites and `comparison.png`.
+
+- Realistic walker pilot: `HighwayHoldout_Iso_Art/realistic-walker/` contains `source/`, `png/`, `previous/`, `prepare.py`, `PROMPTS.md`, `README.md`, `preview.png`, and simulator review captures. Reapply its sprites after old Blender renders.
+- `docs/BUILD-QUEUE.md`: dependency-labelled chunks and paste-ready next-chat handoffs.
+
+- Walker limb animation: `HighwayHoldout_Iso_Art/walker-walk/{source/,png/,prepare.py,preview.gif,in-game.png,PROMPTS.md,README.md}`; twelve `_w0…_w5.imageset` entries under `App/Assets.xcassets/Art/Iso/`. Runtime in `ZombieNodeFactory.swift` + `ArtRegistry.swift`; configuration in `Content/presentation.json` and `PresentationDefs.swift`.

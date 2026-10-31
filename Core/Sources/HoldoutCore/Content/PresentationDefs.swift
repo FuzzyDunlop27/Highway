@@ -41,6 +41,8 @@ public struct ViewDef: Codable, Sendable {
     public let placeholderHeightTiles: [String: Double]
     /// Optional per-image fixes, keyed by art id.
     public let assets: [String: AssetDef]
+    /// Optional distance-driven limb cycle; absent in top-down.
+    public let zombieWalk: ZombieWalkDef?
 }
 
 public struct AssetDef: Codable, Sendable {
@@ -50,4 +52,9 @@ public struct AssetDef: Codable, Sendable {
     public let scale: Double?
     /// False if this image must not be mirrored to make the opposite facing (e.g. text or a one-sided detail).
     public let mirrorable: Bool?
+}
+
+public struct ZombieWalkDef: Codable, Sendable {
+    public let frames: Int
+    public let strideTiles: Double
 }

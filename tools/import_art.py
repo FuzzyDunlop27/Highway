@@ -147,6 +147,7 @@ def write_ui_kit_image(img, name, out_root):
 
 def base_name(name):
     """'zmb_walker_se' -> 'zmb_walker' (facing frames share their base asset's size)."""
+    name = re.sub(r"_w[0-9]+$", "", name)
     m = re.match(r"^(.*)_(" + "|".join(FACINGS) + r")$", name)
     return m.group(1) if m and m.group(1) in ASSETS else name
 

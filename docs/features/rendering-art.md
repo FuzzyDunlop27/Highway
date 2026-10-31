@@ -6,6 +6,7 @@
 Draws the map, decorations, buildings, defenses, zombies, and combat effects with SpriteKit in two views: **isometric** (normal, Tropico style) and **top-down** (building view). Real art where it exists for that view; otherwise a labeled placeholder (3D block in iso, flat box top-down).
 
 ## Files involved
+- `HighwayHoldout_Iso_Art/realistic-walker/` — realistic static walker sources, exact prompts, reproducible canvas fitting, production PNGs, previous sprites and review images.
 - `tools/blender/zombie_details.py` — zombie facial sculpt, costume details and local surface materials; composed by `zombie_models.py`.
 - `HighwayHoldout_Iso_Art/zombie-review/` — before sprites and comparison of the first zombie detail pass.
 - `HighwayHoldout_Blender_Study/` — original 3D art-direction study, editable Blender scene/model libraries and ten transparent sprite samples; not installed into the app.
@@ -42,6 +43,7 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - `Content/presentation.json` → `defaultView`, `autoTopDownWhilePlacing`, `switchFadeSeconds`, `outsideMapColor`; per view: `tileWidthPt/tileHeightPt`, `artNamespace`, `facings`, `turretFacings`, `minScale/startScale`, `placeholderHeightTiles`, `assets.<id>` (`anchor`, `scale`, `mirrorable`).
 
 ## Key rules
+- Realistic walker pilot: use `realistic-walker/png/` for the three isometric walker images. Existing SE/NE mirroring gives four directions. These are 2D cutouts, not the Blender walker; reapply after full Blender renders. Limb animation belongs to separate chunk 1B (ZWALK-1).
 - The simulation is one square grid; views only change drawing. Every position comes from `GridGeometry` (never assume top-down).
 - Top-down: sprite = footprint rectangle, anchored at its middle. Isometric: sprite is as wide as the footprint diamond, any height, anchored at the diamond's bottom point (`[0.5, 1.0]` from the image's top-left unless `assets.<id>.anchor` says otherwise).
 - Upright things (buildings, decorations, later units/zombies) use `ZLayer.sorted(depth:)`; depth = footprint middle's `x + y` in iso (bigger = in front). Ground stays flat underneath.
@@ -67,6 +69,7 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - `import_art.py` trims and refits sprites; the ChatGPT hand-off note asks not to trim (keeps unit pivots consistent). Matters for 1B units; see STATUS open questions.
 
 ## Change log
+- 2026-10-31 — Integrated realistic static walker cutouts (SE/NE + base) using the existing importer and 256×232 canvas; left other types and procedural shamble unchanged. Sources and prompt history retained in `realistic-walker/`.
 - 2026-10-31 — Refined all three zombie models with facial features, weathered costume details and distinct roadside/athletic/workwear styling; rendered and imported nine iso sprites. Existing poses, facing rules and gameplay preserved.
 - 2026-10-31 — Recorded owner-approved isometric placement direction and staged rollout (D-022); documentation only, implementation pending.
 - 2026-10-31 — 1B App: zombies (facings, bob, health bar, hit flash), defenses (wall direction, flat traps, aiming turrets, range ring), effects from SimEvents, rubble + building health bars, horde warning arrows.
@@ -75,3 +78,5 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - 2026-10-31 — Owner abandoned the 8-bit variant; created a fresh Blender miniature-style study and ten PNG samples (40 image checks passed). App artwork remains unchanged.
 - 2026-10-31 — Created (1A App half): scene, ArtRegistry with generated placeholders, terrain/building/ghost factories.
 - 2026-10-31 — Zombies now shamble: a 4 pt hop and ±0.1 rad lean per step (was a barely visible 1.5 pt bob that never stopped); step time from `speed`; idle while bashing. Single sprite per facing, so it's a procedural walk; real frame animation would need new art.
+
+- 2026-10-31 — ZWALK-1/chunk 2A prototype: realistic walker limb textures advance by distance; attack holds frame zero; still fallback retained. Frames use ArtRegistry cache and presentation.json zombieWalk; importer accepts `_wN`. See zombie-walk-animation.md for files and remaining gait checks.

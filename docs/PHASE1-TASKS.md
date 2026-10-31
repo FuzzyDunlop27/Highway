@@ -123,6 +123,7 @@ Open balance questions already in STATUS (food upkeep, permanent death, Horde Al
 ---
 
 ## 1C — Depth ("a 30-minute session feels like progress")
+_Now tracked as build chunks 1B, 1C, 2B, 2C, 3B in `docs/BUILD-QUEUE.md` (status lives there); the tables below stay as the detailed rules._
 
 ### Core
 | Task | Rules / data |
@@ -143,6 +144,7 @@ Upgrade button (cost, level badge from `ui_level_badge` + tint); build-queue str
 ---
 
 ## 1D — Time & alerts ("come back to something")
+_Now build chunks 4B (Core) and 5B (App) in `docs/BUILD-QUEUE.md`._
 
 ### Core
 | Task | Rules / data |

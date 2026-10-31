@@ -1,4 +1,6 @@
-# Isometric art (rendered, not hand-drawn)
+# Isometric art
+
+**Walker exception:** `realistic-walker/` now supplies the isometric walker as realistic generated cutouts. After any full Blender render, reapply its three PNGs and import them; see that folder’s README. Its source is not a rigged Blender model.
 
 These PNGs are the game's **isometric view** art. They were rendered by `tools/blender/render_iso_sprites.py`
 from the Blender study's 3D models (`HighwayHoldout_Blender_Study/scripts`) with the camera in `docs/graphics-spec-iso.md`.

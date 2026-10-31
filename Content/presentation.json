@@ -16,10 +16,22 @@
       "minScale": 0.5,
       "startScale": 1.25,
       "placeholderHeightTiles": {
-        "core": 2.0, "housing": 1.4, "production": 1.0, "utility": 1.4, "military": 1.2,
-        "wall": 0.8, "tower": 2.2, "trap": 0.15, "decoration": 0.6, "default": 1.0
+        "core": 2.0,
+        "housing": 1.4,
+        "production": 1.0,
+        "utility": 1.4,
+        "military": 1.2,
+        "wall": 0.8,
+        "tower": 2.2,
+        "trap": 0.15,
+        "decoration": 0.6,
+        "default": 1.0
       },
-      "assets": {}
+      "assets": {},
+      "zombieWalk": {
+        "frames": 6,
+        "strideTiles": 0.36
+      }
     },
     "topDown": {
       "projection": "topDown",

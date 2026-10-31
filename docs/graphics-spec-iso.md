@@ -41,3 +41,6 @@ Moving things can't be spun like in top-down, so each gets a few drawings. Names
 
 ## 6. Priority
 P1 for the isometric view to look finished: `tile_grass`, `tile_dirt`, `tile_asphalt`, `tile_asphalt_line`, `tile_concrete`, `bld_hq`, `bld_shelter`, `bld_farm`, `bld_scavenger`, `bld_construction_2x2`, `bld_construction_3x3`, `def_wall_wood`, `def_watchtower_base`. Then the rest of the phase 1 list, then units/zombies with facings (needed from milestone 1B).
+
+## Walker animation frames (chunk 2A prototype)
+`zmb_walker_se_w0.png` through `_w5.png`, and `zmb_walker_ne_w0.png` through `_w5.png`. Twelve transparent 256×232 masters, unchanged scale/baseline across frames; mirror for SW/NW. Preserve the approved realistic walker source, not the old Blender model. Still-facing sprites remain fallbacks. Source: `HighwayHoldout_Iso_Art/walker-walk/`.

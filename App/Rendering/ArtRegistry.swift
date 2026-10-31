@@ -23,6 +23,14 @@ final class ArtRegistry {
         return found
     }
 
+    /// Cached real texture for animation; missing frames leave the still sprite intact.
+    func texture(_ id: String, style: ArtStyle) -> SKTexture? {
+        let key = "\(style.namespace)/\(id)"
+        if let texture = textures[key] { return texture }
+        guard let image = image(id, namespace: style.namespace) else { return nil }
+        return cachedTexture(key) { SKTexture(image: image) }
+    }
+
     /// A sprite showing `id` on a `w`×`h` footprint, sized and anchored so its `position` goes at
     /// `style.geometry.groundAnchor(...)`. Real art if present, otherwise a labeled placeholder.
     /// `category` picks the placeholder block height (buildings.json category, `ArtCategory.tile`, ...).

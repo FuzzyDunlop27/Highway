@@ -2,18 +2,21 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-10-31 (1B done; isometric placement done; next 1C)
+**Last updated:** 2026-10-31 (1B done; isometric placement done; 1C–1E split into build chunks in BUILD-QUEUE.md)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
 - **Milestone 1A — Foundation** — DONE (2026-10-31).
 - **Milestone 1V — Two views** — DONE (2026-10-31).
 - **Milestone 1B — Defense** — DONE (2026-10-31).
-- **Isometric-first placement (D-022)** — DONE (2026-10-31). Next: **1C Depth**.
+- **Isometric-first placement (D-022)** — DONE (2026-10-31). Next: **milestone 1C Depth, not started; now tracked as build chunks in `docs/BUILD-QUEUE.md`** (ready now: chunks 1B and 1C).
 - Milestones: 1A Foundation → **1V Two views (owner: isometric + top-down for placing)** → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Chunk 2A / ZWALK-1 started:** realistic walker has 12 limb poses and distance-driven playback, static fallback and attack hold. 119 Core tests pass; simulator build passes; live day-7 horde rendered at displayed 60 fps. Backup town restored. Gait currently favors one leg; refine strides/registration and finish full visual checks before runner/brute. Preview and source: `HighwayHoldout_Iso_Art/walker-walk/`; current implementation: `docs/features/zombie-walk-animation.md`.
+- **Chunk 1A realistic walker DONE:** two generated transparent directional cutouts plus base imported into the app. Latest iPhone 18 Pro simulator build passed; all four facings verified in an actual paused review fixture (`HighwayHoldout_Iso_Art/realistic-walker/in-game-four-facings.png`). Pre-test town restored byte-for-byte, app stopped. Full sources, prompts, prior sprites and fitting script retained. This is 2D art, not a matching Blender rig.
+- **Remaining work moved to `docs/BUILD-QUEUE.md`:** milestone 1C (never started) → track B chunks 1B upgrades + build queue (Core), 2B jobs + defenders, 2C scavenging + research, 3B App panels + the 30-minute exit check; 1C speed buttons + menu thumbnails any time; milestone 1D → 4B (Core) + 5B (App); 1E → 6B. Track A = zombie art (Codex). Each has scope, exit check and a paste-able start prompt. Docs only.
 - **Zombies shamble instead of floating:** each step hops and leans left/right around the feet, faster for runners, stopped while bashing a wall (`ZombieNodeFactory.swift`). Built OK; not yet eyeballed in the simulator.
 - **Wall tool:** walls are now drawn, not placed one by one. Drag a straight or L-shaped line, see how many walls and the total cost (skipped tiles shown red / "already built"), tap Build to place it all at once (nothing if you can't afford it all). Two fingers move the map. Core `planLine`/`placeLine` with 6 tests (119 pass). Checked in the simulator.
 - Starting walls now fully enclose the HQ (D-023): 28-wall ring in `Content/maps/phase1_exit.json`. Headless run: day 1 breaks one wall then is held. New games only.
@@ -35,9 +38,10 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- Claude: read **Approved update — isometric placement first** at the top of `PHASE1-TASKS.md` before touching placement/view switching. Implement its staged checklist; preserve the pending 1B exit checks. No matching top-down art refresh is needed for this direction.
-- **1C Depth** per `docs/PHASE1-TASKS.md` (upgrades, build queue + builders, jobs, defenders, scavenging runs, speed controls, research). Plan: Core contract first, then parallel agents like 1B.
-- Art: isometric renders and the UI kit are integrated. Remaining menu thumbnails and real inventory/pause screens are recommended next; see the review and UI handoff.
+- **Art track: continue chunk 2A**, polish the walker gait and foot alignment, verify mirrored movement, pause/attack, fallback and day-40 performance. Do not revert to the old Blender walker. Chunk 2A remains in progress.
+- **Chunk 2A / ZWALK-1:** owner started a separate walking-animation chat; work is in progress there. Read `docs/BUILD-QUEUE.md` and the source correction in `docs/features/zombie-walk-animation.md`; preserve the realistic walker and do not animate the old polygon model. No further image generation needed for the completed static pilot.
+- Eyeball the zombie shamble in the simulator (built, not yet checked on screen).
+- Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
 
 ## Decided
 - The 8-bit art experiment is abandoned at the owner's request. The app uses the original pack for top-down, Blender-derived isometric sprites, and the new UI kit.

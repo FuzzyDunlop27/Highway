@@ -32,6 +32,9 @@ final class ZombieNode {
 
     private let seed: Int
     private var walking = false
+    private var previousPosition: CGPoint?
+    private var walkedDistance = 0.0
+    private var displayedWalkID: String?
 
     init(seed: Int) {
         self.seed = seed
@@ -95,7 +98,27 @@ final class ZombieNode {
         }
         body?.zRotation = next.rotation
         frame = next
-        setWalking(zombie.attacking == nil, speed: def?.speed ?? 0.6)
+        let position = CGPoint(x: zombie.x, y: zombie.y)
+        if let previousPosition, zombie.attacking == nil {
+            walkedDistance += hypot(Double(position.x - previousPosition.x), Double(position.y - previousPosition.y))
+        }
+        previousPosition = position
+        var hasWalkFrame = false
+        if let walk = style.view.zombieWalk, walk.frames > 0, walk.strideTiles > 0 {
+            let index = zombie.attacking == nil
+                ? Int((walkedDistance / walk.strideTiles).truncatingRemainder(dividingBy: 1) * Double(walk.frames)) : 0
+            let id = "\(next.id)_w\(index)"
+            if art.hasImage(id, style: style), let texture = art.texture(id, style: style) {
+                hasWalkFrame = true
+                if displayedWalkID != id { body?.texture = texture; displayedWalkID = id }
+            }
+        }
+        if !hasWalkFrame, displayedWalkID != nil {
+            body?.texture = art.texture(next.id, style: style)
+            displayedWalkID = nil
+        }
+        // The drawn limbs provide movement; keep the legacy shamble only for still art.
+        setWalking(!hasWalkFrame && zombie.attacking == nil, speed: def?.speed ?? 0.6)
         updateHealth(zombie, def: def)
     }
 
@@ -107,6 +130,7 @@ final class ZombieNode {
     }
 
     private func setBody(_ frame: DirectionalSprite.Frame, style: ArtStyle, art: ArtRegistry) {
+        displayedWalkID = nil
         body?.removeFromParent()
         let sprite = art.sprite(frame.id, width: 1, height: 1, category: Self.category, style: style)
         if frame.mirrored { sprite.xScale = -sprite.xScale }

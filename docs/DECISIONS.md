@@ -108,3 +108,10 @@ _Append-only. Newest at the bottom. Add an entry for any non-obvious choice, so 
 ## D-024 — Walls are drawn as lines and built all at once (2026-10-31) [Accepted]
 **Decision:** Walls use a wall tool instead of the single-building ghost. You drag a line (straight or one-corner L), the bar shows the count and total cost, and Build places the whole line in one command (`Command.placeLine`). Blocked tiles, tiles past the limit, and existing walls are skipped and not charged. If you can't afford the whole line, nothing is built. Two-finger pan always moves the map, because one finger draws.
 **Why:** The owner found wall building awkward and wanted to plan a wall and see its cost before committing. Building all-or-nothing avoids half-built lines when resources run out partway.
+
+## D-025 — Realistic walker uses generated static cutouts (2026-10-31) [Pilot]
+**Decision:** Owner requested one realistic zombie end to end. Replace only the isometric walker with two transparent generated views (plus the SE base fallback), using existing mirrored facings and importer. Retain full-resolution sources, prompts, previous art and fitting script.
+**Trade-off:** This delivers detailed anatomy/materials without rebuilding gameplay, but is not a rigged 3D model and cannot be animated by posing the old low-poly Blender walker. Camera/pose consistency is approximate, not guaranteed by shared geometry. Limb animation is explicitly reserved for another chat; preserve this visual direction there.
+
+## ZWALK-1 prototype production choice (2026-10-31)
+Use reference-conditioned generated pose sheets for the current realistic 2D walker, rather than reverting to the old Blender miniature. Preserve original still assets; slice/resize/pad generated poses without repainting them. Trade-off: generated poses have approximate rather than rig-guaranteed anatomy/camera consistency, so balanced stride and anchor review remain required before chunk 2A closes. Animation timing lives in presentation.json; no gameplay/save changes.

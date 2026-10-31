@@ -1,17 +1,29 @@
-# ZWALK-1 — Zombie walk animation (limbs) — SPEC, not built yet
+# ZWALK-1 — Zombie walk animation (limbs) — walker prototype in progress
 
 **Label:** `ZWALK-1` · **Type:** art + rendering (no Core/gameplay change) · **Fits:** 1E Art swap & polish, or any time
+
+## Current implementation — 2026-10-31
+- **Chunk 2A in progress:** realistic walker only; 12 generated transparent poses (six SE, six NE), mirrored for SW/NW. Source sheets, slicing script, four-facing `preview.gif`, and simulator capture live in `HighwayHoldout_Iso_Art/walker-walk/`.
+- Built-in image generation uses the approved realistic cutouts as references. The historical Blender recipe below is NOT the current walker pipeline. No Blender model was replaced.
+- `ZombieNodeFactory.swift` accumulates distance between Core positions; selects `_w0…_w5`, holds frame zero while attacking, swaps cached textures on the existing body, and disables fake hop/lean when a walk frame exists. Missing frames use the still art and legacy shamble.
+- `presentation.json` → `views.isometric.zombieWalk`: six frames, 0.36 tile stride. `PresentationDefs.swift` decodes this optional presentation-only data; no simulation or save change. Top-down omits it.
+- `ArtRegistry.swift` exposes cached real textures; `tools/import_art.py` recognizes the `_wN` suffix. Generated frames share the current 256×232 canvas, 160-pixel maximum body height and bottom baseline 184. No per-pose scaling.
+- **Verified:** 12 distinct transparent frame files with clear borders; importer 12/12, zero warnings; 119 Core tests pass; iPhone 18 Pro simulator build passes; launched a day-7 horde, realistic walkers render and DEBUG overlay reads 60 fps. Test-town backup restored byte-for-byte; app stopped.
+- **Still pending:** balanced opposite-leg strides, torso/foot registration polish, deliberate pause/attack/missing-frame and mirrored-motion checks, and day-40 performance review. Current AI poses favor one leg and look like a limp. Do not mark the chunk finished or extend to other zombies yet.
+
+## Source correction — realistic walker pilot (2026-10-31)
+The owner approved the realistic walker and reserved animation for a separate chat (**chunk 2A** in `docs/BUILD-QUEUE.md`). The current walker is now generated **2D cutout artwork** in `HighwayHoldout_Iso_Art/realistic-walker/`; there is no matching realistic Blender model or rig. The Blender-only recipe below predates that pilot and must NOT be applied to the walker as written, or it will revert the approved appearance to polygons. Preserve its identity, costume, camera, 256×232 canvas, scale and foot position; select a compatible frame-production approach first. The old Blender recipe remains relevant only to the unchanged runner/brute, which are outside chunk 2A. Read the realistic walker README and exact prompts before generating anything.
 
 ## How to run this later
 Open a new Claude Code (or Codex) session in this repo and paste:
 
-> Build ZWALK-1: follow `docs/features/zombie-walk-animation.md` steps 1–4 (skip step 5). Start with the walker only,
-> render its frames, wire them into the app, and show me a simulator check before doing the runner and brute.
-> Follow AGENTS.md (update this note's change log, MAP, STATUS).
+> Implement chunk 2A in `docs/BUILD-QUEUE.md`: animate only the realistic walker, preserving the source art in
+> `HighwayHoldout_Iso_Art/realistic-walker/`. Read the source correction above; do not render the old low-poly walker.
+> Wire consistent limb frames into the app and show a simulator check. Leave runner/brute and attacks for later.
 
 Doing the walker first is a cheap test of the whole pipeline before spending credits on all three types.
 
-_Status: proposed 2026-10-31. Owner asked "can the limbs move?" Answer: yes, and it fits the existing art pipeline._
+_Status: walker prototype started 2026-10-31. Owner asked "can the limbs move?" Answer: yes, and it fits the existing art pipeline._
 
 ## Goal
 Zombies swing their arms and legs while walking, instead of one still pose sliding along with a procedural hop/lean
@@ -83,4 +95,7 @@ Zombies swing their arms and legs while walking, instead of one still pose slidi
 - `App/Rendering/Nodes/ZombieNodeFactory.swift`, `docs/features/rendering-art.md`, `docs/MAP.md`
 
 ## Change log
+- 2026-10-31 — Linked chunk 2A and corrected the walker source: realistic generated cutouts, not a matching Blender model. Owner reserved implementation for another chat.
 - 2026-10-31 — Spec written (Claude). Not built.
+
+- 2026-10-31 — Started chunk 2A: generated realistic walk sheets, imported twelve frames, distance-driven rendering, content configuration, successful build/tests and initial live-horde check. Gait polish and full visual exit checks remain.
