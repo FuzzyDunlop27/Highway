@@ -36,8 +36,10 @@ enum EconomySystem {
 
     /// A survivor joins every `intervalSeconds` while housing is free and food ≥ `foodCost` (food is spent).
     /// The timer resets while housing is full; if food is short it waits at full until food is enough.
+    /// While a horde is attacking (and `pausedDuringHorde`), the timer holds where it is.
     static func arriveSurvivors(_ state: inout GameState, content: GameContent) {
         let rule = content.resources.survivorArrival
+        if rule.pausedDuringHorde && state.base.horde.active != nil { return }
         let interval = content.ticks(forSeconds: rule.intervalSeconds)
         let housingFree = state.group.survivors < StorageRules.housing(base: state.base, content: content)
         guard housingFree || !rule.requiresFreeHousing else {
