@@ -115,3 +115,7 @@ _Append-only. Newest at the bottom. Add an entry for any non-obvious choice, so 
 
 ## ZWALK-1 prototype production choice (2026-10-31)
 Use reference-conditioned generated pose sheets for the current realistic 2D walker, rather than reverting to the old Blender miniature. Preserve original still assets; slice/resize/pad generated poses without repainting them. Trade-off: generated poses have approximate rather than rig-guaranteed anatomy/camera consistency, so balanced stride and anchor review remain required before chunk 2A closes. Animation timing lives in presentation.json; no gameplay/save changes.
+
+## D-026 — Mixamo stock walker and matching stills (2026-10-31) [Accepted]
+**Decision:** Owner chose a stock Mixamo zombie for ZWALK-1M and approved using Adobe's character and walking animation after the asset-source terms were explained. Render six poses for each of SE/NE and replace both directional stills with frame 0. Keep raw FBX sources out of the app and do not redistribute them. Walker only; runner/brute and attacks remain deferred.
+**Why / trade-off:** Rigged motion should correct the generated-pose prototype's unbalanced gait, at the cost of changing the character's appearance. Adobe's current Mixamo FAQ permits royalty-free character/animation use in video games: https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html (checked 2026-10-31). Prototype and supporting work preserved in local commit `c12e557`.

@@ -81,6 +81,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  SpriteKit scene, ArtRegistry/placeholders, node factories
+│     ├─ [x] zombie-walk-mixamo.md  ZWALK-1M: approved stock Mixamo route; waiting for source FBX
 │     ├─ [x] zombie-walk-animation.md  ZWALK-1: realistic walker limb prototype + remaining checks
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars

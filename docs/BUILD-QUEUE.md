@@ -7,7 +7,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | Chunk | Goal | Needs | Status |
 |---|---|---|---|
 | 1A | Art: realistic walker static cutouts (Codex) | — | Done |
-| 2A | Art: ZWALK-1 realistic walker limb animation | 1A only | In progress (owner's separate animation chat) |
+| 2A | Art: ZWALK-1 realistic walker limb animation | 1A only | In progress — ZWALK-1M waiting for owner FBX downloads |
 | 1B | Core: upgrades + build queue + builders | — | Ready |
 | 1C | App: speed buttons + menu thumbnails | — | Ready |
 | 1D | Art: realistic static walker pilot | — | Done — 2026-10-31 |
@@ -111,9 +111,10 @@ Track A = zombie art (details at the bottom of this file). Track B = 1C–1E gam
 - **Start prompt (review only):** “Review chunk 1D realistic walker: open its README, preview and simulator capture; do not regenerate art.”
 
 ## Chunk 2A — Realistic walker limb animation [In progress]
-- **Goal:** the approved realistic walker visibly steps and swings its arms while moving.
+- **Goal:** the walker visibly steps and swings its arms while moving; owner approved a Mixamo stock replacement in D-026.
 - **Needs:** chunk 1A static walker only (also recorded as 1D by the static-art chat); no gameplay chunk dependency.
 - **Scope:** six poses in each of two source facings, mirrored west, stable canvas/feet, distance-driven cached textures, static fallback, presentation JSON and simulator checks. First prototype is implemented; see `docs/features/zombie-walk-animation.md`.
 - **What NOT to build:** runner/brute art, attack swings, top-down replacement, gameplay or save changes.
 - **Exit check:** smooth alternating steps without scale/anchor jitter, clean four-facing movement, pause/attack stop, missing-frame fallback, build and Core tests pass; day-40 performance matches baseline. Initial build/tests and day-7 horde passed; full visual exit check remains.
-- **Start prompt:** “Continue chunk 2A: read the current-implementation section of docs/features/zombie-walk-animation.md. Review HighwayHoldout_Iso_Art/walker-walk/preview.gif, refine the alternating strides and foot registration, then finish the simulator checks. Preserve the realistic walker. Do not start runner/brute yet.”
+- **Current route / dependency:** ZWALK-1M step 0 approved; prototype preserved in `c12e557`. Step 1 waiting for owner-provided in-place and preferably root-motion FBX files. See `docs/features/zombie-walk-mixamo.md`; browser control failed.
+- **Start prompt:** “Continue ZWALK-1M / chunk 2A: read docs/features/zombie-walk-mixamo.md. Step 0 is approved in D-026; prototype is committed. Check walker-mixamo/source for FBX downloads, then perform steps 2–5. Walker only.”

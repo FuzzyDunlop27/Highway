@@ -12,6 +12,12 @@ slide (`zombie-walk-animation.md` → "Still pending"). Mixamo (free, Adobe acco
 `presentation.json → views.isometric.zombieWalk` sets frames and stride. This route only replaces the 12 PNGs, plus
 the still if the owner decides so in step 0.
 
+## Current session — 2026-10-31
+- Step 0 complete: owner selected stock zombie, matching SE/NE stills from frame 0, approved Mixamo as an asset source after explanation, and approved the prototype backup commit (`c12e557`). Decision D-026.
+- Step 1 waiting for owner downloads: Chrome's logged-in Mixamo page was visible, but native browser control failed (`noWindowsAvailable`, then ScreenCaptureKit audio/video capture failure). No character or animation was selected by the agent.
+- Save the in-place FBX and preferably the same root-motion FBX to `HighwayHoldout_Iso_Art/walker-mixamo/source/`; record exact character and animation names. Steps 2–5 are pending these files.
+- Blender and Xcode 27.1 are installed. No render, new app build, Core test or simulator check has been run in this session. Interactive simulator control may have the same capture limitation; verify later.
+
 ## Step 0 — Owner decisions (before any work)
 1. **Character source.** Mixamo animates a 3D model, but the approved realistic walker is 2D art with no 3D model. Pick one:
    - **(a) Mixamo stock zombie** (recommended, fastest): choose a zombie from Mixamo's Characters tab that's closest
@@ -94,3 +100,5 @@ Runner and brute (same recipe later, one at a time), attack swings, top-down art
 
 ## Change log
 - 2026-10-31 — Spec written (Claude) as a Mixamo alternative to the generated-pose prototype. Not started.
+
+- 2026-10-31 — Step 0 approved (D-026), prototype committed as c12e557; step 1 handed to owner after browser-control failures. Waiting for FBX files before steps 2–5.

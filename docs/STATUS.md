@@ -14,6 +14,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **ZWALK-1M step 0 complete:** owner approved Mixamo stock walker, matching SE/NE frame-0 stills, asset source (D-026), and prototype backup commit `c12e557`. Step 1 waits for owner FBX downloads: native Chrome control failed with window/capture errors. No new rendering, app build, Core tests or simulator checks this session. Blender and Xcode 27.1 are installed. See `docs/features/zombie-walk-mixamo.md`.
 - **Chunk 2A / ZWALK-1 started:** realistic walker has 12 limb poses and distance-driven playback, static fallback and attack hold. 119 Core tests pass; simulator build passes; live day-7 horde rendered at displayed 60 fps. Backup town restored. Gait currently favors one leg; refine strides/registration and finish full visual checks before runner/brute. Preview and source: `HighwayHoldout_Iso_Art/walker-walk/`; current implementation: `docs/features/zombie-walk-animation.md`.
 - **Chunk 1A realistic walker DONE:** two generated transparent directional cutouts plus base imported into the app. Latest iPhone 18 Pro simulator build passed; all four facings verified in an actual paused review fixture (`HighwayHoldout_Iso_Art/realistic-walker/in-game-four-facings.png`). Pre-test town restored byte-for-byte, app stopped. Full sources, prompts, prior sprites and fitting script retained. This is 2D art, not a matching Blender rig.
 - **Remaining work moved to `docs/BUILD-QUEUE.md`:** milestone 1C (never started) → track B chunks 1B upgrades + build queue (Core), 2B jobs + defenders, 2C scavenging + research, 3B App panels + the 30-minute exit check; 1C speed buttons + menu thumbnails any time; milestone 1D → 4B (Core) + 5B (App); 1E → 6B. Track A = zombie art (Codex). Each has scope, exit check and a paste-able start prompt. Docs only.
@@ -38,6 +39,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
+- **ZWALK-1M:** owner downloads in-place and preferably root-motion FBX files using the feature-note checklist, with exact character/animation names. Then continue steps 2–5, walker only; rendering/import/stride tuning and all new verification remain pending.
 - **Art track: continue chunk 2A**, polish the walker gait and foot alignment, verify mirrored movement, pause/attack, fallback and day-40 performance. Do not revert to the old Blender walker. Chunk 2A remains in progress.
 - **Chunk 2A / ZWALK-1:** owner started a separate walking-animation chat; work is in progress there. Read `docs/BUILD-QUEUE.md` and the source correction in `docs/features/zombie-walk-animation.md`; preserve the realistic walker and do not animate the old polygon model. No further image generation needed for the completed static pilot.
 - Eyeball the zombie shamble in the simulator (built, not yet checked on screen).

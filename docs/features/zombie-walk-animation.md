@@ -3,6 +3,7 @@
 **Label:** `ZWALK-1` · **Type:** art + rendering (no Core/gameplay change) · **Fits:** 1E Art swap & polish, or any time
 
 ## Current implementation — 2026-10-31
+- **Approved next route:** ZWALK-1M / D-026 replaces the walker with a Mixamo stock character and matching frame-0 stills. Prototype preserved in `c12e557`; waiting for owner FBX downloads after browser-control failure. Follow `zombie-walk-mixamo.md` before the historical recipes below.
 - **Chunk 2A in progress:** realistic walker only; 12 generated transparent poses (six SE, six NE), mirrored for SW/NW. Source sheets, slicing script, four-facing `preview.gif`, and simulator capture live in `HighwayHoldout_Iso_Art/walker-walk/`.
 - Built-in image generation uses the approved realistic cutouts as references. The historical Blender recipe below is NOT the current walker pipeline. No Blender model was replaced.
 - `ZombieNodeFactory.swift` accumulates distance between Core positions; selects `_w0…_w5`, holds frame zero while attacking, swaps cached textures on the existing body, and disables fake hop/lean when a walk frame exists. Missing frames use the still art and legacy shamble.
@@ -99,3 +100,5 @@ Zombies swing their arms and legs while walking, instead of one still pose slidi
 - 2026-10-31 — Spec written (Claude). Not built.
 
 - 2026-10-31 — Started chunk 2A: generated realistic walk sheets, imported twelve frames, distance-driven rendering, content configuration, successful build/tests and initial live-horde check. Gait polish and full visual exit checks remain.
+
+- 2026-10-31 — Owner approved Mixamo stock replacement (D-026); prototype preserved in c12e557. Waiting for step-1 FBX downloads; no new rendering or simulator verification.
