@@ -1,4 +1,4 @@
-// Purpose: Draws the see-through placement preview (green ok / red blocked footprint tiles) and the selection outline. Notes: docs/features/input.md
+// Purpose: Draws the see-through placement preview (green ok / red blocked footprint tiles), the selection outline, and the range ring. Notes: docs/features/input.md
 import SpriteKit
 import HoldoutCore
 
@@ -38,5 +38,16 @@ enum GhostNodeFactory {
         outline.lineWidth = 2
         outline.zPosition = ZLayer.selection
         return outline
+    }
+
+    /// Range ring of a selected tower (or HQ): a projected circle around its footprint middle, an ellipse in isometric.
+    static func rangeRing(def: BuildingDef, origin: GridPoint, range: Double, style: ArtStyle) -> SKNode {
+        let path = style.geometry.circlePath(gx: Double(origin.x) + Double(def.width) / 2,
+                                             gy: Double(origin.y) + Double(def.height) / 2, radius: range)
+        let ring = SKShapeNode(path: path)
+        ring.fillColor = UIColor.systemYellow.withAlphaComponent(0.08)
+        ring.strokeColor = UIColor.systemYellow.withAlphaComponent(0.7)
+        ring.lineWidth = 1.5
+        return ring
     }
 }

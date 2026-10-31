@@ -1,13 +1,16 @@
 # Feature: Rendering & art
 
 ## Purpose
-Draws the map, decorations, and buildings with SpriteKit in two views: **isometric** (normal, Tropico style) and **top-down** (building view). Real art where it exists for that view; otherwise a labeled placeholder (3D block in iso, flat box top-down).
+Draws the map, decorations, buildings, defenses, zombies, and combat effects with SpriteKit in two views: **isometric** (normal, Tropico style) and **top-down** (building view). Real art where it exists for that view; otherwise a labeled placeholder (3D block in iso, flat box top-down).
 
 ## Files involved
 - `HighwayHoldout_Blender_Study/` — original 3D art-direction study, editable Blender scene/model libraries and ten transparent sprite samples; not installed into the app.
 - `Core/Sources/HoldoutCore/Presentation/GridProjection.swift` — pure tile ↔ screen math for both views (tested in Core; the simulation never uses it, D-016).
 - `Core/Sources/HoldoutCore/Content/PresentationDefs.swift` — Codable for `Content/presentation.json`.
-- `App/Rendering/GameScene.swift` — the SpriteKit scene: calls `GameStore.advance` every frame, switches view when `GameStore.activeView` changes, syncs nodes to Core state; owns the touch gestures.
+- `App/Rendering/GameScene.swift` — the SpriteKit scene: calls `GameStore.advance` every frame (which returns that frame's `SimEvent`s), switches view when `GameStore.activeView` changes, syncs buildings/zombies/warnings/selection to Core state, hands events to `EventPlayer`; owns the touch gestures.
+- `App/Rendering/ZombieLayer.swift` — one `ZombieNode` per zombie in `loop.state.base.zombies`: adds, moves every frame, removes.
+- `App/Rendering/EventPlayer.swift` — `SimEvent`s → effects (shot: tracer + muzzle flash + zombie flash + turret aim; died: goo; damaged: shake; destroyed: dust; trap hit: flashes). Caps effect counts; remembers each tower's last aim.
+- `App/Rendering/HordeWarningOverlay.swift` — pulsing red arrows + tile highlight at the warned spawn edges (`map.spawnEdges`, `hordeStatus.warningEdges`).
 - `App/Rendering/ViewSwitcher.swift` — fade out, rebuild the world in the other view, keep the same map spot centered, fade in.
 - `App/Rendering/ArtStyle.swift` — the active view: geometry, art folder (`Iso` / `TopDown`), placeholder heights, per-image fixes.
 - `App/Rendering/GridGeometry.swift` — CoreGraphics wrapper around `GridProjection` (points, outlines, depth, footprint sizes).
@@ -16,8 +19,12 @@ Draws the map, decorations, and buildings with SpriteKit in two views: **isometr
 - `App/Rendering/DepthSort.swift` — `ZLayer` draw order (ground, sorted upright things, selection, ghost).
 - `App/Rendering/DirectionalSprite.swift` — picks facing images (`_se`, `_ne`, … with mirroring) or rotates one image.
 - `App/Rendering/Nodes/TerrainNodeFactory.swift` — ground tiles + decorations.
-- `App/Rendering/Nodes/BuildingNodeFactory.swift` — one building/defense: sprite (+ turret top), or scaffolding + progress bar.
-- `App/Rendering/Nodes/GhostNodeFactory.swift` — placement ghost (projected tile polygons) and the selection outline.
+- `App/Rendering/Nodes/BuildingNodeFactory.swift` — one building: sprite, scaffolding + progress bar, rubble, health bar when damaged; finished defenses go to `DefenseNodeFactory`.
+- `App/Rendering/Nodes/DefenseNodeFactory.swift` — walls (mirrored in iso for a north-south line), flat traps, towers (base + turret top that aims; faded when unstaffed), muzzle point.
+- `App/Rendering/Nodes/ZombieNodeFactory.swift` — `ZombieNode`: facing sprite, walk bob, health bar when hurt, hit flash.
+- `App/Rendering/Nodes/FXNodeFactory.swift` — tracer, muzzle flash, goo splat, dust puff, building shake, trap flash (each removes itself).
+- `App/Rendering/Nodes/BarNodeFactory.swift` — the small progress/health bars.
+- `App/Rendering/Nodes/GhostNodeFactory.swift` — placement ghost (projected tile polygons), the selection outline, and the range ring (projected circle) of a selected tower/HQ.
 - `App/Assets.xcassets/Art/{TopDown,Iso,UI}/` — namespaced imagesets written by `tools/import_art.py --view` (don't hand-edit).
 - `docs/graphics-spec-iso.md` + `docs/art-templates/iso-template-*.png` — how to draw isometric art.
 - `tools/blender/render_iso_sprites.py` + `tools/blender/extra_models.py` — render the iso art from the Blender study's models (+ stand-ins) into `HighwayHoldout_Iso_Art/png/` (see its README).
@@ -25,7 +32,9 @@ Draws the map, decorations, and buildings with SpriteKit in two views: **isometr
 
 ## Data files
 - `Content/maps/phase1_exit.json` → `legend[*].tile` (ground art id per tile), `decorations` (id + footprint).
-- `Content/buildings.json` → `sprite`, `turretSprite`, `footprint`, `category` (placeholder height), `rules.constructionSprites` (`"WxH"` → scaffold art).
+- `Content/buildings.json` → `sprite`, `turretSprite`, `footprint`, `category` (placeholder height; `wall`/`tower`/`trap` = drawn by DefenseNodeFactory), `levels[].hp` (health bar), `levels[].effects.range` (range ring), `rules.constructionSprites` (`"WxH"` → scaffold art), `rules.rubble.rubbleSprite2x2` / `rubbleSprite1x1`.
+- `Content/zombies.json` → `sprite` (facing images `<sprite>_se` / `_ne`), `hp` (health bar).
+- `Content/maps/*.json` → `spawnEdges` (warning arrows).
 - `Content/presentation.json` → `defaultView`, `autoTopDownWhilePlacing`, `switchFadeSeconds`, `outsideMapColor`; per view: `tileWidthPt/tileHeightPt`, `artNamespace`, `facings`, `turretFacings`, `minScale/startScale`, `placeholderHeightTiles`, `assets.<id>` (`anchor`, `scale`, `mirrorable`).
 
 ## Key rules
@@ -36,17 +45,25 @@ Draws the map, decorations, and buildings with SpriteKit in two views: **isometr
 - Isometric ground-tile placeholders are unlabeled colored diamonds (1,200 labels are noise); every other placeholder carries its id.
 - In iso, turret tops need facing images (`def_watchtower_gunner_se`, …); without them the tower block stands alone.
 - To swap in art: `python3 tools/import_art.py <folder> --view topdown|iso`. No code change.
-- Nodes are rebuilt only when a building's def/level/origin/finished state changes or the view switches; progress bars update every frame.
+- Nodes are rebuilt only when a building's `Signature` changes (def, level, origin, finished, rubble, health in tenths, defense variant) or the view switches; progress bars update every frame.
+- Zombies stand at `GridGeometry.standingAnchor` (iso: bottom corner of a 1×1 diamond centered on them), sorted by `depth(gx:gy:)`. Facing = screen angle of the grid heading (`GridGeometry.screenAngle`) → `DirectionalSprite`; a missing facing image falls back to the base image, then a placeholder.
+- Walls: iso wall art is drawn for a line along x; a wall with more wall neighbors at y±1 than at x±1 is mirrored left-right. Top-down walls are not turned.
+- Finished traps lie flat at `ZLayer.trap`; goo at `ZLayer.decal`; tracers/flashes/dust/arrows at `ZLayer.effects`.
+- Turret tops face their last target (from `.shot`); idle: right top-down, lower right iso. Unstaffed towers show the turret faded.
+- Effect art (`fx_*`) exists only top-down; both views use it (`ArtRegistry.effectTexture`); goo is squashed to half height in iso.
+- Effect counts are capped (`EventPlayer`: 60 goo, oldest removed; 80 tracers/flashes/dust, extras skipped); building shakes and flashes don't restart while playing. Look-only numbers (bob, flash times, bar sizes) are named constants in the factories, not JSON (they are not game tuning).
 
 ## Known issues
-- Isometric art is rendered from the Blender study (D-019). Still blocks: metal wall, MG nest, spikes, barbed wire, runner, brute (1B).
-- Wood walls are one model facing one way; walls in a north-south line will look sideways until a rotated wall image exists (1B).
-- Iso sorting uses footprint middles: right for non-overlapping footprints up to 3×3; a zombie walking right behind a tall HQ can be hidden (planned: fade that building, 1B).
+- Isometric art for metal wall, MG nest, spikes, barbed wire, runner, brute is being rendered (1B); until imported they are labeled blocks.
+- If a wall render faces the other way, north-south and east-west lines swap; flip the rule in `DefenseNodeFactory.addParts` (or set `mirrorable: false`).
+- Iso sorting uses footprint middles: right for non-overlapping footprints up to 3×3; a zombie walking right behind a tall HQ can be hidden (fading that building is not built yet).
+- A building under repair shows scaffolding + progress (same as construction).
 - The view toggle uses SF Symbols (not art) for now.
 - `import_art.py` makes a 1×1 tile 96 px at @3x, so art is crisp at camera scale 1 and a little soft when zoomed in to the max (scale 0.5).
 - `import_art.py` trims and refits sprites; the ChatGPT hand-off note asks not to trim (keeps unit pivots consistent). Matters for 1B units; see STATUS open questions.
 
 ## Change log
+- 2026-10-31 — 1B App: zombies (facings, bob, health bar, hit flash), defenses (wall direction, flat traps, aiming turrets, range ring), effects from SimEvents, rubble + building health bars, horde warning arrows.
 - 2026-10-31 — Real isometric art rendered from the Blender study (+ stand-in models, darker ground tiles); isometric view no longer shows blocks for 1A buildings.
 - 2026-10-31 — 1V: two views (isometric + top-down), presentation.json, projection math in Core, depth sorting, iso placeholder blocks, view switching, namespaced art import.
 - 2026-10-31 — Owner abandoned the 8-bit variant; created a fresh Blender miniature-style study and ten PNG samples (40 image checks passed). App artwork remains unchanged.

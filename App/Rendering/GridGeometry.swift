@@ -1,5 +1,6 @@
 // Purpose: CoreGraphics wrapper around Core's GridProjection: tiles ↔ scene points for the active view. Notes: docs/features/rendering-art.md
 import CoreGraphics
+import Foundation
 import HoldoutCore
 
 struct GridGeometry {
@@ -46,6 +47,36 @@ struct GridGeometry {
     /// Draw-order key for a footprint (its middle); bigger = in front.
     func depth(origin: GridPoint, width w: Int, height h: Int) -> Double {
         projection.depth(gx: Double(origin.x) + Double(w) / 2, gy: Double(origin.y) + Double(h) / 2)
+    }
+
+    /// Draw-order key for a moving thing at (gx, gy); bigger = in front. Same scale as `depth(origin:...)`.
+    func depth(gx: Double, gy: Double) -> Double { projection.depth(gx: gx, gy: gy) }
+
+    /// Where a moving thing's sprite anchor goes when it stands at (gx, gy): the point itself top-down; in isometric the
+    /// bottom corner of a 1×1 diamond centered on it (units/zombies are drawn on a 1×1 canvas, docs/graphics-spec-iso.md).
+    func standingAnchor(gx: Double, gy: Double) -> CGPoint {
+        switch kind {
+        case .topDown: point(gx: gx, gy: gy)
+        case .isometric: point(gx: gx + 0.5, gy: gy + 0.5)
+        }
+    }
+
+    /// Screen direction (radians, 0 = right, π/2 = up) of a grid heading (0 = +x east, π/2 = +y south) at (gx, gy).
+    func screenAngle(gx: Double, gy: Double, heading: Double) -> Double {
+        let a = point(gx: gx, gy: gy), b = point(gx: gx + cos(heading), gy: gy + sin(heading))
+        return atan2(Double(b.y - a.y), Double(b.x - a.x))
+    }
+
+    /// A circle of `radius` tiles around (gx, gy) as a closed polygon: round top-down, an ellipse in isometric.
+    func circlePath(gx: Double, gy: Double, radius: Double, segments: Int = 64) -> CGPath {
+        let path = CGMutablePath()
+        let points = (0..<max(segments, 8)).map { i -> CGPoint in
+            let t = Double(i) / Double(max(segments, 8)) * 2 * Double.pi
+            return point(gx: gx + radius * cos(t), gy: gy + radius * sin(t))
+        }
+        path.addLines(between: points)
+        path.closeSubpath()
+        return path
     }
 
     /// On-screen width of a footprint (rectangle width top-down, diamond width isometric).

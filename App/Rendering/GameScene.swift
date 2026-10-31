@@ -13,12 +13,15 @@ final class GameScene: SKScene {
     var buildingNodes: [BuildingID: (signature: BuildingNodeFactory.Signature, node: SKNode)] = [:]
     var ghost: (key: GhostKey, node: SKNode)?
     var selection: (key: SelectionKey, node: SKNode)?
+    let zombies = ZombieLayer()
+    let effects = EventPlayer()
+    let hordeWarning = HordeWarningOverlay()
     var isSwitchingView = false
     private var lastUpdateTime: TimeInterval?
     private var isDraggingGhost = false
 
     struct GhostKey: Equatable { let defId: String; let origin: GridPoint; let check: PlacementCheck? }
-    struct SelectionKey: Equatable { let id: BuildingID; let origin: GridPoint }
+    struct SelectionKey: Equatable { let id: BuildingID; let origin: GridPoint; let level: Int }
 
     init(store: GameStore) {
         self.store = store
@@ -63,26 +66,36 @@ final class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         let delta = lastUpdateTime.map { currentTime - $0 } ?? 0
         lastUpdateTime = currentTime
-        store.advance(realSeconds: delta)
+        let events = store.advance(realSeconds: delta)
         guard let loop = store.loop, let style else { return }
         if store.activeView != style.kind && !isSwitchingView { switchView(to: store.activeView) }
         if let camera = cameraController?.camera { store.viewCenterTile = style.geometry.tile(at: camera.position) }
         syncBuildings(loop: loop, style: style)
+        zombies.sync(loop: loop, style: style, art: art, parent: world)
+        if !events.isEmpty {
+            effects.play(events, loop: loop, style: style, art: art, buildings: buildingNodes.mapValues(\.node), zombies: zombies)
+        }
+        hordeWarning.sync(edges: store.hordeStatus?.warningEdges ?? [], map: loop.map, style: style, parent: world)
         syncGhost(loop: loop, style: style)
         syncSelection(loop: loop, style: style)
     }
 
     private func syncBuildings(loop: GameLoop, style: ArtStyle) {
         var seen = Set<BuildingID>()
-        for building in loop.state.base.buildings {
+        let buildings = loop.state.base.buildings
+        let walls = DefenseNodeFactory.wallTiles(buildings, content: loop.content)
+        for building in buildings {
             seen.insert(building.id)
-            let signature = BuildingNodeFactory.Signature(building)
+            let def = loop.content.buildingDef(building.defId)
+            let variant = def.map { DefenseNodeFactory.variant(building, def: $0, wallTiles: walls) } ?? 0
+            let signature = BuildingNodeFactory.Signature(building, def: def, variant: variant)
             if let existing = buildingNodes[building.id], existing.signature == signature {
                 if !building.isComplete { BuildingNodeFactory.updateProgress(existing.node, building: building) }
                 continue
             }
             buildingNodes[building.id]?.node.removeFromParent()
-            let node = BuildingNodeFactory.make(building, content: loop.content, style: style, art: art)
+            let node = BuildingNodeFactory.make(building, content: loop.content, style: style, art: art,
+                                                variant: variant, aim: effects.towerAim[building.id])
             world.addChild(node)
             buildingNodes[building.id] = (signature, node)
         }
@@ -108,12 +121,15 @@ final class GameScene: SKScene {
 
     private func syncSelection(loop: GameLoop, style: ArtStyle) {
         let selected = store.selectedBuilding
-        let key = selected.map { SelectionKey(id: $0.id, origin: $0.origin) }
+        let key = selected.map { SelectionKey(id: $0.id, origin: $0.origin, level: $0.level) }
         guard selection?.key != key else { return }
         selection?.node.removeFromParent()
         selection = nil
         guard let selected, let key, let def = loop.content.buildingDef(selected.defId) else { return }
         let node = GhostNodeFactory.selectionOutline(def: def, origin: selected.origin, style: style)
+        if let range = def.level(selected.level)?.effects.range, range > 0 {
+            node.addChild(GhostNodeFactory.rangeRing(def: def, origin: selected.origin, range: range, style: style))
+        }
         world.addChild(node)
         selection = (key, node)
     }

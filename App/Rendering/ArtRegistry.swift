@@ -9,11 +9,19 @@ final class ArtRegistry {
 
     private var textures: [String: SKTexture] = [:]
     private var images: [String: UIImage] = [:]
+    private var exists: [String: Bool] = [:]
 
     /// The real image for `id` in a view's folder (`Assets.xcassets/Art/<namespace>/`), if there is one.
     func image(_ id: String, namespace: String) -> UIImage? { UIImage(named: "\(namespace)/\(id)") }
 
-    func hasImage(_ id: String, style: ArtStyle) -> Bool { image(id, namespace: style.namespace) != nil }
+    /// Remembered per image, because zombies ask about their facing images every frame.
+    func hasImage(_ id: String, style: ArtStyle) -> Bool {
+        let key = "\(style.namespace)/\(id)"
+        if let known = exists[key] { return known }
+        let found = image(id, namespace: style.namespace) != nil
+        exists[key] = found
+        return found
+    }
 
     /// A sprite showing `id` on a `w`×`h` footprint, sized and anchored so its `position` goes at
     /// `style.geometry.groundAnchor(...)`. Real art if present, otherwise a labeled placeholder.
@@ -60,6 +68,19 @@ final class ArtRegistry {
         if let scale = fix?.scale { node.setScale(scale) }
         node.name = SpriteName.body
         return node
+    }
+
+    /// Effect art (`fx_*`) exists only top-down, so it is shared by both views: this view's image, else the TopDown one,
+    /// else a labeled placeholder. Callers size the sprite themselves.
+    func effectTexture(_ id: String, style: ArtStyle) -> SKTexture {
+        for namespace in [style.namespace, "TopDown"] {
+            if let image = image(id, namespace: namespace) {
+                return cachedTexture("\(namespace)/\(id)") { SKTexture(image: image) }
+            }
+        }
+        return cachedTexture("fx/\(id)#placeholder") {
+            SKTexture(image: PlaceholderArt.flatBox(id, size: CGSize(width: 64, height: 64)))
+        }
     }
 
     /// UIImage for SwiftUI (HUD icons, build menu): UI folder, then top-down, then isometric art, else a placeholder.

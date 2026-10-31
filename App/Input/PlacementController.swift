@@ -64,6 +64,12 @@ final class PlacementController {
         if case .moving(let id) = mode { select(id) } else { select(nil) }
     }
 
+    /// After placing a 1×1 defense (wall, trap, tower) the ghost stays, so the next one is one tap + Confirm away.
+    func staysPlacingAfterConfirm(content: GameContent) -> Bool {
+        guard case .placing(let defId) = mode, let def = content.buildingDef(defId) else { return false }
+        return def.width == 1 && def.height == 1 && content.buildings.defenses.contains { $0.id == defId }
+    }
+
     // MARK: Ghost position
 
     func moveGhost(centeredOn tile: GridPoint, loop: GameLoop) {
