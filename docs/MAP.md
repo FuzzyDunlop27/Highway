@@ -226,9 +226,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
 │  └─ Assets.xcassets/      AppIcon + Art/UI/ (UI kit, tools/import_art.py --view ui) + Art/Menu/ (8 old iso building pictures for menu cards)
 ├─ HighwayHoldout_UI_Kit/   ChatGPT's UI kit (menu panels, buttons, glyphs, 3/4 build cards). Don't edit; import with --view ui.
-├─ HighwayHoldout_3D_Sources/  Raw 3D source files (Mixamo walker FBX for chunk 3M).
+├─ HighwayHoldout_3D_Sources/  Raw 3D source files, mostly git-ignored (Mixamo FBX, downloaded models, terrain textures). What the owner must download: docs/OWNER-DOWNLOADS.md (chunk 1X).
 ├─ HighwayHoldout_Blender_Study/  3D art study (models + scripts) the isometric art is rendered from. Art team owns it.
-├─ HighwayHoldout_3D_Sources/  Raw 3D source files (Mixamo walker FBX for chunk 3M).
 ├─ HighwayHoldout_Blender_Study/  Fresh 3D style study: editable .blend, models/, ten png/ samples, renders/, scripts/, QA and Claude handoff.
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
 └─ tools/

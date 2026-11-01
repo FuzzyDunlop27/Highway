@@ -35,3 +35,7 @@ App/Models/zmb_*.usdz
 App/Models/unit_*.usdz
 App/Models/*.anim.json
 HighwayHoldout_3D_Sources/mixamo-*/*.fbx
+
+# Chunk 1X owner downloads: Mixamo humans (any depth) and downloaded terrain textures stay local (public repo).
+HighwayHoldout_3D_Sources/mixamo-*/**/*.fbx
+HighwayHoldout_3D_Sources/terrain/

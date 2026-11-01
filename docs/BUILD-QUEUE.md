@@ -22,7 +22,10 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 2M | 3D art: models for buildings, defenses, decorations (CC0, D-036) | 1R | Done 2026-11-01 — 19 models in App/Models, checker 19/19 (D-037) |
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
 | 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Done 2026-11-01 (D-038) — walk/attack/idle walker, runner/brute variants; Mixamo files local only; defenders still boxes |
-| 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Specced 2026-11-01 (draft) — **own branch**; needs Mixamo downloads from owner |
+| 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props) into the working folder | — | Ready — **you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md`, tick parts A–D |
+| 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | Specced 2026-11-01 — blocked by 1X part A |
+| 2T | 3D: foliage and scatter (trees, bushes, grass, rocks) | 1T; 1X part B | Specced 2026-11-01 — blocked by 1T and 1X part B |
+| 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Specced 2026-11-01 (draft) — **own branch**; needs 1X part C (Mixamo downloads) |
 | 3M-3 | 3D: town life — survivors walk between home and work and do their jobs (Tropico feel) | 3M-2 | Specced 2026-11-01 (draft) — blocked by 3M-2 |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Done 2026-11-01 (D-039) — tracers, muzzle flash, goo, dust, shake, trap flash, health/progress bars, aiming turrets, warning arrows; day-40 ~60 fps (simulator) |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Ready |
@@ -215,3 +218,28 @@ _The humans are split in two so each fits a fresh chat: **3M-2** makes the peopl
 - **Do NOT build:** names/personalities/needs/happiness (Tropico's deeper sim — logged in `docs/IDEAS.md`), survivors being attacked by zombies, any Core rule or save change, new buildings or props beyond a few small task props (crate, sack, hoe) if missing.
 - **Exit check:** in the simulator with a mid-game town: counts on screen match the HUD population (working/building/away/idle) within the visible cap; each workplace shows its workers doing that building's task; changing Workers −/+ sends someone walking there/away within a few seconds; a run team visibly leaves and returns; horde warning empties the streets, "Held!" refills them; no one walks through walls or buildings; crowd-budget table exists and the caps come from it; a 15-minute busy-town + horde run on the minimum phone holds 60 fps without passing "fair" heat; `cd Core && swift test` (new `TownLifePlannerTests`) and the simulator build pass.
 - **Start prompt:** "Implement chunk 3M-3: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/characters-3d.md, docs/features/jobs-defenders.md, docs/plans/town-life-plan.md and the 3M-3 section of docs/BUILD-QUEUE.md only."
+
+## Chunk 1X — Owner downloads [Ready — you, not an agent]
+- **Goal:** all the downloaded art the agents need is in `HighwayHoldout_3D_Sources/`, so no agent spends effort driving a browser.
+- **Who:** the owner. No agent opens Chrome for downloads. Details, search terms, formats and folders: `docs/OWNER-DOWNLOADS.md`.
+- **Parts:** A terrain textures (for 1T), B foliage/scatter models (for 2T), C Mixamo humans (for 3M-2), D optional task props (for 3M-3). Parts are independent; do A first.
+- **Agent's only job:** when told "1X part N done", check the files exist and are the right format, note licences in the folder's `NOTES.txt`, then say which chunk is unblocked.
+- **Exit check:** every ticked part has its files in the listed folder; Mixamo and terrain files are git-ignored (`git status` doesn't list them).
+
+## Chunk 1T — Ground textures + map edge [Specced 2026-11-01]
+- **Goal:** the ground looks like real grass, dirt, asphalt and concrete instead of flat colors, and the map no longer ends in a hard flat edge.
+- **Needs:** 2R (done); 1X part A (texture files).
+- **Scope:** import the textures as small tileable 512 px (1024 px only for the main grass) USDZ-friendly images in `App/` (size budget: ≤ 4 MB total, note it); extend `GroundMesh3D` / `ModelRegistry.material` so each tile art id maps to a texture through `presentation.json reality3d` (texture name, tiling scale, tint); UVs from world position so tiles join without seams; soften the checker (D-016 style grid look) and add per-tile variation (seeded, look-only) so a field of grass isn't visibly tiled; blend where two tile types meet if cheap (else a 1-tile dark soft edge); the road gets its centre line from the `tile_asphalt_line` art id; map edge: a dressed border (dirt/grass strip, a few fences/barriers from existing models, fade to the outside colour) instead of a flat cut-off; missing texture falls back to today's flat color (never crash).
+- **Do NOT build:** foliage or props (2T), new tile types in Core, map layout changes, terrain height/hills, water.
+- **Exit check:** simulator screenshots at two zoom levels and two camera angles beside today's flat ground; texture size table; 60 fps unchanged at a day-40 horde (simulator); removing a texture shows the flat colour; `cd Core && swift test` and the simulator build pass.
+- **Model:** Sonnet is fine (material and UV work, JSON-driven), with the edge dressing reviewed by the owner.
+- **Start prompt:** "Implement chunk 1T: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/rendering-art.md, docs/OWNER-DOWNLOADS.md Part A and the 1T section of docs/BUILD-QUEUE.md only."
+
+## Chunk 2T — Foliage and scatter [Specced 2026-11-01]
+- **Goal:** the town sits in a believable overgrown landscape: live and dead trees, bushes, grass tufts, rocks and roadside junk placed around the map, with no gameplay effect.
+- **Needs:** 1T; 1X part B (models). Run after 5R's fps readout exists, or add a quick readout first, because scatter is the likeliest thing to cost frame rate.
+- **Scope:** extend `tools/blender/export_usdz.py` (recipes) to export the new models as `dec_*` / `fol_*` USDZ at game scale (512 px textures, ≤ ~2,000 triangles each, total new size ≤ 12 MB, record it); a scatter pass in the App (not Core) that places foliage from a seeded random generator and a density mask (none on building footprints, roads or the placement grid area; thicker toward the map edge); drawn as repeated instances of a few models (shared meshes), capped by a count in `presentation.json`; trees may be tall roofs for the placement fade rule (D-032) so they must not hide the ghost (fade or keep clear of the base area); decorations already in the map file (`dec_tree_dead`, car wreck, rubble) stay and are not duplicated; Battery saver (5R) can lower the count (leave a hook).
+- **Do NOT build:** swaying/wind animation (later), destructible or harvestable trees, weather, seasons, new Core rules or saves.
+- **Exit check:** screenshots at two angles with a mid-game town: foliage visible but never over placement ghosts, selected buildings or the tiles you tap; same layout after relaunch (seeded); fps table before/after (day-40 horde, simulator, plus the minimum phone if available, D-040); `check_models.py` reports all new art ids; `cd Core && swift test` and the simulator build pass.
+- **Model:** Sonnet for the export recipes; Opus (or careful review) for the scatter/instancing and the frame-rate budget.
+- **Start prompt:** "Implement chunk 2T: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/rendering-art.md, docs/features/models-3d.md, docs/OWNER-DOWNLOADS.md Part B and the 2T section of docs/BUILD-QUEUE.md only."
