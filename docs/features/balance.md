@@ -53,3 +53,13 @@ Income check: ~20/min each at 15 min, ~40 food + 60 scrap/min at 60 min. Scrap i
 
 ## Change log
 - 2026-10-31 — First tuning pass for all Phase 1 content files.
+
+## Playtest 3B (2026-11-01, agent-played in the iPhone 18 Pro simulator, 2x, fresh town, ~38 game-minutes)
+What happened: Farm + Scavenger Post first, Barracks + 2 defenders (one in the Watchtower, one holding a spot at the west road), Shelter, 2nd Farm, HQ L2 started ~game-min 25 and done ~28, Workshop (Marksmanship research started), Storage. Hordes 1–4 (5, ~8, brute day, 7 zombies) were all "Held!"; only one wall turned to rubble (day 2, rebuilt for 1 scrap). Not played: HQ L3, metal walls, 2nd tower, levels above 2, the 1x pace.
+Findings (for 6B and the next UI pass):
+- **Easy early on.** One Watchtower + 2 defenders held through day 4 with a guaranteed brute. Probably fine for a first hour; if the player should feel pressure by day 3–4, raise `hordes.json budget.baseBudget/budgetPerDay` or lower tower `damage`.
+- **HQ L3 needs storage first.** L3 costs 1200 scrap / 600 food but the cap is 1000 after HQ L2, so it is unreachable until a Storage exists (cap 1500 after one Storage L1; confirmed on screen). Fine by design, but the Upgrade button gives no hint; show "Storage full — build Storage" (UI follow-up).
+- **Scrap is the bottleneck**: +20/min at ~game-min 35; HQ L3 at that rate is ~60 min of saving, so ~game-min 90+ matches the pacing table. Scavenger runs (+60 scrap/5 min for 10 food, 2 survivors) are worth far more than a farm worker's output; if runs feel too good, lower `runRewardMultiplier` or raise the run `foodCost`.
+- **Builders cost income without warning**: food went +20 → +15/min while HQ L2 upgraded (a farm worker became the builder). The strip says "10 free hands" while the HUD says "0 idle" — two different counts for the player.
+- **Research and run timers read well** (Marksmanship 10 min counted down on screen; run Collect worked). Research finishing and its effect were not watched on screen (Core tests cover them).
+UI issues seen (not fixed, 3B scope is done): (1) a toast ("The Workshop needs its workers") stays on screen until OK is tapped, even across screens; (2) on a damaged HQ L2 the "Repair · 25 scrap · 13 food" button text overflows its button; (3) the build menu lists "HQ — free" as a card; (4) the debug long-press and the Workshop worker − button sit close together, easy to mis-tap.

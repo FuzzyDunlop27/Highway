@@ -13,8 +13,8 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 1D | Art: realistic static walker pilot | — | Done — 2026-10-31 |
 | 2B | Core: jobs (manual workers) + defenders | 1B only | Done 2026-11-01 (D-034); save v4 |
 | 2C | Core: scavenging runs + research stub | 1B only | Done 2026-11-01 (D-035); save v5; 198 Core tests |
-| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Ready |
-| 4B | Core: offline catch-up, tamper guard, bonus horde, settings in save | 3B (not the A art track) | Blocked by 3B |
+| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Done 2026-11-01 — panels + 30-min playtest (agent-played, iPhone 18 Pro sim); notes in `docs/features/balance.md` "Playtest 3B" |
+| 4B | Core: offline catch-up, tamper guard, bonus horde, settings in save | 3B (not the A art track) | Ready — 3B completed 2026-11-01; matches Craft Next |
 | 5B | App: settings, welcome back, Horde Alerts, Engage + 1D exit check | 4B | Blocked by 4B |
 | 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers with shadows |
@@ -26,6 +26,8 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | Specced 2026-11-01 — blocked by 1X part A |
 | 2T | 3D: foliage and scatter (trees, bushes, grass, rocks) | 1T; 1X part B | Specced 2026-11-01 — blocked by 1T and 1X part B |
 | 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Specced 2026-11-01 (draft) — **own branch**; needs 1X part C (Mixamo downloads) |
+| 3M-2MH | MakeHuman trial: body-to-FBX script + medieval blacksmith profile | Owner request only; no wave dependency | Done 2026-11-01 — script/profile preparation; live MakeHuman export/import pending; does not complete 3M-2 |
+| 3M-2MH-I | Install MakeHuman on the owner's Mac | Owner request only; no wave dependency | Done 2026-11-01 — modeling screen opened, scripting/FBX plugins loaded; real export/import next |
 | 3M-3 | 3D: town life — survivors walk between home and work and do their jobs (Tropico feel) | 3M-2 | Specced 2026-11-01 (draft) — blocked by 3M-2 |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Done 2026-11-01 (D-039) — tracers, muzzle flash, goo, dust, shake, trap flash, health/progress bars, aiming turrets, warning arrows; day-40 ~60 fps (simulator) |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Ready |
@@ -85,7 +87,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** `swift test` passes, with tests for: run timer/absence/reward/clamped collect, levels unlocking runs, research gate/time/effects, and Knowledge surviving a save round-trip.
 - **Start prompt:** "Implement chunk 2C: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/economy.md, and the 2C section of docs/BUILD-QUEUE.md only."
 
-### 3B — App: 1C panels + 1C exit check [Panels built 2026-11-01; 30-minute exit check still to play]
+### 3B — App: 1C panels + 1C exit check [Done 2026-11-01]
+- **Playtest result (agent-played at 2x, fresh town, ~38 game-min):** HQ L2 reached (~game-min 28), hordes 1–4 all held (day 3–4 hordes are configured with a guaranteed brute), 1 wall lost, Scavenger run + Collect, Barracks train + garrison + hold-spot, Workshop research start/progress, Storage (cap 1000→1500) all worked on screen. HQ L3 not reached (needs 1200 scrap; see balance notes). Findings and knobs: `docs/features/balance.md` → "Playtest 3B".
 - **Result so far:** everything in Scope below is on screen and was driven in the iPhone 18 Pro simulator: selecting a building shows a panel with the level badge (tinted), Upgrade (cost; cream when Core says no and tapping shows the reason, progress bar while upgrading, Cancel job in the bar), Workers −/+, build-queue strip under the HUD, Barracks (Train, queue with cancel, defender cards with a Post… menu: wait at HQ / hold a spot by tapping the map / man a tower), tower panel (assign or release a defender), Scavenger Post (runs, Send, timer, Collect) and Workshop (research list). Defenders are drawn as labeled boxes (not directional until 3M). Range ring includes Marksmanship. Not done: the 30-minute playthrough that reaches HQ 2–3 and faces brutes, plus its balance notes for 6B; Workshop research and Collect were only verified in Core tests (the simulator town had no staffed Workshop). Notes: `docs/features/hud-ui.md`.
 - **Goal:** everything from 1B/2B/2C can be used on screen, and a 30-minute session feels like progress.
 - **Needs:** 1B, 2B, 2C (not the A art track). All three are done; the Core calls to use are listed in the Results of 1B, 2B and 2C above and in `docs/features/core-api.md`. `PlacementMessages` already has text for every new Core error.
@@ -199,7 +202,36 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Result:** 19 models (7 buildings, 6 defenses, 2 construction sites, 2 rubble, car wreck, dead tree), ~20 MB in all (512 px textures, no normal maps, props ≤ ~1,500 triangles). `check_models.py`: 19/19. Review sheets `docs/plans/models-2m/`; in the game on the iPhone 18 Pro simulator they replace the boxes (`docs/plans/models-2m/in-game.jpg`); the 1R spike's study scene loads them too (old study USDZ removed). 198 Core tests pass; build clean; simulator save restored byte-for-byte. Notes: `docs/features/models-3d.md`.
 - **Not done (moved on):** separate turret tops that can aim (now in 4R); a different look per building level (L2/L3); measuring on a real phone (5R).
 
+## Chunk 3M-2MH — MakeHuman script + blacksmith profile [Done 2026-11-01]
+- **Goal:** give the owner a reproducible body/FBX script and a precise age-45 medieval blacksmith brief.
+- **Needs:** owner request only; no wave dependency. Running it needs MakeHuman with scripting/FBX plugins enabled.
+- **Scope:** `tools/makehuman/` script and instructions, measured-height report, `docs/plans/blacksmith-profile.md` with face/build/posture/costume targets. D-041.
+- **Do NOT build:** full cast, custom garment assets, rigging/animation, game hookup, new gameplay or a medieval game setting.
+- **Exit check:** script syntax and mocked plugin-style execution pass (exact values, output isolation, safeguards, invalid-FBX rejection); profile and instructions delivered. Live generation and Blender import are explicitly pending, outside this preparation chunk.
+- **Start prompt / next:** "Continue the MakeHuman trial for chunk 3M-2; follow tools/makehuman/README.md and verify one real FBX in Blender."
+
+## Chunk 3M-2MH-I — Install MakeHuman [Done 2026-11-01]
+- **Goal:** owner can open MakeHuman on this Apple Silicon Mac without setup work.
+- **Needs:** owner installation request; no wave dependency.
+- **Scope:** official pinned source, official CC0 asset pack, private Python environment, user Mac launcher, enabled scripting/FBX, link to existing script.
+- **Do NOT build:** game changes, sculpted character, rigging or animation.
+- **Exit check:** modeling window observed; logs confirm both plugins and startup complete; `pip check` passes. Source reports 1.3.0 alpha. Install details in `tools/makehuman/README.md`.
+- **Start prompt / next:** "Continue the MakeHuman trial for chunk 3M-2: open the installed app and verify one real FBX using tools/makehuman/README.md."
+
 ## Chunk 3M-2 — Human characters: defender + survivor looks [Specced 2026-11-01, draft]
+**Installation ready (3M-2MH-I, 2026-11-01):** open `/Users/rick/Applications/MakeHuman.app`.
+Official source + CC0 system assets installed; private Python environment; scripting/FBX enabled and
+startup verified. Reports 1.3.0 alpha. Follow `tools/makehuman/README.md` for the real export check;
+no blacksmith FBX was generated during installation. No change to the full chunk's remaining scope.
+
+**MakeHuman continuation (2026-11-01, D-041):** 3M-2MH preparation is done. Next, run
+`tools/makehuman/generate_blacksmith.py` in MakeHuman (instructions beside it), compare the FBX
+height/textures in Blender with its report, and apply the chosen survivor look. Rig in Mixamo and
+download the clips before the game integration below. Script syntax/mocked checks passed; no real
+FBX was generated this session. Start prompt: "Continue the MakeHuman trial for chunk 3M-2:
+read tools/makehuman/README.md and docs/plans/blacksmith-profile.md; verify one real FBX in
+Blender before expanding to the full cast."
+
 _The humans are split in two so each fits a fresh chat: **3M-2** makes the people (models + animations), **3M-3** makes them live in the town. Full design for both: `docs/plans/town-life-plan.md`._
 - **Why:** 3M shipped only the zombie. Defenders are still labeled boxes and survivors are not drawn at all.
 - **Work on its own git branch** (`chunk-3m-2-humans`), merged only when the owner approves.
