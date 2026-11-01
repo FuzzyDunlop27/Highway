@@ -41,15 +41,16 @@ final class ModelRegistry {
     }
 
     /// A container for art `id`. `size` = footprint width (x), box height (y) and footprint depth (z), in metres.
-    /// Its origin is the footprint's ground middle (the same rule the 2M model export uses).
-    func entity(_ id: String, size: SIMD3<Float>, labelMinWidth: Float = 0) -> Entity {
+    /// Its origin is the footprint's ground middle (the same rule the 2M model export uses). `lift` raises only the box
+    /// (a turret box sits on its tower's box; the real turret model is built at its height already, 4R).
+    func entity(_ id: String, size: SIMD3<Float>, labelMinWidth: Float = 0, lift: Float = 0) -> Entity {
         let container = Entity()
         container.name = id
         if let model = templates[id] {
             container.addChild(model.clone(recursive: true))
             return container
         }
-        container.addChild(placeholder(id, size: size, labelMinWidth: labelMinWidth))
+        container.addChild(placeholder(id, size: size, labelMinWidth: labelMinWidth, lift: lift))
         if loadModels && !failed.contains(id) {
             waiting[id, default: []].append(WeakEntity(container))
             startLoading(id)
@@ -82,7 +83,8 @@ final class ModelRegistry {
         if let tint = variants[id]?.tint { Self.tint(model, UIColor.hex(tint)) }
         templates[id] = model
         for container in containers.compactMap(\.entity) {
-            container.findEntity(named: Self.placeholderName)?.removeFromParent()
+            // Direct child only: a building may hold a turret with its own placeholder (4R).
+            container.children.first { $0.name == Self.placeholderName }?.removeFromParent()
             container.addChild(model.clone(recursive: true))
         }
     }
@@ -133,7 +135,7 @@ final class ModelRegistry {
 
     // MARK: Placeholder box
 
-    private func placeholder(_ id: String, size: SIMD3<Float>, labelMinWidth: Float) -> Entity {
+    private func placeholder(_ id: String, size: SIMD3<Float>, labelMinWidth: Float, lift: Float) -> Entity {
         let root = Entity()
         root.name = Self.placeholderName
         let box = SIMD3(max(size.x - 2 * Self.boxInset, 0.05), max(size.y, 0.02), max(size.z - 2 * Self.boxInset, 0.05))
@@ -141,10 +143,10 @@ final class ModelRegistry {
                                                              cornerRadius: min(box.x, box.y, box.z) * 0.08)
         boxMeshes[box] = mesh
         let body = ModelEntity(mesh: mesh, materials: [material(id)])
-        body.position.y = box.y / 2
+        body.position.y = lift + box.y / 2
         root.addChild(body)
         if let label = label(id, maxWidth: max(size.x, size.z, labelMinWidth) * 0.95) {
-            label.position.y = box.y + Self.labelLift
+            label.position.y = lift + box.y + Self.labelLift
             root.addChild(label)
         }
         return root

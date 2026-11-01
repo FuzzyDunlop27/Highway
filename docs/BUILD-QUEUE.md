@@ -22,8 +22,8 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 2M | 3D art: models for buildings, defenses, decorations (CC0, D-036) | 1R | Done 2026-11-01 — 19 models in App/Models, checker 19/19 (D-037) |
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
 | 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Done 2026-11-01 (D-038) — walk/attack/idle walker, runner/brute variants; Mixamo files local only; defenders still boxes |
-| 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Ready |
-| 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Blocked by 4R |
+| 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Done 2026-11-01 (D-039) — tracers, muzzle flash, goo, dust, shake, trap flash, health/progress bars, aiming turrets, warning arrows; day-40 ~60 fps (simulator) |
+| 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Ready |
 | 6R | 3D: retire 2D | owner yes | Done 2026-11-01 early, owner's call (D-030) |
 
 Track A = zombie art (details at the bottom of this file; 2D zombie art is retired, D-030). Track B = 1C–1E gameplay. Track C = small parallel side work.
@@ -167,13 +167,23 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Result (2026-11-01):** owner signed in to Mixamo; downloaded Zombie Attack + Zombie Idle for Yaku J Ignite (FBX Binary, With Skin, 30 fps) into `HighwayHoldout_3D_Sources/mixamo-walker/`; exporter now writes walk (0–4.0 s), attack (4.03–8.63 s), idle (8.67–14.73 s), 3.0 MB. In the simulator a temporary log confirmed walkers, runners and brutes switch to attack while bashing and idle when standing (probe removed). 204 Core tests pass; build clean; save restored byte-for-byte.
 - **Not checked / left:** close visual foot-sliding check from all 4 camera angles (stills + maths only); day-40 fps (no in-game readout until 5R); defenders stay boxes (no defender model downloaded; drop `mixamo-defender/defender_idle.fbx` in and rerun the exporter).
 
-## Chunk 4R — Effects, overlays and health bars in 3D [Ready]
+## Chunk 4R — Effects, overlays and health bars in 3D [Done 2026-11-01, D-039]
 - **Goal:** watching a horde reads as well as it did in 2D: you can see who shoots whom, what is hurt, what broke, and where the next horde comes from.
 - **Needs:** 3R (done) and 3M (animated zombies; 3M needs 2M). Effects can be prototyped on boxes, but the exit check needs 3M's zombies.
 - **Scope:** draw Core's `SimEvent`s (today `World3D.update` drains and drops them): tracers and muzzle flash from towers, hit/goo decals on the ground, dust when a wall breaks, short building shake on damage, trap flash; floating health bars over damaged buildings/walls and progress bars over buildings under construction (billboards); turret tops that turn toward their target (2M did not split them: add a separate turret model for the watchtower and MG nest here); horde warning arrows at the map edges during the warning time. Same caps as the old 2D `EventPlayer` (git history before c7a8e9c) so a day-40 horde can't flood the scene; any new caps or timings are look constants, or JSON if they're tuning.
 - **Do NOT build:** new kinds of effects beyond the 2D set, sound, particles that need iOS 26, the performance pass and fps readout (5R), new gameplay or Core rules.
 - **Exit check:** the 1B on-screen defense check in 3D: horde from the debug menu walks to a weakened wall, breaks through (dust + rubble), pours in, towers aim and fire with visible tracers, damaged walls show health bars, "Held!" banner; a day-40 horde (debug) stays smooth in the simulator; `cd Core && swift test` and the simulator build pass.
 - **Start prompt:** "Implement chunk 4R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/rendering-art.md, docs/features/hordes.md and the 4R section of docs/BUILD-QUEUE.md only."
+- **Result (2026-11-01):** new App layers `EffectsLayer3D` (+ `EffectMeshes3D`), `TurretLayer3D`, `BarsLayer3D`, `HordeWarning3D`; new turret models `def_watchtower_gunner`, `def_mg_nest_gun` (with `muzzle` empties); the watchtower is now an open platform so its gun shows; `check_models.py` counts turrets (21/21). No Core change (204 Core tests pass); build has no warnings. Exit check in the iPhone 18 Pro simulator with test saves: warning arrows + red edge tiles at the warned edges; horde walked to weakened walls (red health bars), broke through (dust cloud caught in a frame, rubble), poured in, the watchtower gun turned and fired yellow tracers, goo where zombies died; with a full-health HQ the horde ended with "Held! +49 scrap · +45 food" (HQ bar back to green); earlier runs with a near-dead HQ ended "HQ fell". Day-40 horde (up to 47 zombies): 58.6–59.6 fps from a temporary display-link probe (removed). Simulator save restored byte-for-byte.
+- **Not checked:** the MG nest gun in the game (the test town has none; model exported and reviewed only); defender tracers (no defender holding a spot in the test town); trap flash (no spikes in the test town); real-phone fps (5R).
+
+## Chunk 5R — Performance pass, fps readout, Battery saver [Ready]
+- **Goal:** the 3D game stays smooth and cool on real phones, and the player can see/limit it.
+- **Needs:** 4R (done).
+- **Scope:** a DEBUG fps + entity-count readout in the game (like the old 2D one; 4R used a temporary display-link probe); stress tests: day-40 horde and ~100 zombies (debug), on the simulator and on the oldest supported real iPhone available; tune what costs most (shadow distance, zombie model detail, effect caps) with numbers in `presentation.json` where they are tuning; a **Battery saver** setting (e.g. 30 fps cap via the display link, shadows off) saved with the player's settings; an app-size report (`App/Models` is ~20 MB + characters); a 30-minute play session heat check on a real phone.
+- **Do NOT build:** new effects or models, gameplay changes, the 1D settings screen beyond the one Battery saver switch (5B owns the settings screen; put the switch where 5B can move it).
+- **Exit check:** 60 fps at day 40 and ≥45 fps at 100 zombies on the oldest phone tried (table in `docs/plans/`), Battery saver visibly lowers fps/shadows and survives a relaunch, a 30-minute session without the phone getting hot, size report; `cd Core && swift test` and the simulator build pass.
+- **Start prompt:** "Implement chunk 5R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/rendering-art.md and the 5R section of docs/BUILD-QUEUE.md only. Start with the fps readout and a stress test."
 
 ## Chunk 6R — Retire 2D [Done 2026-11-01, D-030]
 - Owner asked to move to full 3D right after 2R. Removed the SpriteKit renderer, iso/top-down sprites and Core 2D projection math; kept menus, `PlacementController` logic, the DEBUG spike, tools and source art folders. Building stays off until 3R.

@@ -11,10 +11,10 @@ MODELS = os.path.join(ROOT, 'App', 'Models')
 
 
 def sprites(node):
-    """Every "sprite" value in a JSON tree."""
+    """Every "sprite" (and "turretSprite") value in a JSON tree."""
     if isinstance(node, dict):
         for key, value in node.items():
-            if key == 'sprite' and isinstance(value, str):
+            if key in ('sprite', 'turretSprite') and isinstance(value, str):  # turrets: chunk 4R
                 yield value
             else:
                 yield from sprites(value)

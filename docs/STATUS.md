@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-11-01 (chunk 3M done: animated zombies walk/attack/idle, D-038; 4R ready next on the 3D track)
+**Last updated:** 2026-11-01 (chunk 4R done: effects, bars, aiming turrets, warning arrows, D-039; 5R ready next on the 3D track)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -14,6 +14,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Chunk 4R done (D-039): watching a horde reads well in 3D.** Towers have a gun on top that turns toward its target and fires yellow tracers with a muzzle flash; dead zombies leave goo that fades; a wall that breaks puffs dust and turns to rubble; hit buildings shake; traps flash; damaged buildings show a green/amber/red health bar and buildings under construction a green progress bar; before a horde the warned map edges glow red with big arrows. New App layers `EffectsLayer3D`, `TurretLayer3D`, `BarsLayer3D`, `HordeWarning3D`; new models `def_watchtower_gunner`, `def_mg_nest_gun`; the watchtower is now an open platform (the roof hid the gun). Checked in the iPhone 18 Pro simulator with test saves (arrows, breakthrough + dust, tracers, "Held!", HQ-fell); day-40 horde ~59–60 fps. No Core change; 204 Core tests pass; build clean; save restored. Not checked: MG nest gun, defender tracers and trap flash on screen (test town has none), real phone. **Next on the 3D track: 5R.** Notes: `docs/features/rendering-art.md`.
 - **Chunk 3M done (D-038): zombies are animated 3D characters.** New exporter `tools/blender/export_characters.py` turns the Mixamo walker into `App/Models/zmb_walker.usdz` + `.anim.json` (git-ignored: public repo, Mixamo terms). Zombies glide between Core ticks, turn smoothly and walk with the cycle matched to their speed (`CharacterMotion3D` in Core, 6 new tests, 204 pass); runner/brute are the walker scaled and tinted (`presentation.json reality3d.characters`). Checked in the simulator; missing model → labeled box; save restored. Mixamo Zombie Attack + Zombie Idle downloaded later the same day; attack while bashing and idle confirmed in the app. Not checked: close foot-sliding look from all 4 angles, day-40 fps (5R). Defenders still boxes. **Next on the 3D track: 4R.** Notes: `docs/features/characters-3d.md`.
 - **Chunk 2M done (D-036, D-037): the map shows real models instead of boxes.** All 19 buildings, defenses, construction/rubble states and decorations are realistic CC0 models: buildings assembled from Quaternius modular pieces, props from Poly Haven, barricades/spikes/barbed wire modelled with Poly Haven textures. New pipeline `tools/blender/export_usdz.py` (recipes in `recipes_buildings.py` / `recipes_defenses.py`, helpers `model_kit.py`) writes `App/Models/` (~20 MB; 512 px, no normal maps); `python3 tools/check_models.py` reports 19/19. Review sheets in `docs/plans/models-2m/`; checked in the game on the iPhone 18 Pro simulator (`in-game.jpg`). 198 Core tests pass; build clean; save restored byte-for-byte. Not done: aiming turret parts (moved to 4R), per-level looks, real-phone check. Zombies are still boxes (3M, now ready). Notes: `docs/features/models-3d.md`.
 - **Chunk 3B panels built (2B/2C are now usable on screen).** Tap a building: tinted level badge + Upgrade (cost; cream and a reason if Core says no; progress bar and Cancel job while upgrading), Workers −/+, a "Building 1/2 · 2 free hands" strip under the top bar, a Barracks panel (Train, queue, defender cards with a Post… menu: wait at HQ, hold a spot by tapping the map, man a tower), a tower panel, a Scavenger Post panel (Send run, timer, Collect) and a Workshop research list. Defenders show as labeled boxes. Driven in the iPhone 18 Pro simulator on the day-7 town (trained 3 defenders, manned the Watchtower, sent one to hold a spot outside the wall, worker − cut farm food to +5/min, started an HQ upgrade and a quick run); Core 198 tests pass; simulator save restored. **Not done:** the 30-minute playthrough exit check (HQ 2–3, brutes) and Workshop research/Collect on screen (the test town's Workshop had no workers; covered by Core tests). Not pushed yet.
@@ -51,8 +52,8 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **Track B: chunk 3B (App panels for upgrades, queue, workers, Barracks, runs, research + the 30-minute exit check) is now ready**; then 4B/5B (time & alerts).
-- **Chunk 3M (animated zombies) is next on the 3D track** (2M done; start prompt in `BUILD-QUEUE.md`); then 4R (effects, health bars, turret tops that aim). An older-phone check and a heat check stay with 5R.
+- **Track B: chunk 3B's panels are built; its 30-minute playthrough exit check is still to play**; then 4B/5B (time & alerts).
+- **Chunk 5R (performance pass, fps readout, Battery saver, real-phone + heat check) is next on the 3D track**; start prompt in `BUILD-QUEUE.md`.
 - Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
 
 ## Decided

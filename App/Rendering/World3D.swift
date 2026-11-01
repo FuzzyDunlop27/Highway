@@ -1,4 +1,4 @@
-// Purpose: The 3D scene: camera, dusk light, ground, decorations, buildings/zombies and placement/selection overlays synced every frame. Notes: docs/features/rendering-art.md
+// Purpose: The 3D scene: camera, dusk light, ground, decorations, buildings/zombies, effects, bars and overlays synced every frame. Notes: docs/features/rendering-art.md
 import RealityKit
 import UIKit
 import HoldoutCore
@@ -21,6 +21,10 @@ final class World3D {
     let placement = PlacementLayer3D()
     private let selection = SelectionLayer3D()
     private let fader = OccluderFader3D()
+    private let turrets = TurretLayer3D()
+    private let bars = BarsLayer3D()
+    private let effects = EffectsLayer3D()
+    private let warning = HordeWarning3D()
 
     init?(store: GameStore, ticker: GameTicker) {
         guard let loop = store.loop else { return nil }
@@ -41,6 +45,9 @@ final class World3D {
         root.addChild(buildings.root)
         root.addChild(zombies.root)
         root.addChild(defenders.root)
+        root.addChild(warning.root)
+        root.addChild(effects.root)
+        root.addChild(bars.root)
         root.addChild(selection.root)
         root.addChild(placement.root)
         addLights()
@@ -53,13 +60,23 @@ final class World3D {
         update(dt: 0)
     }
 
-    /// Called every rendered frame: finish any camera turn, then match Core's buildings and zombies, then the overlays.
+    /// Called every rendered frame: finish any camera turn, play this frame's Core events (before the layers drop the
+    /// zombies that died), then match Core's buildings and zombies, then effects, bars and overlays.
     func update(dt: Double) {
-        _ = ticker.drainEvents()  // effects come in chunk 4R; until then this frame's events are simply dropped
+        let events = ticker.drainEvents()
         orbit.advance(seconds: dt)
         applyCamera()
         guard let loop = store.loop else { return }
+        if !events.isEmpty {
+            effects.play(events, loop: loop, mapping: mapping, buildings: buildings, zombies: zombies, defenders: defenders,
+                         turrets: turrets)
+        }
         buildings.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
+        turrets.sync(loop: loop, buildings: buildings, settings: settings, registry: registry, seconds: dt)
+        bars.sync(loop: loop, mapping: mapping, buildings: buildings, facing: camera.orientation)
+        effects.update(seconds: dt)
+        let horde = store.hordeStatus
+        warning.sync(edges: horde?.isActive == false ? horde?.warningEdges ?? [] : [], map: loop.map, mapping: mapping, seconds: dt)
         zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, seconds: dt, gameSpeed: Double(store.speed))
         defenders.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, gameSpeed: Double(store.speed))
         placement.sync(placement: store.placement, viewCenter: store.viewCenterTile, loop: loop, mapping: mapping,

@@ -20,7 +20,11 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Offline credit cap (12h), what progresses while away, Horde Alert timing | `Content/offline.json` |
 | Which number to change when it feels too slow/hard | `docs/features/balance.md` |
 | Map layout, roads, spawn edges | `Content/maps/phase1_exit.json` |
-| How buildings / zombies look in 3D | `App/Rendering/{BuildingLayer3D,ZombieLayer3D}.swift`; models `<artId>.usdz` via `ModelRegistry.swift` (effects: chunk 4R) |
+| How buildings / zombies look in 3D | `App/Rendering/{BuildingLayer3D,ZombieLayer3D}.swift`; models `<artId>.usdz` via `ModelRegistry.swift` |
+| Tracers, muzzle flash, goo, dust, trap flash, building shake (sizes, times, caps) | `App/Rendering/EffectsLayer3D.swift` + `EffectMeshes3D.swift` |
+| Health / build-progress bars over buildings | `App/Rendering/BarsLayer3D.swift` |
+| Turret tops that aim (watchtower gun, MG) | `App/Rendering/TurretLayer3D.swift`; models `recipes_defenses.py` (`turretSprite` in `buildings.json`) |
+| Red arrows / glowing edge tiles before a horde | `App/Rendering/HordeWarning3D.swift` (timing: `hordes.json warningSeconds`) |
 | Horde chip, banners, debug menu | `App/UI/HordeChipView.swift`, `HordeBannerView.swift`, `DebugMenuView.swift` |
 | Horde timing, size, mix, edges | `Content/hordes.json`; code `Core/.../Systems/Hordes/` (notes: `docs/features/hordes.md`) |
 | Zombie routes, bashing, traps | `docs/features/pathing.md`; code `Core/.../Systems/Pathing/`, `Systems/Combat/ZombieMovement.swift` |
@@ -177,6 +181,11 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
 │  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (3B); idle clip if a model exists (3M)
 │  │  ├─ [x] ZombieLayer3D.swift   one animated zombie per zombie: glides, turns, walk/attack/idle (3M)
+│  │  ├─ [x] EffectsLayer3D.swift  plays Core SimEvents: tracers, muzzle flash, goo, dust, trap flash, shake (4R)
+│  │  ├─ [x] EffectMeshes3D.swift  shared shapes/materials for those effects (4R)
+│  │  ├─ [x] TurretLayer3D.swift   aiming turret under each finished tower; muzzle point for tracers (4R)
+│  │  ├─ [x] BarsLayer3D.swift     health / build-progress bars above roofs (4R)
+│  │  ├─ [x] HordeWarning3D.swift  warned spawn edges: red tiles + ground arrows (4R)
 │  │  ├─ [x] CharacterAnimator3D.swift  plays a character's clip (cut from its one USDZ timeline) at the right speed (3M)
 │  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
 │  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
@@ -202,7 +211,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SaveFileStore.swift        Read/write Application Support/HighwayHoldout/save.json
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
-│  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
+│  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (+ 4R turrets def_watchtower_gunner, def_mg_nest_gun) (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
 │  │                        3M: zmb_*.usdz / unit_*.usdz + <artId>.anim.json from tools/blender/export_characters.py — git-ignored (Mixamo, D-038)
 │  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
 │  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, scene/walker/shadow/host/cap toggles, launch args

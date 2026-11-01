@@ -27,7 +27,16 @@ final class ZombieLayer3D {
         return (f - 0.5) * crowdSpreadTiles
     }
 
+    /// Look-only: where shots hit, as a share of the zombie's box height (about the chest).
+    private static let hitHeightShare: Float = 0.6
+    private var hitHeight: Float = 0
+
     init() { root.name = "zombies" }
+
+    /// Where a tracer ends on this zombie (its chest, where it is drawn now); nil if it isn't drawn.
+    func hitPoint(_ id: ZombieID) -> SIMD3<Float>? {
+        drawn[id].map { $0.entity.position + [0, hitHeight, 0] }
+    }
 
     /// `seconds` = real time since the last frame; `gameSpeed` = 0 (paused), 1 or 2.
     func sync(loop: GameLoop, mapping: WorldMapping3D, settings: Reality3DDef, registry: ModelRegistry,
@@ -40,6 +49,7 @@ final class ZombieLayer3D {
         var seen = Set<ZombieID>(minimumCapacity: zombies.count)
         let box = settings.zombieBoxTiles
         let size = SIMD3<Float>(Float(box.width), Float(box.height), Float(box.width)) * Float(settings.metresPerTile)
+        hitHeight = size.y * Self.hitHeightShare
         for zombie in zombies {
             seen.insert(zombie.id)
             let gx = zombie.x + Self.crowdOffset(zombie.id, salt: 0.618)

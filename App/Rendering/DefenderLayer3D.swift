@@ -13,13 +13,24 @@ final class DefenderLayer3D {
     private static let hqRowOffsetTiles = 0.6
     private static let hqRowSpacingTiles = 0.7
 
+    /// Look-only: where a defender's shot starts, as a share of its box height.
+    private static let muzzleHeightShare: Float = 0.7
+    private var muzzleHeight: Float = 0
+
     init() { root.name = "defenders" }
+
+    /// Where a defender's tracer starts (it is drawn and on the map), else nil.
+    func muzzle(_ id: DefenderID) -> SIMD3<Float>? {
+        guard let e = entities[id], e.isEnabled else { return nil }
+        return e.position + [0, muzzleHeight, 0]
+    }
 
     func sync(loop: GameLoop, mapping: WorldMapping3D, settings: Reality3DDef, registry: ModelRegistry, gameSpeed: Double) {
         let defenders = loop.state.base.defenders
         let sprite = loop.content.units.units.first { $0.id == "defender" }?.sprite ?? "unit_defender"
         let box = settings.zombieBoxTiles
         let size = SIMD3<Float>(Float(box.width), Float(box.height), Float(box.width)) * Float(settings.metresPerTile)
+        muzzleHeight = size.y * Self.muzzleHeightShare
         var waiting = 0
         for d in defenders {
             guard let spot = position(of: d, loop: loop, waitingIndex: &waiting) else {

@@ -9,7 +9,7 @@ Every building, defense, construction/rubble state and map decoration has a real
 - `tools/blender/export_usdz.py` — runs every recipe, scales metres → tiles, shrinks textures, drops normal maps, writes `App/Models/<artId>.usdz`; `review=<folder>` renders one 4-angle picture per model
 - `tools/blender/model_kit.py` — building blocks: Quaternius kit pieces (`piece`, `wall_ring`, `flat_roof`), Poly Haven props (`prop`, decimated), sandbags, simple textured shapes (`box`, `stake`, `coil`)
 - `tools/blender/recipes_buildings.py` — HQ, shelter, farm, scavenger post, workshop, barracks, storage, construction sites, rubble
-- `tools/blender/recipes_defenses.py` — wood/metal walls, watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
+- `tools/blender/recipes_defenses.py` — wood/metal walls, watchtower, MG nest, their aiming turrets (4R), spikes, barbed wire, car wreck, dead tree
 - `tools/check_models.py` — lists art ids the content uses that have no model (exit 1 if a non-character one is missing)
 - `App/Models/*.usdz` — the exported models (committed; loaded by `App/Rendering/ModelRegistry.swift`)
 - Review sheets: `docs/plans/models-2m/<artId>.jpg`, in-game shot `docs/plans/models-2m/in-game.jpg`
@@ -24,13 +24,14 @@ Every building, defense, construction/rubble state and map decoration has a real
 - Walls are modelled running along X; the game turns north–south walls itself.
 - Textures 512 px, normal maps dropped, props decimated to ~1,500 triangles, sandbags ~200 (they come in dozens). Biggest model ~3 MB; all 19 ≈ 20 MB.
 - A missing or broken model still shows the labeled box (ModelRegistry), never a crash.
+- Turrets (`turretSprite`, 4R) are separate models the game turns about the footprint centre: gun along +X, built at its height on the tower, an empty named `muzzle` at the barrel tip. The watchtower has an open platform (no roof) so its gun is visible from the game camera (D-039).
 - Run: `/Applications/Blender.app/Contents/MacOS/Blender -b -P tools/blender/export_usdz.py -- [only=bld_hq] [review=<folder>]`, then `python3 tools/check_models.py`.
 
 ## Known issues
-- Turrets are not separate parts yet (watchtower/MG nest have no gun); 4R adds an aiming top.
 - Kit windows lose their fake-interior shader and show pale glass.
 - Building tiers (L2/L3) use the same model; upgrades don't change the look yet.
 - Not yet measured on a real phone (simulator only).
 
 ## Change log
+- 2026-11-01 — Chunk 4R: `def_watchtower_gunner` and `def_mg_nest_gun` turret models (with `muzzle` empties); watchtower roof removed; `check_models.py` counts `turretSprite` (21/21).
 - 2026-11-01 — Chunk 2M: pipeline, 19 models, missing-model checker, review sheets (D-036, D-037).

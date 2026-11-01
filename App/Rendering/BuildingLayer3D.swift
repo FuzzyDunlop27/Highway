@@ -3,10 +3,10 @@ import RealityKit
 import HoldoutCore
 
 /// Art ids per state: finished model, scaffold (buildings.json constructionSprites), faded 1×1 while building, rubble.
-/// Turret tops, health and progress bars come with effects in chunk 4R; tower bases draw alone for now.
+/// Turret tops (TurretLayer3D) hang under a tower's entity; health/progress bars are BarsLayer3D (4R).
 @MainActor
 final class BuildingLayer3D {
-    /// Everything that changes how a building looks in 3D right now (no health bars yet, so hp isn't in it).
+    /// Everything that changes the building's model (hp is drawn by BarsLayer3D, so it isn't in it).
     struct Signature: Equatable {
         let defId: String
         let level: Int
@@ -90,14 +90,20 @@ final class BuildingLayer3D {
     /// One upright box per building: its footprint up to its roof (the model's real height once loaded, else the box's).
     func pickBoxes(mapping: WorldMapping3D) -> [(id: BuildingID, box: Box3D)] {
         Array(entries.keys).compactMap { id in
-            guard var e = entries[id] else { return nil }
-            if e.modelHeight == nil, e.entity.findEntity(named: ModelRegistry.placeholderName) == nil, !e.entity.children.isEmpty {
-                e.modelHeight = e.entity.visualBounds(relativeTo: e.entity).max.y
-                entries[id] = e
-            }
-            return (id, Box3D(footprint: e.signature.origin, width: e.width, height: e.height,
-                              tall: Double(e.modelHeight ?? e.boxHeight), mapping: mapping))
+            guard let e = entries[id], let tall = topHeight(id) else { return nil }
+            return (id, Box3D(footprint: e.signature.origin, width: e.width, height: e.height, tall: Double(tall), mapping: mapping))
         }
+    }
+
+    /// Height (metres) of a building's roof: the real model's, measured once it has loaded, else its box's.
+    func topHeight(_ id: BuildingID) -> Float? {
+        guard var e = entries[id] else { return nil }
+        let hasPlaceholder = e.entity.children.contains { $0.name == ModelRegistry.placeholderName }
+        if e.modelHeight == nil, !hasPlaceholder, !e.entity.children.isEmpty {
+            e.modelHeight = e.entity.visualBounds(relativeTo: e.entity).max.y
+            entries[id] = e
+        }
+        return e.modelHeight ?? e.boxHeight
     }
 
     private static let wallCategory = "wall"

@@ -1,6 +1,10 @@
 # Purpose: Chunk 2M recipes for walls, towers, traps and map decorations (simple textured shapes + Poly Haven props). Notes: docs/features/models-3d.md
 # One tile ≈ 2.44 m. Walls run along X (the game turns north–south walls itself).
+# Turrets (chunk 4R) are separate models the game turns about the footprint centre: gun pointing +X, built at the
+# height it sits on its tower, with an empty named 'muzzle' at the barrel tip (where tracers start).
 import math
+
+import bpy
 
 from model_kit import box, coil, material, prop, sandbag_row, stake
 
@@ -35,13 +39,13 @@ def wall_metal():
 
 
 def watchtower():
-    """Wooden tower: four legs with braces, a sandbagged platform at 4.2 m and a tin roof."""
-    wood, tin = _wood(), material('corrugated_iron_02', metres=1.0, roughness=0.6, metallic=0.5)
+    """Wooden tower: four legs with braces and an open sandbagged platform at 4.2 m (no roof since 4R: from the game's
+    high camera a roof hid the aiming gun, def_watchtower_gunner)."""
+    wood = _wood()
     leg, top = 0.9, 4.2
     for sx in (-1, 1):
         for sy in (-1, 1):
-            box((0.16, 0.16, top), (sx * leg, sy * leg, 0), wood)
-            box((0.08, 0.08, 2.0), (sx * leg * 0.92, sy * leg * 0.92, top), wood)
+            box((0.16, 0.16, top + 0.6), (sx * leg, sy * leg, 0), wood)
     for sy in (-1, 1):
         box((0.08, 0.06, 2.5), (0, sy * leg, 0.6), wood, tilt=(0, math.radians(52)))
         box((2.5, 0.06, 0.08), (0, sy * leg, 2.2), wood)
@@ -51,7 +55,6 @@ def watchtower():
         sandbag_row(-1.0, 1.0, 1.05, z)
         sandbag_row(-0.7, 0.7, -1.05, z, turn_row=math.pi / 2)
         sandbag_row(-0.7, 0.7, 1.05, z, turn_row=math.pi / 2)
-    box((2.6, 2.6, 0.05), (0, 0, top + 2.0), tin, tilt=(math.radians(6), 0))
     for z in (0.5, 1.1, 1.7, 2.3, 2.9, 3.5, 4.1):  # ladder rungs up the front
         box((0.5, 0.04, 0.04), (0, -leg - 0.1, z), wood)
     for x in (-0.25, 0.25):
@@ -67,6 +70,48 @@ def mg_nest():
         sandbag_row(-0.8, 0.5, 1.0, z, turn_row=math.pi / 2)
     prop('ammo_box', 0.3, 0.2, 0, scale=2.2, turn=0.4)
     prop('ammo_box', -0.4, 0.4, 0, scale=2.2, turn=-0.2)
+
+
+def _gunmetal():
+    return material(None, tint=(0.07, 0.07, 0.065), roughness=0.45, metallic=0.8)
+
+
+def _muzzle(x, z):
+    """Empty marking the barrel tip; the game reads it by name (TurretLayer3D.muzzleName)."""
+    empty = bpy.data.objects.new('muzzle', None)
+    empty.location = (x, 0, z)
+    bpy.context.scene.collection.objects.link(empty)
+
+
+def _gun(x0, z, length, scale=1.0):
+    """A belt-fed gun along +X from x0, receiver bottom at z: receiver, barrel with shroud, stock, ammo can."""
+    metal, rust = _gunmetal(), _rust()
+    s = scale
+    box((0.55 * s, 0.14 * s, 0.16 * s), (x0 + 0.27 * s, 0, z), metal)
+    box((0.35 * s, 0.1 * s, 0.1 * s), (x0 - 0.15 * s, 0, z + 0.02 * s), metal, tilt=(0, math.radians(-6)))
+    box((length * 0.55, 0.08 * s, 0.08 * s), (x0 + 0.55 * s + length * 0.275, 0, z + 0.05 * s), metal)
+    box((length * 0.45, 0.045 * s, 0.045 * s), (x0 + 0.55 * s + length * 0.775, 0, z + 0.065 * s), metal)
+    box((0.22 * s, 0.16 * s, 0.16 * s), (x0 + 0.3 * s, -0.17 * s, z - 0.02 * s), rust)
+    _muzzle(x0 + 0.55 * s + length, z + 0.085 * s)
+
+
+def watchtower_gunner():
+    """Turret for the watchtower: a heavy gun with a small shield on a pivot post, on the 4.34 m platform."""
+    floor = 4.34
+    metal = _gunmetal()
+    box((0.1, 0.1, 0.75), (0, 0, floor), metal)
+    _gun(-0.35, floor + 0.75, 1.1, scale=1.4)
+    box((0.04, 0.8, 0.5), (0.55, 0, floor + 0.62), _rust())  # shield plate the barrel pokes through
+
+
+def mg_nest_gun():
+    """Turret for the MG nest: a machine gun on a low tripod behind the sandbags."""
+    metal = _gunmetal()
+    for turn in (0, 2.1, -2.1):
+        box((0.05, 0.05, 0.75), (0.32 * math.cos(turn) * -1, 0.32 * math.sin(turn), 0), metal,
+            tilt=(math.radians(25) * math.sin(turn), math.radians(25) * -math.cos(turn) * -1))
+    box((0.08, 0.08, 0.1), (0, 0, 0.62), metal)
+    _gun(-0.3, 0.7, 0.75)
 
 
 def spikes():
@@ -102,6 +147,7 @@ def tree_dead():
 RECIPES = {
     'def_wall_wood': (wall_wood, (1, 1)), 'def_wall_metal': (wall_metal, (1, 1)),
     'def_watchtower_base': (watchtower, (1, 1)), 'def_mg_nest_base': (mg_nest, (1, 1)),
+    'def_watchtower_gunner': (watchtower_gunner, (1, 1)), 'def_mg_nest_gun': (mg_nest_gun, (1, 1)),
     'def_spikes': (spikes, (1, 1)), 'def_barbwire': (barbwire, (1, 1)),
     'dec_car_wreck': (car_wreck, (2, 1)), 'dec_tree_dead': (tree_dead, (1, 1)),
 }

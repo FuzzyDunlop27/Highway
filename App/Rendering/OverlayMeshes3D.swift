@@ -66,7 +66,8 @@ enum OverlayMeshes3D {
         return root
     }
 
-    private static func model(positions: [SIMD3<Float>], indices: [UInt32], color: UIColor, alpha: Float) -> Entity? {
+    /// One unlit see-through mesh that casts no shadow (also used by HordeWarning3D for its arrows).
+    static func model(positions: [SIMD3<Float>], indices: [UInt32], color: UIColor, alpha: Float) -> Entity? {
         var d = MeshDescriptor(name: "overlay")
         d.positions = MeshBuffers.Positions(positions)
         d.normals = MeshBuffers.Normals(Array(repeating: [0, 1, 0], count: positions.count))
