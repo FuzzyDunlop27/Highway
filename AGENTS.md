@@ -8,6 +8,8 @@ Before the local docs below, check **Craft → Highway Holdout** for shared proj
 
 Known Craft project page: **Highway Holdout — Zombie TD Game**, root block ID `c6f9fd54-e7d4-463b-4d01-f2e85218f679`. Resolve the current folder through Craft rather than creating duplicate project pages or folders.
 
+**Craft kanban (required):** the board is the collection **Highway Holdout Tasks** (id `88e3b7cd-6bc5-245b-067a-3d4fe4e298f3`, columns Task / Status [Backlog, Next, Doing, Done] / Phase / Notes / Doc; find it with `collections list`). Whenever a chunk is started, finished, blocked, or unblocked, update its card (Status + Notes, one card per chunk named like "Chunk 2B — …"; add a card if missing) and flip any chunk it unblocks to Next. Do this in the same session as the BUILD-QUEUE.md change, re-read the cards to verify, and never say the board is updated unchecked. The handoff note on the project page does not replace the board.
+
 1. `docs/STATUS.md` — where we left off and the current milestone.
 2. `docs/MAP.md` — what every folder/file is for, and "to change X, look in Y".
 3. The one feature note for your task in `docs/features/` (if it exists).
