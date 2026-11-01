@@ -1,8 +1,8 @@
-// Purpose: Draws labeled placeholder images for missing art: flat boxes (top-down) and 3D blocks/diamonds (isometric). Notes: docs/features/rendering-art.md
+// Purpose: Labeled placeholder pictures for missing menu art, and the per-category placeholder colors (also used by 3D boxes). Notes: docs/features/rendering-art.md
 import UIKit
 
 enum PlaceholderArt {
-    /// Flat rounded box with the art id written on it (top-down and UI icons).
+    /// Flat rounded box with the art id written on it (menu and HUD icons).
     static func flatBox(_ id: String, size: CGSize) -> UIImage {
         UIGraphicsImageRenderer(size: size).image { _ in
             let rect = CGRect(origin: .zero, size: size).insetBy(dx: 1, dy: 1)
@@ -14,46 +14,6 @@ enum PlaceholderArt {
             path.stroke()
             drawLabel(id, in: rect, fontSize: max(9, min(size.width, size.height) * 0.14))
         }
-    }
-
-    /// Isometric block standing on a `w`×`h` footprint diamond, `height` points tall (0 = flat diamond, e.g. a ground tile).
-    /// Image is the block's bounding box; its ground point (the diamond's bottom corner) is the image's bottom middle.
-    static func isoBlock(_ id: String, footprintW w: Int, footprintH h: Int,
-                         tileW: CGFloat, tileH: CGFloat, height: CGFloat, labeled: Bool = true) -> UIImage {
-        let width = CGFloat(w + h) * tileW / 2
-        let diamond = CGFloat(w + h) * tileH / 2
-        let size = CGSize(width: width, height: diamond + height)
-        // Footprint corners (y down, top face at y = 0): north, east, south, west.
-        let n = CGPoint(x: CGFloat(h) * tileW / 2, y: 0)
-        let e = CGPoint(x: width, y: CGFloat(w) * tileH / 2)
-        let s = CGPoint(x: CGFloat(w) * tileW / 2, y: diamond)
-        let wst = CGPoint(x: 0, y: CGFloat(h) * tileH / 2)
-        func down(_ p: CGPoint) -> CGPoint { CGPoint(x: p.x, y: p.y + height) }
-        let base = color(for: id)
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            let outline = UIColor.black.withAlphaComponent(0.6)
-            if height > 0 {
-                fill([wst, s, down(s), down(wst)], base.darker(0.15), outline)   // left (south-west) face
-                fill([s, e, down(e), down(s)], base.darker(0.35), outline)       // right (south-east) face
-            }
-            fill([n, e, s, wst], base.lighter(0.12), height > 0 ? outline : base.darker(0.25))  // top face
-            if labeled {
-                let top = CGRect(x: wst.x, y: n.y, width: width, height: diamond)
-                drawLabel(id, in: top.insetBy(dx: width * 0.18, dy: 0), fontSize: max(7, min(width * 0.09, 13)))
-            }
-        }
-    }
-
-    private static func fill(_ points: [CGPoint], _ color: UIColor, _ stroke: UIColor) {
-        let path = UIBezierPath()
-        path.move(to: points[0])
-        points.dropFirst().forEach { path.addLine(to: $0) }
-        path.close()
-        color.setFill()
-        path.fill()
-        stroke.setStroke()
-        path.lineWidth = 1
-        path.stroke()
     }
 
     private static func drawLabel(_ text: String, in rect: CGRect, fontSize: CGFloat) {

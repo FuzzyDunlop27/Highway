@@ -1,5 +1,7 @@
 # ZWALK-1 — Zombie walk animation (limbs) — walker prototype in progress
 
+> **RETIRED (D-030, 2026-11-01):** 2D walker frames are no longer used; the app frames and code were removed. Animated 3D zombies are chunk 3M.
+
 **Label:** `ZWALK-1` · **Type:** art + rendering (no Core/gameplay change) · **Fits:** 1E Art swap & polish, or any time
 
 ## Current implementation — 2026-10-31

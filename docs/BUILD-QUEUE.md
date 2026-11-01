@@ -7,7 +7,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | Chunk | Goal | Needs | Status |
 |---|---|---|---|
 | 1A | Art: realistic walker static cutouts (Codex) | — | Done |
-| 2A | Art: ZWALK-1 realistic walker limb animation | 1A only | Implemented — normal-horde visual acceptance pending |
+| 2A | Art: ZWALK-1 realistic walker limb animation | 1A only | Retired 2026-11-01 — 2D walker frames no longer used (D-030); animated 3D zombie = 3M |
 | 1B | Core: upgrades + build queue + builders | — | Ready |
 | 1C | App: speed buttons + menu thumbnails | — | Ready |
 | 1D | Art: realistic static walker pilot | — | Done — 2026-10-31 |
@@ -18,15 +18,15 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 5B | App: settings, welcome back, Horde Alerts, Engage + 1D exit check | 4B | Blocked by 4B |
 | 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers with shadows |
-| 2R | 3D: game playable in 3D behind a switch, labeled boxes | 1R | Ready (iOS 18 minimum set) |
+| 2R | 3D: game playable in 3D, labeled boxes | 1R | Done 2026-11-01 — 3D view, ticker, camera, ModelRegistry (switch then removed by 6R) |
 | 2M | 3D art: Blender → USDZ pipeline + buildings/props | 1R | Ready |
-| 3R | 3D: placement, selection, walls | 2R | Blocked by 2R |
-| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Blocked by 2R, 2M |
+| 3R | 3D: placement, selection, walls (building is off until this lands) | 2R | **Ready — next** |
+| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Blocked by 2M |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Blocked by 3R, 3M |
-| 5R | 3D: performance pass + make 3D the default | 4R | Blocked by 4R |
-| 6R | 3D: retire 2D (optional, owner yes only) | 5R | Blocked by 5R |
+| 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Blocked by 4R |
+| 6R | 3D: retire 2D | owner yes | Done 2026-11-01 early, owner's call (D-030) |
 
-Track A = zombie art (details at the bottom of this file). Track B = 1C–1E gameplay. Track C = small parallel side work.
+Track A = zombie art (details at the bottom of this file; 2D zombie art is retired, D-030). Track B = 1C–1E gameplay. Track C = small parallel side work.
 Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2026-11-01, D-027). R/M "Needs" lines override the wave rule: they depend only on each other, not on track B. Full scope, exit checks and start prompts: `docs/plans/3d-rendering-plan.md` §6. The 2D living-world plan (`docs/plans/living-world-plan.md`, chunks 1K 1N 1F 1U 1S 2F 2S) is parked, not queued.
 
 **Save versions:** the save is v2 now. Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (for example v4 instead of v3).
@@ -119,7 +119,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** build succeeds; all four directions render with clean transparency in the real app. Passed; `in-game-four-facings.png` uses a paused review fixture. Pre-test save restored byte-for-byte.
 - **Start prompt (review only):** “Review chunk 1D realistic walker: open its README, preview and simulator capture; do not regenerate art.”
 
-## Chunk 2A — Realistic walker limb animation [In progress]
+## Chunk 2A — Realistic walker limb animation [Retired — D-030]
+- **Retired 2026-11-01:** the game no longer draws 2D sprites, so 2D walker frames aren't needed. The Mixamo walker's next life is the animated 3D zombie in chunk 3M. Text below kept for history.
 - **Goal:** the walker visibly steps and swings its arms while moving; owner approved a Mixamo stock replacement in D-026.
 - **Needs:** chunk 1A static walker only (also recorded as 1D by the static-art chat); no gameplay chunk dependency.
 - **Scope:** six poses in each of two source facings, mirrored west, stable canvas/feet, distance-driven cached textures, static fallback, presentation JSON and simulator checks. First prototype is implemented; see `docs/features/zombie-walk-animation.md`.
@@ -137,19 +138,26 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Start prompt:** "Implement chunk 1R: read AGENTS.md, docs/STATUS.md, the 1R section of docs/BUILD-QUEUE.md and docs/plans/3d-rendering-plan.md only. Build the DEBUG RealityKit spike and report fps and screenshots."
 - **Result (2026-11-01):** `docs/plans/3d-spike-1R-results.md` + screenshots in `docs/plans/spike-1R/`. Spike in `App/Spike3D/` (Debug menu → "3D spike (1R)"); one-off export `tools/blender/spike_export_usdz.py`. Simulator: 60 fps with 100 walkers + shadows on both RealityView (iOS 18) and ARView non-AR (iOS 17). RealityView, particles, billboards, opacity fades are iOS 18+; no public frame-rate cap. Real iPhone 18 Pro: 60 fps at 0/35/100 walkers, shadows on or off, both routes. Recommendation: GO with minimum iOS 18. **Owner: GO, minimum iOS 18 (D-028).** An older-phone check and a heat check stay with 5R.
 
-## Chunk 2R — Game in 3D behind a switch [Ready]
-- **Goal:** the real game playable in 3D with labeled boxes; flipping the switch back gives the unchanged 2D game on the same save.
-- **Needs:** 1R (done). Minimum iOS is already 18 (D-028), so use RealityView only; no ARView path. Ask the owner "free or 4-angle snapped rotation?" before tuning the camera.
-- **Scope:** as in `docs/plans/3d-rendering-plan.md` §6 2R, plus 1R lessons: load models in the background (placeholder box meanwhile); move the game clock into a shared ticker so the 2D scene doesn't run underneath; camera limits in JSON with a calmer pinch, zoom toward the fingers, a minimum camera height so it can't enter roofs, and zoom-out clamped to the map; one merged ground mesh; Blender→RealityKit axes as found in 1R (+X east, Blender +Y = −Z).
-- **Do NOT build:** placement, effects, real models (2M), animated zombies (3M), Battery saver.
-- **Exit check:** a game runs in 3D with boxes moving correctly; the switch back shows the unchanged 2D game on the same save; `cd Core && swift test` and the simulator build pass.
-- **Start prompt:** "Implement chunk 2R: read AGENTS.md, docs/MAP.md, docs/features/rendering-art.md, docs/plans/3d-spike-1R-results.md and the 2R sections of docs/BUILD-QUEUE.md and docs/plans/3d-rendering-plan.md only."
+## Chunk 2R — Game in 3D [Done 2026-11-01]
+- **Goal:** the real game playable in 3D with labeled boxes.
+- **Result:** RealityView world (virtual camera): one merged ground mesh, labeled placeholder boxes, buildings/zombies synced to Core, dusk sun with shadows. `ModelRegistry` loads `<artId>.usdz` in the background, so the 1R spike's six models already show. Shared `GameTicker` (display link) runs the clock, which pauses behind the DEBUG spike. Snapped 4-angle camera (one 90° step per two-finger twist, eased), pan, pinch toward the fingers, tilt, minimum camera height, zoom-out clamped to the map; numbers in `presentation.json reality3d`. Core: tested `WorldMapping3D` and `OrbitCamera3D`. 129 Core tests; simulator build clean; checked on the simulator with the owner's save (horde ran, zombies walked to the breach). The 2D/3D switch was built and checked, then removed when the owner retired 2D (6R, D-030). Notes: `docs/features/rendering-art.md`, D-031.
+
+## Chunk 3R — Placement, selection and walls in 3D [Ready — next]
+- **Goal:** building feels as good as the D-022 isometric placement did, now in 3D. Until this lands the player can't build (2D is gone, D-030).
+- **Needs:** 2R (done). Independent of 2M/3M: works with boxes or models.
+- **Scope:** switch the Build button back on (`GameRootView.canBuildIn3D`); taps turn into a ray from the finger: ground tile via `OrbitCamera3D.groundPoint`, buildings via collision boxes (tall roofs win, like the old iso rule); select a building (outline + range ring on the ground for towers/HQ, the existing selection bar); placement ghost = see-through model or box, tile grid around it, green/red footprint, reason in the existing bar; a drag that starts on the ghost moves it (lifted above the finger), any other one-finger drag pans; Move/Cancel/Confirm through the existing `PlacementController`; wall tool: one finger drags a line (count + cost, skipped tiles red), two fingers pan; buildings between the camera and the ghost fade (`OpacityComponent`), from any of the 4 angles. Tunables (grid radius, lift, fade) as named look constants or JSON if they're tuning.
+- **Do NOT build:** effects, health/progress bars, turret aiming (4R), real models (2M), animated zombies (3M), new placement rules (Core is unchanged).
+- **Exit check:** repeat the D-022 simulator checks in 3D at two camera angles: place a 1×1 (wall line at the map edge), a 2×2 inside the walls, move the HQ then Cancel (no change), invalid spots blocked with reasons, tap a roof to select, demolish with refund; `cd Core && swift test` and the simulator build pass.
+- **Start prompt:** "Implement chunk 3R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/input.md, docs/features/rendering-art.md and the 3R section of docs/BUILD-QUEUE.md only."
+
+## Chunk 6R — Retire 2D [Done 2026-11-01, D-030]
+- Owner asked to move to full 3D right after 2R. Removed the SpriteKit renderer, iso/top-down sprites and Core 2D projection math; kept menus, `PlacementController` logic, the DEBUG spike, tools and source art folders. Building stays off until 3R.
 
 ## Chunk 2M — 3D model pipeline + buildings/props [Ready]
 - **Goal:** every building, defense and decoration has a 3D model the 3D view can load.
 - **Needs:** 1R (done). Can run alongside 2R: 2M touches `tools/blender/` and a model folder, 2R touches App code.
 - **Scope:** `tools/blender/export_usdz.py` built from the spike's one-off script, keeping the 1R rules (1 tile = 1 m, origin at footprint ground centre, Z-up→Y-up with `convert_orientation`, curves converted to mesh, bevels applied); one USDZ per art id named like today (`bld_hq.usdz`…); a model folder in `App/` that both Debug and Release use; a missing-model checker listing art ids with no USDZ; export the study models; finish backs/roofs that were only modelled for one angle; model the missing assets in the same style; tower base and turret as separate parts so the turret can aim.
 - **Do NOT build:** characters/zombies (3M), renderer code (2R), materials/lighting polish beyond "reads clearly" (5R).
-- **Exit check:** the checker reports zero missing buildings/props; a review sheet shows each model from 4 angles; models load in the 1R spike screen without errors.
+- **Exit check:** the checker reports zero missing buildings/props; a review sheet shows each model from the 4 camera angles (D-029); models load in the 1R spike screen without errors.
 - **Start prompt:** "Implement chunk 2M: read AGENTS.md, HighwayHoldout_Blender_Study/CLAUDE_HANDOFF.md, docs/plans/3d-spike-1R-results.md and the 2M sections of docs/BUILD-QUEUE.md and docs/plans/3d-rendering-plan.md only."
 

@@ -1,60 +1,72 @@
-// Purpose: Codable shape for Content/presentation.json (views, tile sizes, art packs). Read by the App only. Notes: docs/features/rendering-art.md
+// Purpose: Codable shape for Content/presentation.json (3D view: camera, light, placeholder sizes). Read by the App only. Notes: docs/features/rendering-art.md
 import Foundation
 
-/// How the App draws the map. Core never uses this; it is decoded here so content tests cover the file.
+/// How the App draws the map (real 3D with RealityKit, D-027/D-030). Core never uses this; it is decoded here so
+/// content tests cover the file.
 public struct PresentationContent: Codable, Sendable {
     public let schemaVersion: Int
-    /// The view the game opens in (until the player picks another).
-    public let defaultView: ProjectionKind
-    /// Flip to top-down while placing or moving a building, then flip back.
-    public let autoTopDownWhilePlacing: Bool
-    /// Real seconds for the fade between views (half out, half in).
-    public let switchFadeSeconds: Double
-    /// Hex color drawn outside the map (e.g. the empty corners around the isometric diamond).
+    /// Hex color drawn around and beyond the map.
     public let outsideMapColor: String
-    /// One entry per view, keyed by `ProjectionKind` raw value.
-    public let views: [String: ViewDef]
-
-    public func view(_ kind: ProjectionKind) -> ViewDef? { views[kind.rawValue] }
+    /// The 3D view's settings.
+    public let reality3d: Reality3DDef
 }
 
-public enum ProjectionKind: String, Codable, CaseIterable, Sendable {
-    case topDown
-    case isometric
-}
-
-public struct ViewDef: Codable, Sendable {
-    public let projection: ProjectionKind
-    /// Screen points for one tile: top-down is a square; isometric is a 2:1 diamond (width × height).
-    public let tileWidthPt: Double
-    public let tileHeightPt: Double
-    /// Folder (Xcode namespace) under `Assets.xcassets/Art/` holding this view's art, e.g. "Iso".
-    public let artNamespace: String
-    /// Facing images for units/zombies: 1 = one image rotated in code; 4 or 8 = `<id>_se`, `<id>_ne`, ...
-    public let facings: Int
-    /// Facing images for turret tops (watchtower gunner, MG).
-    public let turretFacings: Int
-    /// Closest zoom (camera scale) and the zoom the view opens at.
-    public let minScale: Double
-    public let startScale: Double
-    /// Placeholder block height per building category, in tile heights (isometric only).
+/// Settings for the RealityKit 3D view. 1 tile = `metresPerTile` metres; +X = east, +Z = south (WorldMapping3D).
+public struct Reality3DDef: Codable, Sendable {
+    public let metresPerTile: Double
+    /// Load `<artId>.usdz` models from the app bundle in the background (false = always draw labeled boxes).
+    public let loadModels: Bool
+    /// Placeholder box height per building category, in tiles (box = footprint × this).
     public let placeholderHeightTiles: [String: Double]
-    /// Optional per-image fixes, keyed by art id.
-    public let assets: [String: AssetDef]
-    /// Optional distance-driven limb cycle; absent in top-down.
-    public let zombieWalk: ZombieWalkDef?
+    /// Zombie placeholder box: width (and depth) and height, in tiles.
+    public let zombieBoxTiles: ZombieBox3D
+    public let camera: Camera3DDef
+    public let light: Light3DDef
 }
 
-public struct AssetDef: Codable, Sendable {
-    /// Ground point inside the image as [x, y] fractions from its top-left (isometric default: bottom middle).
-    public let anchor: [Double]?
-    /// Extra size multiplier when the art is drawn a bit too big or small.
-    public let scale: Double?
-    /// False if this image must not be mirrored to make the opposite facing (e.g. text or a one-sided detail).
-    public let mirrorable: Bool?
+public struct ZombieBox3D: Codable, Sendable {
+    public let width: Double
+    public let height: Double
 }
 
-public struct ZombieWalkDef: Codable, Sendable {
-    public let frames: Int
-    public let strideTiles: Double
+/// Orbit camera (D-029): turns in `snapAngles` steps, eased; pan, pinch zoom toward the fingers and limited tilt.
+public struct Camera3DDef: Codable, Sendable {
+    /// Vertical field of view.
+    public let fieldOfViewDegrees: Double
+    /// Distance from the camera to the ground point it looks at, in metres.
+    public let startDistance: Double
+    public let minDistance: Double
+    public let maxDistance: Double
+    /// The camera never goes lower than this above the ground (metres), so it can't enter roofs.
+    public let minHeightMetres: Double
+    /// Pitch = angle above the ground (90 = straight down).
+    public let startPitchDegrees: Double
+    public let minPitchDegrees: Double
+    public let maxPitchDegrees: Double
+    /// Tilt change per screen point of a two-finger up/down drag.
+    public let tiltDegreesPerPoint: Double
+    /// Opening angle around the map; the snap angles are this plus multiples of 360 / snapAngles.
+    public let startYawDegrees: Double
+    public let snapAngles: Int
+    /// How far two fingers must twist before the camera turns one step (one step per twist).
+    public let twistThresholdDegrees: Double
+    /// Seconds for the eased turn to the next angle.
+    public let snapTurnSeconds: Double
+    /// Pinch strength: 1 = zoom exactly with the fingers, smaller = calmer.
+    public let pinchSensitivity: Double
+    /// How far past the map edge (tiles) the looked-at point may go.
+    public let panMarginTiles: Double
+}
+
+/// One warm sun with shadows plus a weak fill light (values from the 1R spike).
+public struct Light3DDef: Codable, Sendable {
+    public let sunElevationDegrees: Double
+    public let sunAzimuthDegrees: Double
+    public let sunIntensityLux: Double
+    public let sunColor: String
+    public let fillIntensityLux: Double
+    public let fillColor: String
+    public let shadows: Bool
+    public let shadowMaxDistance: Double
+    public let shadowDepthBias: Double
 }

@@ -21,20 +21,25 @@ enum ContentValidator {
     }
 
     private static func validatePresentation(_ p: PresentationContent) throws {
-        let file = "presentation.json"
-        for kind in ProjectionKind.allCases {
-            guard let view = p.view(kind) else { throw fail(file, "missing view '\(kind.rawValue)'") }
-            if view.projection != kind { throw fail(file, "view '\(kind.rawValue)' must use projection '\(kind.rawValue)'") }
-            if view.tileWidthPt <= 0 || view.tileHeightPt <= 0 { throw fail(file, "\(kind.rawValue): tile size must be above 0") }
-            if ![1, 4, 8].contains(view.facings) || ![1, 4, 8].contains(view.turretFacings) {
-                throw fail(file, "\(kind.rawValue): facings must be 1, 4 or 8")
-            }
-            if view.minScale <= 0 || view.startScale < view.minScale { throw fail(file, "\(kind.rawValue): need 0 < minScale <= startScale") }
-            for (id, asset) in view.assets where asset.anchor.map({ $0.count != 2 }) ?? false {
-                throw fail(file, "\(kind.rawValue).assets.\(id).anchor must be [x, y]")
-            }
+        try validateReality3D(p.reality3d)
+    }
+
+    private static func validateReality3D(_ r: Reality3DDef) throws {
+        let file = "presentation.json", c = r.camera
+        if r.metresPerTile <= 0 { throw fail(file, "reality3d.metresPerTile must be above 0") }
+        if r.zombieBoxTiles.width <= 0 || r.zombieBoxTiles.height <= 0 { throw fail(file, "reality3d.zombieBoxTiles must be above 0") }
+        if c.minDistance <= 0 || c.minDistance > c.startDistance || c.startDistance > c.maxDistance {
+            throw fail(file, "reality3d.camera: need 0 < minDistance <= startDistance <= maxDistance")
         }
-        if p.switchFadeSeconds < 0 { throw fail(file, "switchFadeSeconds can't be negative") }
+        if c.minPitchDegrees <= 0 || c.minPitchDegrees > c.startPitchDegrees || c.startPitchDegrees > c.maxPitchDegrees
+            || c.maxPitchDegrees > 90 {
+            throw fail(file, "reality3d.camera: need 0 < minPitchDegrees <= startPitchDegrees <= maxPitchDegrees <= 90")
+        }
+        if c.snapAngles < 1 { throw fail(file, "reality3d.camera.snapAngles must be at least 1") }
+        if c.fieldOfViewDegrees <= 0 || c.fieldOfViewDegrees >= 180 { throw fail(file, "reality3d.camera.fieldOfViewDegrees must be 0–180") }
+        if c.minHeightMetres < 0 || c.snapTurnSeconds < 0 || c.twistThresholdDegrees <= 0 || c.pinchSensitivity <= 0 {
+            throw fail(file, "reality3d.camera: minHeightMetres/snapTurnSeconds >= 0, twistThresholdDegrees/pinchSensitivity > 0")
+        }
     }
 
     private static func validateResources(_ r: ResourcesContent) throws {

@@ -14,7 +14,7 @@ struct ContentFilesTests {
         #expect(content.research.items.count == 3)
         #expect(content.offline.timeFactor.maxOfflineCreditHours > 0)
         #expect(content.maps["phase1_exit"] != nil)
-        #expect(content.presentation.view(.isometric) != nil && content.presentation.view(.topDown) != nil)
+        #expect(content.presentation.reality3d.metresPerTile > 0)
     }
 
     @Test func noContentFileIsLeftUnread() throws {
@@ -48,6 +48,17 @@ struct ContentFilesTests {
         let dir = try copyOfContent()
         let url = dir.appendingPathComponent("hordes.json")
         let text = try String(contentsOf: url, encoding: .utf8).replacingOccurrences(of: "side_road_south", with: "nowhere")
+        try Data(text.utf8).write(to: url)
+        #expect(throws: ContentError.self) { try ContentLoader.load(from: dir) }
+    }
+
+    @Test func cameraSnapsToFourAnglesAndBadCameraFailsValidation() throws {
+        let content = try TestSupport.content()
+        #expect(content.presentation.reality3d.camera.snapAngles == 4)  // D-029
+        let dir = try copyOfContent()
+        let url = dir.appendingPathComponent("presentation.json")
+        let text = try String(contentsOf: url, encoding: .utf8)
+            .replacingOccurrences(of: "\"minPitchDegrees\": 25", with: "\"minPitchDegrees\": 80")
         try Data(text.utf8).write(to: url)
         #expect(throws: ContentError.self) { try ContentLoader.load(from: dir) }
     }

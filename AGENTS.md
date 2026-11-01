@@ -30,8 +30,9 @@ The owner avoids long-running chats. Work is split into **build chunks** tracked
   state directly; it sends a `Command` to Core (e.g. place building, start horde).
 - All tuning numbers (costs, speeds, health, ranges, timers, caps) live in `Content/*.json`.
   Never hardcode a tuning number in Swift. If a new number is needed, add a JSON field.
-- Art is looked up by id through `App/Rendering/ArtRegistry.swift`. A missing image must draw
-  a labeled colored placeholder, never crash.
+- The map is real 3D (RealityKit; 2D retired, D-030). Models are looked up by art id through
+  `App/Rendering/ModelRegistry.swift`; menu/HUD pictures through `App/Rendering/ArtRegistry.swift`.
+  A missing model or image must draw a labeled colored placeholder, never crash.
 - Saves are versioned JSON (`Core/Sources/HoldoutCore/Save/`). If you change saved data, add a migration.
 
 ## File rules
@@ -80,5 +81,5 @@ If you cannot run a command (e.g. no Xcode in your sandbox), say so; never claim
 - No third-party dependencies without a DECISIONS entry approved by the owner.
 
 ## Art
-- New PNGs from ChatGPT: put them in a folder and run `python3 tools/import_art.py <folder>`.
-  It resizes them into `App/Assets.xcassets/Art/`. Filenames must match `docs/graphics-spec-phase1.md`.
+- Map art is 3D: one `<artId>.usdz` per art id (ids as in `docs/graphics-spec-phase1.md`; pipeline is chunk 2M).
+- Menu/HUD PNGs (UI kit): put them in a folder and run `python3 tools/import_art.py <folder> --view ui`.

@@ -1,5 +1,7 @@
 # Plan: real 3D drawing for Highway Holdout (option two)
 
+> **Status 2026-11-01:** chosen (D-027), 1R spike GO (D-028), 2R done, and 2D retired early at the owner's request (D-030), so §4's "run side by side" no longer applies and 6R is done. Live status: `docs/BUILD-QUEUE.md`.
+
 _Written 2026-10-31. A plan only: nothing here is built or approved. Compare it with `docs/plans/living-world-plan.md` (option one, staying 2D) and pick._
 
 ## In one paragraph

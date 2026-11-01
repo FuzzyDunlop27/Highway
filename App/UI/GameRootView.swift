@@ -1,38 +1,27 @@
-// Purpose: Main screen: the SpriteKit map with the HUD, build menu, and placement/selection bars on top. Notes: docs/features/hud-ui.md
-import SpriteKit
+// Purpose: Main screen: the 3D map with the HUD, build menu, and placement/selection bars on top. Notes: docs/features/hud-ui.md
 import SwiftUI
 
 struct GameRootView: View {
     let store: GameStore
-    @State private var scene: GameScene
+    /// The game clock (runs separately from drawing).
+    @State private var ticker: GameTicker
     @State private var showBuildMenu = false
     @State private var buildTab = BuildMenuView.Tab.buildings
 
     init(store: GameStore) {
         self.store = store
-        _scene = State(initialValue: GameScene(store: store))
+        _ticker = State(initialValue: GameTicker(store: store))
     }
-
-    #if DEBUG
-    /// DEBUG builds show frame rate and node count in the corner (performance checks with big hordes).
-    private static let spriteDebug: SpriteView.DebugOptions = [.showsFPS, .showsNodeCount]
-    #else
-    private static let spriteDebug: SpriteView.DebugOptions = []
-    #endif
 
     var body: some View {
         if let error = store.loadError {
             LoadErrorView(message: error)
         } else {
             ZStack {
-                SpriteView(scene: scene, options: [.ignoresSiblingOrder], debugOptions: Self.spriteDebug)
-                    .ignoresSafeArea()
+                Reality3DView(store: store, ticker: ticker)
                 VStack(spacing: 8) {
                     HUDView(store: store)
                         .frame(maxWidth: .infinity)
-                        .overlay(alignment: .trailing) {
-                            if !store.placement.isPositioning { ViewToggleButton(store: store) }
-                        }
                     if let notice = store.notice {
                         NoticeBanner(text: notice) { store.notice = nil }
                     }
@@ -46,13 +35,30 @@ struct GameRootView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 8)
             }
+            .onAppear { ticker.start() }
             .animation(.easeInOut(duration: 0.15), value: store.placement.mode)
             .animation(.easeInOut(duration: 0.15), value: showBuildMenu)
             .animation(.easeInOut(duration: 0.25), value: store.banner)
         }
     }
 
+    /// Building, selecting and walls in 3D are chunk 3R. Until then the map is for watching; `placementBar` (the build
+    /// menu and placement bars) is kept for 3R to switch back on.
+    private static let canBuildIn3D = false
+
     @ViewBuilder private var bottomBar: some View {
+        if !Self.canBuildIn3D {
+            Text("Building in 3D comes next (chunk 3R)")
+                .font(.caption).foregroundStyle(Kit.ink)
+                .padding(.horizontal, 12).padding(.vertical, 6)
+                .kitPanel()
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        } else {
+            placementBar
+        }
+    }
+
+    @ViewBuilder private var placementBar: some View {
         switch store.placement.mode {
         case .placing, .moving:
             PlacementBarView(store: store)
@@ -76,24 +82,6 @@ struct GameRootView: View {
                         .accessibilityIdentifier("buildButton")
                 }
             }
-        }
-    }
-}
-
-/// Flips between isometric and top-down. Long-press for the "top-down while building" setting.
-private struct ViewToggleButton: View {
-    let store: GameStore
-
-    var body: some View {
-        let isIso = store.preferredView == .isometric
-        // Shows the view you'd switch to.
-        KitIconButton(glyph: isIso ? "view_topdown" : "view_iso",
-                      label: isIso ? "Switch to top-down view" : "Switch to isometric view") { store.toggleView() }
-        .accessibilityIdentifier("viewToggle")
-        .contextMenu {
-            Toggle("Top-down while building", isOn: Binding(
-                get: { store.autoTopDownWhilePlacing },
-                set: { store.setAutoTopDownWhilePlacing($0) }))
         }
     }
 }

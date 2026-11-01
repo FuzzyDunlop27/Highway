@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-11-01 (3D GO, minimum iOS 18, D-028; chunks 2R + 2M ready)
+**Last updated:** 2026-11-01 (chunk 2R done; 2D retired, D-030 — the game is 3D only; 3R next)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -14,6 +14,8 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **2D retired (D-030, owner's call):** the game now opens straight into 3D; SpriteKit scene, node factories, iso/top-down sprites (~4.6 MB), view toggle, 2D camera/taps and Core `GridProjection`/`Facing` removed; `presentation.json` is 3D-only (schema 2). Kept: menus/HUD, UI-kit art, 8 building pictures in `Art/Menu` for menu cards, `PlacementController` logic for 3R, the DEBUG 1R spike, `tools/` and the source art folders. **Building, moving, selecting and walls are off until chunk 3R** (bottom of the screen says so). 129 Core tests pass; iPhone 18 Pro simulator build clean; checked in the simulator on the existing save (opens in 3D, pan and pinch work). Simulator save restored byte-for-byte afterwards.
+- **Chunk 2R done:** RealityKit 3D view: one merged ground mesh, labeled boxes (art id above each), buildings/zombies synced to Core, dusk sun with shadows; `ModelRegistry` loads `<artId>.usdz` in the background, so the spike's HQ/shelter/farm/watchtower/wall/car models already appear after a few seconds. `GameTicker` (display link) runs the clock and pauses behind the DEBUG spike. Camera: snaps to 4 angles (one 90° step per two-finger twist; a simulator check found a 60° twist turned 180°, fixed test-first), pan, pinch toward the fingers, tilt, minimum height (no flying into roofs), zoom-out clamped to the map; all numbers in `presentation.json reality3d`. Core: tested `WorldMapping3D` + `OrbitCamera3D` (D-031). Simulator: horde started from the debug menu, zombie boxes walked along the road to the broken wall, "Held".
 - **3D GO + iOS 18 (D-028):** deployment target raised to 18.0 (project file, owner-approved) and Core package `.iOS(.v18)`. 119 Core tests pass; iPhone 18 Pro simulator build succeeds with no code warnings.
 - **Chunk 1R 3D spike built (DEBUG only, D-028).** Debug menu → "3D spike (1R)" shows HQ, shelter, farm, watchtower, car wreck and walls as real 3D models (exported from the Blender study by `tools/blender/spike_export_usdz.py`), a low dusk sun with shadows, an orbit camera (pan, pinch, twist, tilt; all checked in the simulator) and 0/35/100 animated Mixamo walkers, with an fps readout. Simulator (iPhone 18 Pro, iOS 27): 60 fps even at 100 walkers with shadows, on both RealityView (iOS 18+) and ARView (the iOS 17 route). Found: RealityView, particles, billboards and fades need iOS 18; there is no public frame-rate cap. **Real iPhone 18 Pro ("Ramrod18"): 60 fps at 0/35/100 walkers, shadows on or off, on both routes.** Recommendation: GO with minimum iOS 18. 119 Core tests pass; simulator build passes; 2D game opens unchanged. Results, fps table and screenshots: `docs/plans/3d-spike-1R-results.md`. The simulator test save advanced ~5 game-minutes during the runs (backed up afterwards, restored after the 2D check).
 - **Look direction chosen: real 3D (D-027).** Two plans written (`docs/plans/living-world-plan.md` = 2D, parked; `docs/plans/3d-rendering-plan.md` = 3D, chosen) plus mockup pictures (`docs/plans/mockups/`). 3D chunks 1R–6R, 2M, 3M added to `BUILD-QUEUE.md`. Docs only.
@@ -42,28 +44,23 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **3D next: chunks 2R and 2M are ready** (owner said GO, minimum iOS now 18, D-028). Start prompts in `BUILD-QUEUE.md`. Owner still to pick free vs snapped camera rotation before 2R's camera tuning. An older-phone check and a heat check stay with 5R.
-- **ZWALK-1M / chunk 2A next:** review `walker-mixamo/preview.gif` and README, run a normal horde via long-press → Horde now, inspect four-facing gait/foot sliding at gameplay zoom, and close 2A only after visual acceptance. No FBX download blocker remains. Runner/brute remain deferred.
-- **Art track: finish chunk 2A visual acceptance**, using the approved Mixamo route above. Fixture checks are complete; normal-horde hands-on review remains. Do not re-import earlier generated poses or the old low-poly model.
-- **Chunk 2A / ZWALK-1M:** current route is `docs/features/zombie-walk-mixamo.md` and D-026. Earlier generated-pose source notes are historical; no further image generation is needed.
-- Eyeball the zombie shamble in the simulator (built, not yet checked on screen).
+- **Chunk 3R (3D placement, selection, walls) is next**: it turns building back on. Start prompt in `BUILD-QUEUE.md`. 2M (models) can run alongside; 3M waits for 2M.
+- 2M ready (Blender → USDZ models). An older-phone check and a heat check stay with 5R.
 - Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
 
 ## Decided
-- The 8-bit art experiment is abandoned at the owner's request. The app uses the original pack for top-down, Blender-derived isometric sprites, and the new UI kit.
+- The map is real 3D only (D-027, D-030); menus use the UI kit. 2A (2D walker frames) is retired.
 - Xcode project exists (D-014); `App/` is a synced folder; agents never edit `.pbxproj`.
 - How to run: open `HighwayHoldout.xcodeproj`, pick an iPhone simulator, press Run (or the `xcodebuild` command in AGENTS.md).
-- Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 17.0 (see `docs/research/tech-findings.md`).
+- Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 18.0 (D-028).
 - Landscape only for Phase 1.
 - Core tests read the repo's `Content/` folder; the App passes its bundled copy (D-010).
 
 ## Open questions (owner decides)
-- **ZWALK-1** zombie limb animation: spec + paste-ready prompt in `docs/features/zombie-walk-animation.md` (Blender walk frames, ~36 sprites). Build when credits allow?
-- View direction is decided in D-022 (implementation pending). Iso facings remain 4 for units/zombies and 8 for turrets; changing those is a separate choice.
 - Final game name (Highway Holdout is a working title).
 - Balance: should survivors eat food (upkeep), so food stays useful after ~60 min? (`resources.json foodUpkeepPerSurvivorPerMin`, currently 0; Core rejects non-zero until upkeep is built)
 - Balance: should defenders/survivors ever die permanently? (currently knocked out for 2 min, `units.json`)
 - Balance: Horde Alert ON by default? (`offline.json hordeAlert.defaultEnabled`, currently true; Time factor stays OFF)
-- Art: `--view topdown` still trims and refits sprites (and caps a tile at 96 px @3x); `--view iso` doesn't trim. Should top-down stop trimming too before 1B's units/turrets? (Owner/1E call.)
+- Cleanup after D-030 (optional): delete the unused 2D art tools/folders outside the app (`render_iso_sprites.py`, `import_art.py` topdown/iso modes, `HighwayHoldout_Iso_Art/`, `HighwayHoldoutAssets/` top-down pack, the 8-bit folder)? They don't ship; 2M reuses the Blender model scripts.
 - Art: `tools/import_art.py` also writes `App/AppIconLayers/*.png`, which end up as loose files in the app bundle. They're harmless and small; move them out of `App/` if that matters.
 

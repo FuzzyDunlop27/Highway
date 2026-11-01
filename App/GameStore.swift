@@ -25,12 +25,10 @@ final class GameStore {
     var notice: String?
 
     let placement = PlacementController()
-    /// The view the player chose (HUD button); remembered between launches. Starts at presentation.json defaultView.
-    private(set) var preferredView: ProjectionKind = .isometric
-    /// Flip to top-down while placing or moving (presentation.json default; the player can turn it off).
-    private(set) var autoTopDownWhilePlacing = false
     @ObservationIgnored let lifecycle = AppLifecycle()
-    /// Tile at the middle of the screen; the scene updates it so new ghosts appear in view.
+    /// True while something covers the game and time must not pass (the DEBUG 3D spike). Checked by GameTicker.
+    @ObservationIgnored var isClockPaused = false
+    /// Ground tile at the middle of the screen; the 3D view updates it so new ghosts appear in view.
     @ObservationIgnored var viewCenterTile = GridPoint(x: 0, y: 0)
     @ObservationIgnored private let saveStore: SaveFileStore
 
@@ -64,7 +62,7 @@ final class GameStore {
                 state = try Self.newGame(content)
             }
             loop = try GameLoop(content: content, state: state)
-            loadViewPreferences(content.presentation)
+            Self.forgetRetiredViewSettings()
             lifecycle.configure(autosaveSeconds: content.economy.autosaveSeconds)
             refresh()
         } catch {
@@ -86,40 +84,17 @@ final class GameStore {
         }
     }
 
-    // MARK: View (isometric / top-down)
-
-    /// The view to draw right now: top-down while positioning a ghost (if auto is on), else the player's choice.
-    var activeView: ProjectionKind {
-        autoTopDownWhilePlacing && placement.isPositioning ? .topDown : preferredView
-    }
-
-    func toggleView() {
-        preferredView = preferredView == .isometric ? .topDown : .isometric
-        UserDefaults.standard.set(preferredView.rawValue, forKey: Self.preferredViewKey)
-    }
-
-    func setAutoTopDownWhilePlacing(_ on: Bool) {
-        autoTopDownWhilePlacing = on
-        UserDefaults.standard.set(on, forKey: Self.autoTopDownKey)
-    }
-
-    private static let preferredViewKey = "view.preferred"
-    /// v2: D-022 made isometric placement the default, so choices saved under the old key (auto-flip on by default)
-    /// are ignored; only a choice made after the change counts.
-    private static let autoTopDownKey = "view.autoTopDownWhilePlacing.v2"
-
-    /// View choices are presentation, not game state, so they live in UserDefaults rather than the save.
-    private func loadViewPreferences(_ presentation: PresentationContent) {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: "view.autoTopDownWhilePlacing")  // pre-D-022 setting
-        preferredView = defaults.string(forKey: Self.preferredViewKey).flatMap(ProjectionKind.init) ?? presentation.defaultView
-        autoTopDownWhilePlacing = defaults.object(forKey: Self.autoTopDownKey) as? Bool ?? presentation.autoTopDownWhilePlacing
+    /// Settings from the retired 2D views (D-030) are no longer read; tidy them out of UserDefaults.
+    private static func forgetRetiredViewSettings() {
+        for key in ["view.preferred", "view.autoTopDownWhilePlacing", "view.autoTopDownWhilePlacing.v2", "debugRenderer"] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
     }
 
     // MARK: Every frame
 
-    /// Called by the scene once per frame with real seconds since the last frame. Returns what happened in Core
-    /// since the last frame (the scene draws these as effects); banner-worthy events also set `banner`.
+    /// Called by GameTicker once per screen frame with real seconds since the last frame. Returns what happened in Core
+    /// since the last frame (the 3D view will draw these as effects, chunk 4R); banner-worthy events also set `banner`.
     @discardableResult
     func advance(realSeconds: Double) -> [SimEvent] {
         guard let loop else { return [] }

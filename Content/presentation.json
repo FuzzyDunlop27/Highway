@@ -1,49 +1,53 @@
 {
-  "_notes": "How the App draws the map. Not game tuning; Core ignores it. Two views (DECISIONS D-016): isometric (normal, Tropico style) and topDown (building view). defaultView = view the game opens in. autoTopDownWhilePlacing = flip to topDown while placing/moving, then back (false since D-022: placement happens in isometric; top-down stays as a manual fallback). switchFadeSeconds = fade between views. outsideMapColor = color around the map. Per view: tileWidthPt/tileHeightPt = screen points per tile (iso is a 2:1 diamond); artNamespace = folder in App/Assets.xcassets/Art/ (tools/import_art.py --view); facings / turretFacings = 1 (rotate one image) or 4/8 facing images named <id>_e, _se, _s, _sw, _w, _nw, _n, _ne; minScale/startScale = closest and opening camera zoom (bigger = farther out); placeholderHeightTiles = placeholder block height per building category in tile heights (iso only); assets.<artId> = optional fixes: anchor [x, y] = ground point as fractions from the image's top-left (iso default [0.5, 1.0], bottom middle), scale = size multiplier, mirrorable = false to forbid mirroring.",
-  "schemaVersion": 1,
-  "defaultView": "isometric",
-  "autoTopDownWhilePlacing": false,
-  "switchFadeSeconds": 0.3,
+  "_notes": "How the App draws the map: real 3D with RealityKit (D-027; 2D retired in D-030). Not game tuning; Core ignores it. outsideMapColor = color around and beyond the map. reality3d: metresPerTile = 1 tile in metres; loadModels = load <artId>.usdz in the background (false = labeled boxes only); placeholderHeightTiles = box height per building category in tiles (box = footprint x height, art id written above it); zombieBoxTiles = zombie box size in tiles; camera = orbit camera (D-029: snapAngles steps, twistThresholdDegrees to turn one step per twist, snapTurnSeconds eased turn; distances and minHeightMetres in metres, minHeightMetres keeps the camera out of roofs; pitch = degrees above the ground; tiltDegreesPerPoint = two-finger up/down drag; pinchSensitivity 1 = follow the fingers exactly, lower = calmer; panMarginTiles = how far past the map edge you can pan; zoom-out also stops when the map fills the screen width); light = dusk sun + fill from the 1R spike (lux, hex colors).",
+  "schemaVersion": 2,
   "outsideMapColor": "#2B2A26",
-  "views": {
-    "isometric": {
-      "projection": "isometric",
-      "tileWidthPt": 64,
-      "tileHeightPt": 32,
-      "artNamespace": "Iso",
-      "facings": 4,
-      "turretFacings": 8,
-      "minScale": 0.5,
-      "startScale": 1.25,
-      "placeholderHeightTiles": {
-        "core": 2.0,
-        "housing": 1.4,
-        "production": 1.0,
-        "utility": 1.4,
-        "military": 1.2,
-        "wall": 0.8,
-        "tower": 2.2,
-        "trap": 0.15,
-        "decoration": 0.6,
-        "default": 1.0
-      },
-      "assets": {},
-      "zombieWalk": {
-        "frames": 6,
-        "strideTiles": 0.6149123397
-      }
+  "reality3d": {
+    "metresPerTile": 1.0,
+    "loadModels": true,
+    "placeholderHeightTiles": {
+      "core": 2.4,
+      "housing": 1.6,
+      "production": 1.0,
+      "utility": 1.6,
+      "military": 1.4,
+      "wall": 0.9,
+      "tower": 2.6,
+      "trap": 0.12,
+      "decoration": 0.6,
+      "default": 1.0
     },
-    "topDown": {
-      "projection": "topDown",
-      "tileWidthPt": 32,
-      "tileHeightPt": 32,
-      "artNamespace": "TopDown",
-      "facings": 1,
-      "turretFacings": 1,
-      "minScale": 0.5,
-      "startScale": 0.75,
-      "placeholderHeightTiles": {},
-      "assets": {}
+    "zombieBoxTiles": {
+      "width": 0.35,
+      "height": 0.75
+    },
+    "camera": {
+      "fieldOfViewDegrees": 35,
+      "startDistance": 22,
+      "minDistance": 6,
+      "maxDistance": 55,
+      "minHeightMetres": 4.5,
+      "startPitchDegrees": 40,
+      "minPitchDegrees": 25,
+      "maxPitchDegrees": 75,
+      "tiltDegreesPerPoint": 0.25,
+      "startYawDegrees": 45,
+      "snapAngles": 4,
+      "twistThresholdDegrees": 25,
+      "snapTurnSeconds": 0.35,
+      "pinchSensitivity": 0.6,
+      "panMarginTiles": 2
+    },
+    "light": {
+      "sunElevationDegrees": 22,
+      "sunAzimuthDegrees": 235,
+      "sunIntensityLux": 12000,
+      "sunColor": "#FFC78C",
+      "fillIntensityLux": 400,
+      "fillColor": "#8C9ED9",
+      "shadows": true,
+      "shadowMaxDistance": 45,
+      "shadowDepthBias": 1.5
     }
   }
 }

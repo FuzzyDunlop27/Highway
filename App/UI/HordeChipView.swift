@@ -42,6 +42,7 @@ struct HordeChipView: View {
             .fullScreenCover(isPresented: $showSpike3D) {
                 Spike3DScreen { showSpike3D = false }
             }
+            .onChange(of: showSpike3D, initial: true) { store.isClockPaused = showSpike3D }  // no game time behind the spike
             #endif
         }
     }

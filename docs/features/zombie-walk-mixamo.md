@@ -1,5 +1,7 @@
 # ZWALK-1M — Walker limb animation via Mixamo (alternative route for chunk 2A)
 
+> **RETIRED as 2D frames (D-030, 2026-11-01):** the app no longer uses the rendered walker PNGs. The Mixamo source and D-026 terms notes still matter for chunk 3M (animated 3D walker).
+
 **Label:** `ZWALK-1M` · **Chunk:** 2A (art track, see `docs/BUILD-QUEUE.md`) · **Type:** art + rendering only (no Core, gameplay or save change)
 **Runs in:** Claude Code (this repo) or ChatGPT/Codex. Each step says who does it.
 

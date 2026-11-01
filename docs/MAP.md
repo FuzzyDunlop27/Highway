@@ -3,7 +3,7 @@
 _Read this before opening any code. Keep it accurate: if you add, move, rename, or delete a file, update this page in the same change._
 
 **Status key:** `[ ]` planned, not created yet · `[x]` exists. Flip the box when you create the file.
-Everything for milestone 1A exists (Core package + App target). `Content/` is bundled into the app as a folder.
+Everything for milestone 1A exists (Core package + App target). `Content/` is bundled into the app as a folder. The map is drawn in 3D only (D-030).
 
 ## Lookup: "I want to change X" → look in Y
 
@@ -20,7 +20,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Offline credit cap (12h), what progresses while away, Horde Alert timing | `Content/offline.json` |
 | Which number to change when it feels too slow/hard | `docs/features/balance.md` |
 | Map layout, roads, spawn edges | `Content/maps/phase1_exit.json` |
-| How zombies / defenses / effects look | `App/Rendering/Nodes/{Zombie,Defense,FX}NodeFactory.swift` |
+| How buildings / zombies look in 3D | `App/Rendering/{BuildingLayer3D,ZombieLayer3D}.swift`; models `<artId>.usdz` via `ModelRegistry.swift` (effects: chunk 4R) |
 | Horde chip, banners, debug menu | `App/UI/HordeChipView.swift`, `HordeBannerView.swift`, `DebugMenuView.swift` |
 | Horde timing, size, mix, edges | `Content/hordes.json`; code `Core/.../Systems/Hordes/` (notes: `docs/features/hordes.md`) |
 | Zombie routes, bashing, traps | `docs/features/pathing.md`; code `Core/.../Systems/Pathing/`, `Systems/Combat/ZombieMovement.swift` |
@@ -32,30 +32,28 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | How fast farms/posts produce, caps, survivor arrival (code) | `Core/Sources/HoldoutCore/Systems/Economy/EconomySystem.swift` |
 | Why a spot is red / placement rules | `Core/Sources/HoldoutCore/Systems/Construction/PlacementRules.swift` |
 | What the App can call in Core | `docs/features/core-api.md` |
-| Placeholder shape/color/label for missing art | `App/Rendering/ArtRegistry.swift` |
-| Which image an entity uses | `App/Rendering/ArtRegistry.swift` |
-| How a building/zombie/etc. is drawn | `App/Rendering/Nodes/<Type>NodeFactory.swift` |
-| Camera pan/zoom feel | `App/Input/CameraController.swift`; zoom limits in `Content/presentation.json` |
-| Isometric vs top-down: tile size, default view, auto top-down while building, block heights, art anchors | `Content/presentation.json` |
-| How the view switch looks (fade, keep the spot centered) | `App/Rendering/ViewSwitcher.swift` |
-| What draws in front of what | `App/Rendering/DepthSort.swift` |
-| Placeholder blocks/boxes look | `App/Rendering/PlaceholderArt.swift` |
-| How to draw isometric art (for ChatGPT/Blender) | `docs/graphics-spec-iso.md`, `docs/art-templates/` |
-| Wall tool (drag a line, cost, Build) | `App/Input/PlacementController.swift` (`.drawingLine`), `App/Rendering/Nodes/WallLineNodeFactory.swift`, `App/UI/WallLineBarView.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
-| Tap-to-place, ghost preview, invalid-spot red | `App/Input/PlacementController.swift` (logic), `App/Rendering/Nodes/GhostNodeFactory.swift` (look) |
+| Placeholder box size/color/label for a missing 3D model | `App/Rendering/ModelRegistry.swift`; heights in `Content/presentation.json` `reality3d.placeholderHeightTiles` |
+| Which model an entity uses | its art id (`sprite` in buildings/zombies JSON) → `<artId>.usdz` in the app bundle (`ModelRegistry.swift`) |
+| Menu/HUD pictures, missing-picture placeholder | `App/Rendering/ArtRegistry.swift`, `PlaceholderArt.swift`; art in `Art/UI`, `Art/Menu` |
+| Camera feel: pan, pinch, twist snap, tilt, min height, zoom limits | `Content/presentation.json` `reality3d.camera`; math `Core/.../Presentation/OrbitCamera3D.swift`; touches `App/Input/OrbitGestures3D.swift` |
+| Sun, shadows, fill light, background color | `Content/presentation.json` `reality3d.light`, `outsideMapColor`; code `App/Rendering/World3D.swift` |
+| Tile ↔ 3D world position | `Core/.../Presentation/WorldMapping3D.swift` |
+| Ground look (merged mesh, colors) | `App/Rendering/GroundMesh3D.swift` |
+| Game clock (who advances Core each frame) | `App/GameTicker.swift` |
+| Wall tool (drag a line, cost, Build) — off until 3R | `App/Input/PlacementController.swift` (`.drawingLine`), `App/UI/WallLineBarView.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
+| Tap-to-place, ghost, invalid-spot red — off until 3R | `App/Input/PlacementController.swift` (logic); 3D drawing is chunk 3R |
 | Text shown when a spot is invalid | `App/Input/PlacementMessages.swift` |
 | Confirm/Cancel and Move/Demolish bars | `App/UI/PlacementBarView.swift` |
 | Where the save file lives / when it saves | `App/Platform/SaveFileStore.swift`, `App/Platform/AppLifecycle.swift` |
-| Tile size on screen, grid ↔ screen math | `App/Rendering/GridGeometry.swift` |
 | Top bar (resources, clock, speed buttons) | `App/UI/HUDView.swift` |
 | Build menu | `App/UI/BuildMenuView.swift` |
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
 | 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
-| Re-render isometric art from the 3D models | `tools/blender/render_iso_sprites.py` (models: Blender study + `tools/blender/extra_models.py`) |
+| Blender model scripts (source for 2M's USDZ export) | `tools/blender/*_models.py`; old iso sprite renderer `render_iso_sprites.py` is unused since D-030 |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
 | Horde Alert notification text/timing | `App/Platform/NotificationScheduler.swift` |
-| Replace a placeholder with real art | drop PNG in a folder → `python3 tools/import_art.py <folder> --view topdown` (or `--view iso`) |
+| Replace a placeholder box with a real model | add `<artId>.usdz` to the app (chunk 2M pipeline); menu PNGs: `python3 tools/import_art.py <folder> --view ui` |
 
 ## Folder tree
 
@@ -71,9 +69,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] GAME-DESIGN.md    What the game is; Phase 1 content list
 │  ├─ [x] PHASE1-PLAN.md    Stack, milestones 1A–1E, exit checks, kickoff prompts
 │  ├─ [x] PHASE1-TASKS.md   Task-by-task plan for what's left (1V two views → 1E), owner decisions
-│  ├─ [x] graphics-spec-phase1.md  Art filenames, sizes, style (for ChatGPT); top-down view
-│  ├─ [x] graphics-spec-iso.md     Isometric view art: camera, canvas, anchors, facings
-│  ├─ [x] art-templates/           iso-template-1x1/2x2/3x3.png diamond guides for artists
+│  ├─ [x] graphics-spec-phase1.md  Art ids/filenames (still the id list); its top-down sprite specs are retired (D-030)
+│  ├─ [x] graphics-spec-iso.md     RETIRED (D-030): old isometric sprite spec, kept for history
+│  ├─ [x] art-templates/           RETIRED (D-030): iso diamond guides
 │  ├─ plans/                Proposals for the owner to pick from (not yet in BUILD-QUEUE)
 │  │  ├─ [x] living-world-plan.md  Option 1: Tropico-style living world in 2D (chunks 1K 1N 1F 1U 1S 2F 2S)
 │  │  ├─ [x] 3d-rendering-plan.md  Option 2: real 3D drawing with RealityKit (chunks 1R–6R, 2M, 3M)
@@ -87,9 +85,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] economy.md     Production, caps, housing, survivor arrival, auto-staffing
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
-│     ├─ [x] rendering-art.md  SpriteKit scene, ArtRegistry/placeholders, node factories
-│     ├─ [x] zombie-walk-mixamo.md  ZWALK-1M: implemented stock Mixamo route; normal-horde acceptance pending
-│     ├─ [x] zombie-walk-animation.md  ZWALK-1: realistic walker limb prototype + remaining checks
+│     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
+│     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for 3M
+│     ├─ [x] zombie-walk-animation.md  RETIRED 2D walker limb prototype (D-030)
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
 ├─ Content/                 ALL tuning data, loaded at runtime. No numbers in Swift.
@@ -101,11 +99,11 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] research.json     Metal Fortification, Marksmanship, Agriculture
 │  ├─ [x] economy.json      Tick rate, speeds, autosave, HQ-loss penalty
 │  ├─ [x] offline.json      Time factor (offline credit) + Horde Alert notification rules
-│  ├─ [x] presentation.json Views (isometric + top-down): tile sizes, art folders, zoom, placeholder heights (App only)
+│  ├─ [x] presentation.json 3D view: camera, light, placeholder box sizes, background color (App only)
 │  └─ maps/
 │     └─ [x] phase1_exit.json  The highway-exit starting map (40×30, highway on the north edge)
 ├─ Core/                    Swift package HoldoutCore: pure simulation, Foundation only
-│  ├─ [x] Package.swift     iOS 17 / macOS 14, Swift 6; `cd Core && swift test`
+│  ├─ [x] Package.swift     iOS 18 / macOS 14, Swift 6; `cd Core && swift test`
 │  ├─ Sources/HoldoutCore/
 │  │  ├─ Model/             Plain saved data
 │  │  │  ├─ [x] GameState.swift   Clock, speed, random, group, bases
@@ -118,7 +116,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] GridProjection.swift (tile ↔ screen), Facing.swift (facing image choice) — App only
+│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math) — App only
 │  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
@@ -138,7 +136,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
 │     ├─ [x] TestSupport.swift  Finds repo Content/ via #filePath, builds test games
-│     ├─ [x] Presentation/GridProjectionTests.swift, FacingTests.swift
+│     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
@@ -146,35 +144,23 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
 │  ├─ [x] HighwayHoldoutApp.swift  App entry point; saves when the app leaves the foreground
-│  ├─ [x] GameStore.swift   @Observable bridge: loads content + save, owns Core GameLoop, ticks it, sends Commands
-│  ├─ Rendering/            SpriteKit
-│  │  ├─ [x] GameScene.swift      SKScene hosted in SpriteView; syncs nodes to Core state; gestures
-│  │  ├─ [x] ArtRegistry.swift    art id → texture/UIImage; labeled colored placeholder if image missing
-│  │  ├─ [x] GridGeometry.swift   CoreGraphics wrapper around Core's GridProjection for the active view
-│  │  ├─ [x] ArtStyle.swift       active view: geometry, art folder, placeholder heights, per-image fixes
-│  │  ├─ [x] PlaceholderArt.swift flat labeled boxes (top-down) and 3D blocks/diamonds (isometric)
-│  │  ├─ [x] DepthSort.swift      ZLayer draw order; front-to-back sorting
-│  │  ├─ [x] DirectionalSprite.swift  facing images (_se, _ne, … + mirroring) or rotate one image
-│  │  ├─ [x] ViewSwitcher.swift   fade between isometric and top-down, keep the spot centered
-│  │  ├─ [x] ZombieLayer.swift    one node per Core zombie, synced every frame
-│  │  ├─ [x] EventPlayer.swift    Core events → effects (capped), remembers tower aim
-│  │  ├─ [x] HordeWarningOverlay.swift  warning arrows + edge highlight at warned spawn edges
-│  │  └─ Nodes/                   One factory per entity type:
-│  │     ├─ [x] TerrainNodeFactory.swift   ground tiles + decorations; ZLayer draw order
-│  │     ├─ [x] BuildingNodeFactory.swift  buildings; scaffolding, rubble, health bar; defenses → DefenseNodeFactory
-│  │     ├─ [x] DefenseNodeFactory.swift   walls turned to their line, flat traps, aiming turret tops
-│  │     ├─ [x] ZombieNodeFactory.swift    zombie facing image, bob, health bar, hit flash, crowd spread
-│  │     ├─ [x] FXNodeFactory.swift        tracer, muzzle flash, goo, dust, shake, trap flash
-│  │     ├─ [x] BarNodeFactory.swift       small progress / health bars
-│  │     ├─ [x] GhostNodeFactory.swift     placement ghost (green/red tile polygons), selection outline, range ring
-│  │     └─ [ ] UnitNodeFactory.swift      survivors/defenders (1C)
+│  ├─ [x] GameStore.swift   @Observable bridge: loads content + save, owns Core GameLoop, sends Commands
+│  ├─ [x] GameTicker.swift  The game clock: display link → GameStore.advance each frame; buffers Core events
+│  ├─ Rendering/            RealityKit 3D (2D SpriteKit retired, D-030)
+│  │  ├─ [x] Reality3DView.swift   SwiftUI host: RealityView (virtual camera) + touch layer
+│  │  ├─ [x] World3D.swift         scene: camera, sun/fill light, ground, layers; per-frame sync to Core
+│  │  ├─ [x] GroundMesh3D.swift    one merged ground mesh + decorations; Reality3DSizes helpers
+│  │  ├─ [x] BuildingLayer3D.swift one entity per building, rebuilt on Signature change; wall direction
+│  │  ├─ [x] ZombieLayer3D.swift   one entity per zombie, moved/turned every frame
+│  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
+│  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
+│  │  └─ [x] PlaceholderArt.swift  labeled flat box for missing menu art; per-prefix colors (also 3D boxes)
 │  ├─ Input/
-│  │  ├─ [x] CameraController.swift     Pan/pinch-zoom, bounds
-│  │  ├─ [x] PlacementController.swift  Mode (select/place/move), ghost spot, validity, Confirm command
-│  │  ├─ [x] HitTesting.swift           isometric taps: front-most drawn building, else ground tile
+│  │  ├─ [x] OrbitGestures3D.swift      3D camera touches: pan, pinch toward fingers, twist snap, tilt
+│  │  ├─ [x] PlacementController.swift  Mode (select/place/move/line), ghost spot, validity, Confirm command (drawn again in 3R)
 │  │  └─ [x] PlacementMessages.swift    Core placement problems/errors → player text
 │  ├─ UI/                   SwiftUI
-│  │  ├─ [x] GameRootView.swift  SpriteView + overlays, view toggle button, ArtIcon, notice banner, load-error screen
+│  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen (Build hidden until 3R)
 │  │  ├─ [x] HUDView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
@@ -185,7 +171,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SaveFileStore.swift        Read/write Application Support/HighwayHoldout/save.json
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
-│  ├─ Spike3D/              DEBUG throwaway chunk 1R RealityKit spike (delete when 2R lands); notes: docs/plans/3d-spike-1R-results.md
+│  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its Models/*.usdz also show in the game until 2M); notes: docs/plans/3d-spike-1R-results.md
 │  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, walker/shadow/host/cap toggles, launch args
 │  │  ├─ [x] Spike3DWorld.swift        scene: ground, models, dusk sun + fill, walker rings, per-frame update
 │  │  ├─ [x] Spike3DHosts.swift        RealityView virtual camera (iOS 18) and ARView non-AR (iOS 17) hosts
@@ -194,18 +180,18 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] Spike3DConfig.swift + spike3d.json  spike-only tuning
 │  │  └─ Models/               USDZ from tools/blender/spike_export_usdz.py (walker USDZ is git-ignored, Mixamo)
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
-│  └─ Assets.xcassets/      AppIcon + Art/{TopDown,Iso,UI}/ sprites (written by tools/import_art.py --view; don't hand-edit)
+│  └─ Assets.xcassets/      AppIcon + Art/UI/ (UI kit, tools/import_art.py --view ui) + Art/Menu/ (8 old iso building pictures for menu cards)
 ├─ HighwayHoldoutAssets/    ChatGPT's top-down art pack (source PNGs in png/). ChatGPT owns it; don't edit.
 ├─ HighwayHoldout_UI_Kit/   ChatGPT's UI kit (menu panels, buttons, glyphs, 3/4 build cards). Don't edit; import with --view ui.
 ├─ HighwayHoldout_Blender_Study/  3D art study (models + scripts) the isometric art is rendered from. Art team owns it.
-├─ HighwayHoldout_Iso_Art/  Rendered isometric PNGs (tools/blender/render_iso_sprites.py); README says what's in it.
+├─ HighwayHoldout_Iso_Art/  Old rendered isometric PNGs (no longer in the app since D-030); README says what's in it.
 ├─ HighwayHoldoutAssets_8bit/  Abandoned pixel-art experiment; not selected for the app.
 ├─ HighwayHoldout_Blender_Study/  Fresh 3D style study: editable .blend, models/, ten png/ samples, renders/, scripts/, QA and Claude handoff.
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
 └─ tools/
-   ├─ [x] import_art.py     PNGs → imagesets: --view topdown (trimmed), iso (untrimmed), ui (UI kit as-is)
+   ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
    └─ blender/
-      ├─ [x] render_iso_sprites.py  Blender script: renders isometric sprites + ground tiles
+      ├─ [x] render_iso_sprites.py  UNUSED since D-030: rendered the old isometric sprites
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
       ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
@@ -230,6 +216,6 @@ Create a note from `_TEMPLATE.md` the first time a feature is built. Planned nam
 - Realistic walker pilot: `HighwayHoldout_Iso_Art/realistic-walker/` contains `source/`, `png/`, `previous/`, `prepare.py`, `PROMPTS.md`, `README.md`, `preview.png`, and simulator review captures. Reapply its sprites after old Blender renders.
 - `docs/BUILD-QUEUE.md`: dependency-labelled chunks and paste-ready next-chat handoffs.
 
-- Walker limb animation: `HighwayHoldout_Iso_Art/walker-walk/{source/,png/,prepare.py,preview.gif,in-game.png,PROMPTS.md,README.md}`; twelve `_w0…_w5.imageset` entries under `App/Assets.xcassets/Art/Iso/`. Runtime in `ZombieNodeFactory.swift` + `ArtRegistry.swift`; configuration in `Content/presentation.json` and `PresentationDefs.swift`.
+- Walker limb animation (RETIRED with 2D, D-030): sources stay in `HighwayHoldout_Iso_Art/walker-walk/`; the app frames and runtime code were removed.
 
-- Current Mixamo walker: `HighwayHoldout_Iso_Art/walker-mixamo/` contains production `png/`, render metadata, README, comparison/GIF and actual simulator evidence. `source/*.fbx` and `local-review/` remain local and ignored by Git; source FBX never ships. The shared iso renderer main guard allows safe helper imports.
+- Mixamo walker (its 2D frames retired with D-030; the FBX source is what 3M converts): `HighwayHoldout_Iso_Art/walker-mixamo/` contains `png/`, render metadata, README, comparison/GIF and actual simulator evidence. `source/*.fbx` and `local-review/` remain local and ignored by Git; source FBX never ships. The shared iso renderer main guard allows safe helper imports.
