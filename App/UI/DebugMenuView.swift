@@ -1,4 +1,4 @@
-// Purpose: DEBUG-only testing menu (long-press the horde chip): start a horde now, add resources, kill all zombies. Notes: docs/features/hud-ui.md
+// Purpose: DEBUG-only testing menu (long-press the horde chip): start a horde now, add resources, kill all zombies, open the 3D spike. Notes: docs/features/hud-ui.md
 #if DEBUG
 import SwiftUI
 import HoldoutCore
@@ -6,6 +6,8 @@ import HoldoutCore
 struct DebugMenuView: View {
     let store: GameStore
     let close: () -> Void
+    /// Opens the chunk 1R RealityKit spike (App/Spike3D/).
+    let openSpike3D: () -> Void
     /// Testing gift only; Core clamps it to storage caps.
     private static let gift = Cost(scrap: 500, food: 500)
 
@@ -19,6 +21,11 @@ struct DebugMenuView: View {
             item("Horde now", glyph: "alert", kind: .danger, command: .debugStartHorde)
             item("+\(Self.gift.food) food & scrap", glyph: "plus", kind: .primary, command: .debugAddResources(Self.gift))
             item("Kill all zombies", glyph: "demolish", kind: .secondary, command: .debugKillAllZombies)
+            Button(action: openSpike3D) {
+                KitLabel(glyph: "plus", title: "3D spike (1R)").frame(maxWidth: .infinity)
+            }
+            .buttonStyle(KitButtonStyle(kind: .secondary))
+            .accessibilityIdentifier("debug_spike3d")
         }
         .padding(16)
         .frame(width: 260)

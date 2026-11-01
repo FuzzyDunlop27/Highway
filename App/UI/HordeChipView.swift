@@ -6,6 +6,8 @@ struct HordeChipView: View {
     let store: GameStore
     #if DEBUG
     @State private var showDebug = false
+    /// Launch with `-spike3DWalkers N` to open the 1R spike straight away (for measuring without touches).
+    @State private var showSpike3D = UserDefaults.standard.object(forKey: "spike3DWalkers") != nil
     #endif
 
     var body: some View {
@@ -33,8 +35,12 @@ struct HordeChipView: View {
             #if DEBUG
             .onLongPressGesture { showDebug = true }
             .popover(isPresented: $showDebug) {
-                DebugMenuView(store: store) { showDebug = false }
+                DebugMenuView(store: store, close: { showDebug = false },
+                              openSpike3D: { showDebug = false; showSpike3D = true })
                     .presentationCompactAdaptation(.popover)
+            }
+            .fullScreenCover(isPresented: $showSpike3D) {
+                Spike3DScreen { showSpike3D = false }
             }
             #endif
         }

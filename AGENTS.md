@@ -71,7 +71,7 @@ If you cannot run a command (e.g. no Xcode in your sandbox), say so; never claim
 ## Xcode project file
 - The project uses Xcode buildable (synced) folders: adding or removing a file needs no project-file edit.
 - Never edit `*.xcodeproj/project.pbxproj` unless the owner explicitly asks.
-- Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 17.0.
+- Toolchain: Xcode 27, Swift 6, minimum iOS/iPadOS 18.0 (raised from 17 for RealityKit 3D, D-028).
 
 ## Phase discipline
 - Build only the current milestone (`docs/STATUS.md` → milestone; scope in `docs/PHASE1-PLAN.md`,

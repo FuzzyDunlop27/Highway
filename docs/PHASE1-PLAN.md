@@ -19,7 +19,7 @@ Read with: `docs/GAME-DESIGN.md` (what), `AGENTS.md` (how to work), `Content/*.j
 | Notifications | UserNotifications (local only) | Horde Alerts work offline; no server. |
 | Tests | Swift Testing | Locks down economy, catch-up, and pathing rules. |
 | Project file | Create once in Xcode 27 with buildable folders (the default since Xcode 16); agents never edit `.pbxproj` | Agents can add/remove Swift files without touching the fragile project file. XcodeGen is a fallback only. |
-| Toolchain | Xcode 27, Swift 6.4, minimum iOS/iPadOS 17.0 | iOS 17 is iPhone 15's launch OS and the floor for `@Observable`. App Store uploads need the iOS 27 SDK from April 2027. Sources: docs/research/tech-findings.md |
+| Toolchain | Xcode 27, Swift 6.4, minimum iOS/iPadOS 18.0 (raised from 17 for RealityKit 3D, D-028) | iOS 17 was iPhone 15's launch OS and the floor for `@Observable`; 18 is needed for RealityKit's virtual camera. App Store uploads need the iOS 27 SDK from April 2027. Sources: docs/research/tech-findings.md |
 | Agent ↔ Xcode | `xcodebuild` from the terminal; optionally Xcode's MCP bridge (`xcrun mcpbridge`) | Lets Codex/Claude Code build and run tests themselves. Needs a Mac with Xcode open. |
 
 **Mac reality check:** the iOS app only builds on a Mac. Cloud/Linux agents can still run `swift test` on `HoldoutCore`, which is why the simulation lives there.

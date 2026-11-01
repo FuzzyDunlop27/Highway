@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-10-31 (1B done; isometric placement done; 1C–1E split into build chunks in BUILD-QUEUE.md)
+**Last updated:** 2026-11-01 (3D GO, minimum iOS 18, D-028; chunks 2R + 2M ready)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -14,6 +14,9 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **3D GO + iOS 18 (D-028):** deployment target raised to 18.0 (project file, owner-approved) and Core package `.iOS(.v18)`. 119 Core tests pass; iPhone 18 Pro simulator build succeeds with no code warnings.
+- **Chunk 1R 3D spike built (DEBUG only, D-028).** Debug menu → "3D spike (1R)" shows HQ, shelter, farm, watchtower, car wreck and walls as real 3D models (exported from the Blender study by `tools/blender/spike_export_usdz.py`), a low dusk sun with shadows, an orbit camera (pan, pinch, twist, tilt; all checked in the simulator) and 0/35/100 animated Mixamo walkers, with an fps readout. Simulator (iPhone 18 Pro, iOS 27): 60 fps even at 100 walkers with shadows, on both RealityView (iOS 18+) and ARView (the iOS 17 route). Found: RealityView, particles, billboards and fades need iOS 18; there is no public frame-rate cap. **Real iPhone 18 Pro ("Ramrod18"): 60 fps at 0/35/100 walkers, shadows on or off, on both routes.** Recommendation: GO with minimum iOS 18. 119 Core tests pass; simulator build passes; 2D game opens unchanged. Results, fps table and screenshots: `docs/plans/3d-spike-1R-results.md`. The simulator test save advanced ~5 game-minutes during the runs (backed up afterwards, restored after the 2D check).
+- **Look direction chosen: real 3D (D-027).** Two plans written (`docs/plans/living-world-plan.md` = 2D, parked; `docs/plans/3d-rendering-plan.md` = 3D, chosen) plus mockup pictures (`docs/plans/mockups/`). 3D chunks 1R–6R, 2M, 3M added to `BUILD-QUEUE.md`. Docs only.
 - **ZWALK-1M implemented; normal-horde visual acceptance pending:** Chrome extension connected; Yaku J Ignite / Zombie Walk downloaded, rendered and imported (12 frames + 2 stills, zero warnings). Shared iso pipeline; six frames, measured stride 0.6149123397 tiles. 119 Core tests; full/fallback/restored simulator builds pass. Actual-app fixtures: four facings, pause/attack hold, missing-frame still, later day-40 crowd captures at 60 fps (32 zombies / 1,389 nodes). Native simulator clicks fail, so Horde now menu path and hands-on normal-horde gait/foot-sliding check remain pending. Original save restored byte-for-byte, full build installed, app stopped. Sources/evidence: `walker-mixamo/README.md`; D-026; prototype preserved in `c12e557`.
 - **Chunk 2A / ZWALK-1 started:** realistic walker has 12 limb poses and distance-driven playback, static fallback and attack hold. 119 Core tests pass; simulator build passes; live day-7 horde rendered at displayed 60 fps. Backup town restored. Gait currently favors one leg; refine strides/registration and finish full visual checks before runner/brute. Preview and source: `HighwayHoldout_Iso_Art/walker-walk/`; current implementation: `docs/features/zombie-walk-animation.md`.
 - **Chunk 1A realistic walker DONE:** two generated transparent directional cutouts plus base imported into the app. Latest iPhone 18 Pro simulator build passed; all four facings verified in an actual paused review fixture (`HighwayHoldout_Iso_Art/realistic-walker/in-game-four-facings.png`). Pre-test town restored byte-for-byte, app stopped. Full sources, prompts, prior sprites and fitting script retained. This is 2D art, not a matching Blender rig.
@@ -39,6 +42,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
+- **3D next: chunks 2R and 2M are ready** (owner said GO, minimum iOS now 18, D-028). Start prompts in `BUILD-QUEUE.md`. Owner still to pick free vs snapped camera rotation before 2R's camera tuning. An older-phone check and a heat check stay with 5R.
 - **ZWALK-1M / chunk 2A next:** review `walker-mixamo/preview.gif` and README, run a normal horde via long-press → Horde now, inspect four-facing gait/foot sliding at gameplay zoom, and close 2A only after visual acceptance. No FBX download blocker remains. Runner/brute remain deferred.
 - **Art track: finish chunk 2A visual acceptance**, using the approved Mixamo route above. Fixture checks are complete; normal-horde hands-on review remains. Do not re-import earlier generated poses or the old low-poly model.
 - **Chunk 2A / ZWALK-1M:** current route is `docs/features/zombie-walk-mixamo.md` and D-026. Earlier generated-pose source notes are historical; no further image generation is needed.

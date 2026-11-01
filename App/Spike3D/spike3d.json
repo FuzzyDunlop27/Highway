@@ -1,0 +1,16 @@
+{
+  "_note": "Chunk 1R spike tuning only (DEBUG, throwaway). Not game content. See docs/plans/3d-spike-1R-results.md",
+  "ground": { "width": 80, "depth": 80, "roadZ": 5.5, "roadWidth": 3 },
+  "sun": { "elevationDegrees": 22, "azimuthDegrees": 235, "intensityLux": 12000, "shadowMaxDistance": 40, "shadowDepthBias": 1.5 },
+  "fill": { "intensityLux": 400 },
+  "camera": {
+    "fieldOfViewDegrees": 35, "startDistance": 17, "minDistance": 6, "maxDistance": 45,
+    "startPitchDegrees": 38, "minPitchDegrees": 20, "maxPitchDegrees": 70, "startYawDegrees": 45,
+    "panLimit": 18
+  },
+  "walkers": {
+    "scale": 0.41361584, "strideTiles": 0.6149123397, "cyclesPerLoop": 1,
+    "innerRadius": 6.5, "ringSpacing": 0.9, "perRing": 14, "counts": [0, 35, 100]
+  },
+  "cappedFrameRate": 30
+}

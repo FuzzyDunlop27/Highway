@@ -50,6 +50,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Top bar (resources, clock, speed buttons) | `App/UI/HUDView.swift` |
 | Build menu | `App/UI/BuildMenuView.swift` |
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
+| 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
 | Re-render isometric art from the 3D models | `tools/blender/render_iso_sprites.py` (models: Blender study + `tools/blender/extra_models.py`) |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
@@ -73,6 +74,12 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] graphics-spec-phase1.md  Art filenames, sizes, style (for ChatGPT); top-down view
 │  ├─ [x] graphics-spec-iso.md     Isometric view art: camera, canvas, anchors, facings
 │  ├─ [x] art-templates/           iso-template-1x1/2x2/3x3.png diamond guides for artists
+│  ├─ plans/                Proposals for the owner to pick from (not yet in BUILD-QUEUE)
+│  │  ├─ [x] living-world-plan.md  Option 1: Tropico-style living world in 2D (chunks 1K 1N 1F 1U 1S 2F 2S)
+│  │  ├─ [x] 3d-rendering-plan.md  Option 2: real 3D drawing with RealityKit (chunks 1R–6R, 2M, 3M)
+│  │  ├─ [x] 3d-spike-1R-results.md  Chunk 1R results: fps table, iOS 17/18 findings, gaps, go/no-go
+│  │  ├─ [x] spike-1R/     1R screenshots (3D spike + current 2D for comparison)
+│  │  └─ [x] mockups/      Look-alike pictures of each option (painted over a real screenshot / Blender render)
 │  └─ features/             One short note per feature (see list below)
 │     ├─ [x] _TEMPLATE.md   Copy this to start a new feature note
 │     ├─ [x] balance.md     Pacing targets, formulas, timeline, tuning knobs
@@ -171,13 +178,21 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] HUDView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
-│  │  ├─ [x] DebugMenuView.swift  DEBUG only (long-press horde chip): horde now, +500, kill all
+│  │  ├─ [x] DebugMenuView.swift  DEBUG only (long-press horde chip): horde now, +500, kill all, open 3D spike
 │  │  ├─ [ ] SettingsView.swift         (1D)
 │  │  └─ [ ] WelcomeBackView.swift      Summary after Time-factor catch-up (1D)
 │  ├─ Platform/
 │  │  ├─ [x] SaveFileStore.swift        Read/write Application Support/HighwayHoldout/save.json
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
+│  ├─ Spike3D/              DEBUG throwaway chunk 1R RealityKit spike (delete when 2R lands); notes: docs/plans/3d-spike-1R-results.md
+│  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, walker/shadow/host/cap toggles, launch args
+│  │  ├─ [x] Spike3DWorld.swift        scene: ground, models, dusk sun + fill, walker rings, per-frame update
+│  │  ├─ [x] Spike3DHosts.swift        RealityView virtual camera (iOS 18) and ARView non-AR (iOS 17) hosts
+│  │  ├─ [x] Spike3DOrbitCamera.swift  pan / zoom / twist / limited tilt → camera transform
+│  │  ├─ [x] Spike3DGestureLayer.swift UIKit touch recognizers driving the orbit camera
+│  │  ├─ [x] Spike3DConfig.swift + spike3d.json  spike-only tuning
+│  │  └─ Models/               USDZ from tools/blender/spike_export_usdz.py (walker USDZ is git-ignored, Mixamo)
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
 │  └─ Assets.xcassets/      AppIcon + Art/{TopDown,Iso,UI}/ sprites (written by tools/import_art.py --view; don't hand-edit)
 ├─ HighwayHoldoutAssets/    ChatGPT's top-down art pack (source PNGs in png/). ChatGPT owns it; don't edit.
@@ -192,6 +207,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
    └─ blender/
       ├─ [x] render_iso_sprites.py  Blender script: renders isometric sprites + ground tiles
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
+      ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```

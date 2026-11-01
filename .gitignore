@@ -18,3 +18,6 @@ __pycache__/
 # Mixamo editable source assets stay local; ship rendered PNGs only.
 HighwayHoldout_Iso_Art/walker-mixamo/source/*.fbx
 HighwayHoldout_Iso_Art/walker-mixamo/local-review/
+
+# Chunk 1R spike: the rigged Mixamo walker as USDZ stays local too (regenerate with tools/blender/spike_export_usdz.py).
+App/Spike3D/Models/zmb_walker_mixamo.usdz
