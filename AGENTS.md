@@ -23,6 +23,14 @@ The owner avoids long-running chats. Work is split into **build chunks** tracked
 - **When the owner asks "what's left?"** (any time), read `BUILD-QUEUE.md` and answer: done / ready now / blocked (and by which chunks).
 - **Record status in Craft** (Highway Holdout page, see "Look here first") whenever a chunk is started, finished, or blocked, and keep `BUILD-QUEUE.md` the same. Verify the Craft write; never claim it synced unchecked.
 
+## Reporting to the owner (keep it short)
+The owner is not an engineer and does not want walls of text while you work.
+- Work quietly. No running commentary, no pasting logs, diffs or long file lists into chat.
+- At the end, give **one consolidated summary**: what changed (plain English, a few lines), how to check it, and what's next.
+- Then add a short **"Heads up"** list: exceptions, deviations from the spec, things you skipped or hedged on, anything you found missing or risky, and anything the owner may be missing. Never bury these inside the summary.
+- Call out hedged scope ("if quick", "optional") that you did not finish, in the same Heads up list, so it can't slip through unnoticed.
+- Keep long detail in the repo docs (feature notes, STATUS, DECISIONS), not in chat. Ask the owner at most one question at a time, with your recommendation.
+
 ## Architecture rules (never break these)
 - `Core/` (Swift package `HoldoutCore`) is the game simulation. It imports only Foundation.
   Never import SpriteKit, SwiftUI, UIKit, or Observation in Core.

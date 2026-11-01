@@ -30,5 +30,19 @@ When the owner picks one, turn it into a chunk in `BUILD-QUEUE.md` and a `DECISI
 - Design implications: pre-placed, non-demolishable (or costly to remove) blocking pieces per map; a buildable-area mask (Core map data: `Content/` JSON); zombie paths must still reach the base through the gaps. Fits the existing wall/pathing rules (`docs/features/pathing.md`, `construction.md`) and the CC0 modular-building art direction (D-036).
 - Open: size of the buildable area, whether it can grow (claim adjacent lots), how pre-placed pieces get damaged/repaired.
 
+## 5. Horde variety and rewards for winning (added 2026-11-01)
+- **Variety:** hordes shouldn't always be huge. Mix in small ones (just a couple of zombies), medium ones, and the occasional big one, so the player gets breathing room and big hordes feel like events.
+- **Reward:** winning must feel like winning, not just surviving. Candidate rewards (owner unsure which; could combine):
+  - **Experience / town level:** held hordes earn XP that levels the town, unlocking perks, research, or buildings.
+  - **Zombie drops:** valuables from kills (scrap, parts, rare items), possibly rarer from tougher types like Brutes.
+  - **Morale / survivors:** a win brings new arrivals or a morale boost (ties to the population balance idea).
+  - **Bigger payoff for bigger hordes** so risk is rewarded.
+- Today (`docs/features/hordes.md`): hordes are sized from a threat budget that scales with spent value and day (`Content/hordes.json` `budget`, `composition`). A held horde pays `completionBonus` and kills give `loot` (`Content/zombies.json`); there is no XP and no small-horde variation. Likely starting point: a random size roll per horde from the seeded RNG (kept deterministic), plus a reward table in `Content/*.json`.
+- Open: which reward type(s)? Should small hordes still pay anything? Does the player see a "victory" summary after each held horde?
+
 ## How these connect
 The shoreline (1) gives each map a setting, the neighborhood start (4) is how each map plays, supply runs (2) is how you leave the base, and weather (3) is the skin over all of it.
+
+## 6. Deeper town life, Tropico-style (added 2026-11-01)
+- After chunk 3M-3 (survivors visibly walking and working, looks only): named survivors you can follow, needs/happiness, day/night with sleeping, survivors who can be bitten, morale from held hordes (ties to §5).
+- Each of these adds Core state + a save migration, so each is its own decision. Design notes: `docs/plans/town-life-plan.md` §8.
