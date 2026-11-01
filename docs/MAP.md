@@ -52,6 +52,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | How many survivors work where, defenders, garrison, hold a spot | `docs/features/jobs-defenders.md`; code `Core/.../Systems/Jobs/`; numbers in `Content/units.json` and Barracks in `Content/buildings.json` |
 | Scavenging runs (time, reward, which level unlocks) | `Content/buildings.json` scavenger `runs` + level `effects`; code `Core/.../Systems/Scavenging/ScavengingSystem.swift` |
 | Research items, cost, time, what they do | `Content/research.json`; code `Core/.../Systems/Research/`; notes `docs/features/scavenging-research.md` |
+| Upgrade button, worker −/+, Barracks / Scavenger / Workshop panels | `App/UI/BuildingPanelView.swift` + `BarracksSection`, `ScavengerSection`, `WorkshopSection`; actions `App/GameStore+Jobs.swift` |
 | Build slots, queue length, builders per job, cancel refund | `Content/buildings.json rules`; code `Core/.../Systems/Construction/BuildQueue.swift` |
 | Upgrading a building | `Core/.../Systems/Construction/UpgradeSystem.swift`; level data in `Content/buildings.json` |
 | Build menu | `App/UI/BuildMenuView.swift` |
@@ -159,6 +160,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
 │  ├─ [x] HighwayHoldoutApp.swift  App entry point; saves when the app leaves the foreground
 │  ├─ [x] GameStore.swift   @Observable bridge: loads content + save, owns Core GameLoop, sends Commands
+│  ├─ [x] JobsSnapshot.swift / GameStore+Jobs.swift  what the job panels show + their actions (3B)
 │  ├─ [x] GameTicker.swift  The game clock: display link → GameStore.advance each frame; buffers Core events
 │  ├─ Rendering/            RealityKit 3D (2D SpriteKit retired, D-030)
 │  │  ├─ [x] Reality3DView.swift   SwiftUI host: RealityView (virtual camera) + touch layer
@@ -169,6 +171,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
 │  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (3R)
 │  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
+│  │  ├─ [x] DefenderLayer3D.swift  one box per defender: by the HQ, on its tower or held spot (3B)
 │  │  ├─ [x] ZombieLayer3D.swift   one entity per zombie, moved/turned every frame
 │  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
 │  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
@@ -180,6 +183,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ [x] PlacementMessages.swift    Core placement problems/errors → player text
 │  ├─ UI/                   SwiftUI
 │  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen
+│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (3B)
+│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (3B)
+│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (3B)
+│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (3B)
 │  │  ├─ [x] HUDView.swift / SpeedButtonsView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
@@ -213,7 +220,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
    └─ blender/
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
       ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
-      ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres, 1K textures)
+      ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres; textures=512, only=<name> options)
+      ├─ [x] free_assets_assemblies.py   free-asset spike: assembles buildings (fa_qt_shop) from Quaternius modular pieces
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```

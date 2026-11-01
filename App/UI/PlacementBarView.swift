@@ -74,8 +74,15 @@ struct SelectionBarView: View {
                         .buttonStyle(KitButtonStyle(kind: .primary))
                         .accessibilityIdentifier("repairButton")
                 }
-                Button { store.beginMoving() } label: { KitLabel(glyph: "move", title: "Move") }
-                    .buttonStyle(KitButtonStyle(kind: .secondary))
+                if store.jobs?.selectedJob != nil {
+                    Button { store.cancelSelectedJob() } label: { KitLabel(glyph: "close", title: "Cancel job") }
+                        .buttonStyle(KitButtonStyle(kind: .secondary))
+                        .accessibilityIdentifier("cancelJobButton")
+                }
+                if store.jobs?.selectedJob == nil {  // no room for Move beside Cancel job on a phone
+                    Button { store.beginMoving() } label: { KitLabel(glyph: "move", title: "Move") }
+                        .buttonStyle(KitButtonStyle(kind: .secondary))
+                }
                 Button { confirmDemolish = true } label: { KitLabel(glyph: "demolish", title: "Demolish") }
                     .buttonStyle(KitButtonStyle(kind: .danger))
                 KitIconButton(glyph: "close", label: "Close") { store.deselect() }

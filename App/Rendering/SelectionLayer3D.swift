@@ -3,7 +3,7 @@ import RealityKit
 import UIKit
 import HoldoutCore
 
-/// Shows which building is selected. Towers (and the HQ) also get their range (`buildings.json effects.range`, tiles)
+/// Shows which building is selected. Towers (and the HQ) also get their range (`buildings.json effects.range` plus researched bonuses, tiles; Core's `towerRange`)
 /// as a ring on the ground. Rebuilt only when the selection, its spot or its level changes.
 @MainActor
 final class SelectionLayer3D {
@@ -14,13 +14,13 @@ final class SelectionLayer3D {
     private static let ringAlpha: Float = 0.7
     private static let ringFillAlpha: Float = 0.08
 
-    private struct Key: Equatable { let id: BuildingID; let defId: String; let origin: GridPoint; let level: Int }
+    private struct Key: Equatable { let id: BuildingID; let defId: String; let origin: GridPoint; let level: Int; let range: Double? }
     private var shown: (key: Key, entity: Entity)?
 
     init() { root.name = "selection" }
 
-    func sync(selected: Building?, content: GameContent, mapping: WorldMapping3D) {
-        let key = selected.map { Key(id: $0.id, defId: $0.defId, origin: $0.origin, level: $0.level) }
+    func sync(selected: Building?, range: Double?, content: GameContent, mapping: WorldMapping3D) {
+        let key = selected.map { Key(id: $0.id, defId: $0.defId, origin: $0.origin, level: $0.level, range: range) }
         guard shown?.key != key else { return }
         shown?.entity.removeFromParent()
         shown = nil
@@ -33,7 +33,7 @@ final class SelectionLayer3D {
                                                color: .systemYellow, alpha: Self.outlineAlpha, lift: OverlayMeshes3D.lineLift) {
             entity.addChild(outline)
         }
-        if let range = def.level(selected.level)?.effects.range, range > 0 {
+        if let range = key.range, range > 0 {
             let center = Reality3DSizes.vector(mapping.footprintCenter(origin: key.origin, width: def.width, height: def.height))
             entity.addChild(OverlayMeshes3D.ring(center: center, radius: Float(range * mapping.metresPerTile),
                                                  color: .systemYellow, alpha: Self.ringAlpha, fillAlpha: Self.ringFillAlpha))

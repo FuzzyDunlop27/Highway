@@ -55,8 +55,11 @@ enum Spike3DScene: String, CaseIterable {
         ]
     }()
 
-    /// Realistic Quaternius city block (12 × 15 × 17 m), beyond the walker rings to the north.
+    /// Quaternius: a 6 × 6 m two-storey shop assembled from modular pieces (the chosen direction, D-036), east of the
+    /// props, and the prebuilt city block (12 × 15 × 17 m) beyond the walker rings to the north, for comparison.
     private static let quaternius: [Placement] = [
+        .init(id: "fa_qt_shop", x: 4.2, y: 0, z: -1.5, turn: 0, unitMetres: 1),
+        .init(id: "fa_qt_shop_512", x: 4.2, y: 0, z: 2.2, turn: 0, unitMetres: 1),  // same shop, 512 px textures
         .init(id: "fa_qt_building_small", x: 1, y: 0, z: -16.5, turn: 0, unitMetres: 1),
     ]
 }

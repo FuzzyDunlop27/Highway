@@ -11,6 +11,15 @@ enum Kit {
     static let danger = Color(red: 0xA8 / 255, green: 0x4D / 255, blue: 0x43 / 255)
     static let gold = Color(red: 0xDB / 255, green: 0xAE / 255, blue: 0x63 / 255)
 
+    /// Look-only tint of the level badge: bronze, silver, gold for levels 1, 2, 3.
+    static func levelTint(_ level: Int) -> Color {
+        switch level {
+        case ...1: Color(red: 0.80, green: 0.55, blue: 0.35)
+        case 2: Color(red: 0.78, green: 0.82, blue: 0.85)
+        default: gold
+        }
+    }
+
     /// A stretchable kit image (`Art/UI/<name>`): the corners keep their shape at any size.
     static func surface(_ name: String, corner: CGFloat) -> some View {
         Image("UI/\(name)")

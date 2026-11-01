@@ -23,6 +23,10 @@ final class GameStore {
     private(set) var speed = 1
     /// The selected building as of the last frame (for the selection bar's live progress).
     private(set) var selectedBuilding: Building?
+    /// Who works where, queues, runs, research (for the job panels); only reassigned when something visible changes.
+    private(set) var jobs: JobsSnapshot?
+    /// Set while the player is choosing a map tile for this defender to hold (the next tap on the map sends it there).
+    var choosingSpotFor: DefenderID?
     /// A short message for the player, e.g. why demolishing failed. The UI clears it.
     var notice: String?
 
@@ -127,12 +131,14 @@ final class GameStore {
         placement.refresh(loop: loop)
         let selected: Building? = if case .selected(let id) = placement.mode { loop.state.base.building(id) } else { nil }
         if selected != selectedBuilding { selectedBuilding = selected }
+        let jobsNow = JobsSnapshot.make(loop: loop, selected: selected?.id)
+        if jobsNow != jobs { jobs = jobsNow }
     }
 
     // MARK: Player actions (all go through Core Commands)
 
     @discardableResult
-    private func send(_ command: Command) -> Result<CommandOutcome, CommandError>? {
+    func send(_ command: Command) -> Result<CommandOutcome, CommandError>? {
         guard let loop else { return nil }
         let result = loop.send(command)
         if case .failure(let error) = result, let content {
@@ -145,7 +151,10 @@ final class GameStore {
     /// `drawnBuilding`: the building whose picture was tapped (isometric roofs), checked before the ground tile.
     func tapped(tile: GridPoint, drawnBuilding: BuildingID? = nil) {
         guard let loop else { return }
-        if placement.isDrawingLine {
+        if let defender = choosingSpotFor {
+            choosingSpotFor = nil
+            send(.holdSpot(defender: defender, at: tile))
+        } else if placement.isDrawingLine {
             placement.setLine(from: tile, to: tile, loop: loop)  // a tap is a one-wall line; drag for more
         } else if placement.isPositioning {
             placement.moveGhost(centeredOn: tile, loop: loop)

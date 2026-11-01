@@ -22,6 +22,7 @@ struct GameRootView: View {
                 VStack(spacing: 8) {
                     HUDView(store: store)
                         .frame(maxWidth: .infinity)
+                    BuildQueueStripView(store: store)
                     if let notice = store.notice {
                         NoticeBanner(text: notice) { store.notice = nil }
                     }
@@ -49,9 +50,20 @@ struct GameRootView: View {
         case .drawingLine:
             WallLineBarView(store: store)
         case .selected:
-            SelectionBarView(store: store)
+            VStack(spacing: 8) {
+                BuildingPanelView(store: store)
+                SelectionBarView(store: store)
+            }
         case .idle:
-            if showBuildMenu {
+            if let defender = store.choosingSpotFor {
+                HStack(spacing: 12) {
+                    Text("Tap the map to choose where Defender \(defender) holds.").font(.headline).foregroundStyle(Kit.ink)
+                    Spacer()
+                    Button { store.choosingSpotFor = nil } label: { KitLabel(glyph: "close", title: "Cancel") }
+                        .buttonStyle(KitButtonStyle(kind: .secondary))
+                }
+                .padding(14).kitPanel()
+            } else if showBuildMenu {
                 BuildMenuView(store: store, tab: $buildTab) { defId in
                     showBuildMenu = false
                     store.beginPlacing(defId: defId)

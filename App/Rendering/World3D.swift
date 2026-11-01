@@ -17,6 +17,7 @@ final class World3D {
     private let registry = ModelRegistry.shared
     let buildings = BuildingLayer3D()
     private let zombies = ZombieLayer3D()
+    private let defenders = DefenderLayer3D()
     let placement = PlacementLayer3D()
     private let selection = SelectionLayer3D()
     private let fader = OccluderFader3D()
@@ -38,6 +39,7 @@ final class World3D {
         root.addChild(GroundMesh3D.decorations(map: loop.map, mapping: mapping, settings: settings, registry: registry))
         root.addChild(buildings.root)
         root.addChild(zombies.root)
+        root.addChild(defenders.root)
         root.addChild(selection.root)
         root.addChild(placement.root)
         addLights()
@@ -58,9 +60,11 @@ final class World3D {
         guard let loop = store.loop else { return }
         buildings.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
         zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
+        defenders.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
         placement.sync(placement: store.placement, viewCenter: store.viewCenterTile, loop: loop, mapping: mapping,
                        settings: settings, registry: registry)
-        selection.sync(selected: store.selectedBuilding, content: loop.content, mapping: mapping)
+        selection.sync(selected: store.selectedBuilding, range: store.selectedBuilding.flatMap { loop.towerRange(id: $0.id) },
+                       content: loop.content, mapping: mapping)
         fader.sync(ghost: placement.ghostBox, eye: orbit.position, buildings: buildings, mapping: mapping)
     }
 
