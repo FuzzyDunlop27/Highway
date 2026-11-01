@@ -15,6 +15,14 @@ public enum SimEvent: Equatable, Sendable {
     case buildingDamaged(BuildingID)
     /// A building reached 0 hp and became rubble.
     case buildingDestroyed(BuildingID)
+    /// A defender holding a spot fired at a zombie.
+    case defenderShot(from: DefenderID, at: ZombieID)
+    case defenderKnockedOut(DefenderID)
+    /// A defender finished training, or came back from being knocked out.
+    case defenderReady(DefenderID)
+    /// A scavenging run came home; its reward waits at the post.
+    case runFinished(buildingId: BuildingID)
+    case researchFinished(String)
     case hordeEnded(HordeResult)
 }
 

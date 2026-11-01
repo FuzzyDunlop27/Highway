@@ -18,7 +18,7 @@ Staffed towers shoot zombies in range during a horde, so a well-placed Watchtowe
 
 ## Key rules
 - **What is a tower:** any building whose current level's effects have `range`, `damage` and `fireRate`.
-- **When it fires:** only if finished and not rubble (`isComplete`) and `staffed >= workers`. Garrisoned defenders counting as the worker is 1C (not built). Marksmanship range research is 1C (not built).
+- **When it fires:** only if finished and not rubble (`isComplete`) and `staffed >= workers`. A garrisoned defender counts as the worker and boosts damage (`jobs-defenders.md`); Marksmanship adds range to the listed towers (`scavenging-research.md`).
 - **Fire timing (no saved cooldown):** `ticksPerShot = max(1, round(ticksPerSecond / fireRate))`; a tower fires on ticks where `(tick + towerID) % ticksPerShot == 0`. Derived from the tick and id only, so towers are staggered, deterministic, and save/load can't change their rhythm. Trade-off: a new tower may wait up to one period for its first shot, and fire rates are rounded to whole ticks (10/sec → 5 shots/s = every 2 ticks exactly).
 - **Range:** straight-line distance in tiles from the middle of the tower's footprint to the zombie's (x, y); exactly at range counts.
 - **Targets:** only zombies with hp > 0 in range.
@@ -35,4 +35,5 @@ Staffed towers shoot zombies in range during a horde, so a well-placed Watchtowe
 - (none yet)
 
 ## Change log
+- 2026-11-01 — Chunk 2B/2C: garrison damage multiplier, hold-spot defenders shoot (`DefenderCombat`), Marksmanship range bonus.
 - 2026-10-31 — Created for 1B task B6: tower targeting (nearest-to-HQ / nearest) and stateless staggered firing.

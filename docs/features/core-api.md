@@ -44,12 +44,17 @@ let data = try SaveCodec.encode(loop.state)
 loop.state.base.zombies    // [Zombie]: id, defId, x/y in tiles (tile middle = +0.5), hp, heading (grid radians), attacking
 loop.hordeStatus           // HordeStatus: day, secondsUntilNext, warningEdges, isActive, zombiesAlive, zombiesToSpawn
 loop.drainEvents()         // [SimEvent] since last call: hordeWarning/Started/Ended, zombieSpawned/Died, shot, trapHit,
-                           // buildingDamaged/Destroyed — draw these as effects, once per frame
+                           // buildingDamaged/Destroyed, defenderShot/KnockedOut/Ready, runFinished, researchFinished — draw these as effects, once per frame
 loop.planLine(defId: "wall_wood", from: a, to: b)  // LinePlan: tiles, buildable, skipped, cost, canBuild
 loop.send(.placeLine(defId: "wall_wood", from: a, to: b)) // -> .placedLine(ids), all at once
 loop.send(.upgrade(id: id)) // queue the next level -> .upgradeQueued(cost:); loop.upgradeProblem(id:) says why not
 loop.send(.cancelJob(buildingId: id)) // cancel a waiting/running job -> .cancelled(refund:); loop.buildQueue = slots/queue/builders
 loop.send(.repair(id: id)) // repair damage or rebuild rubble (Building.isRubble); -> .repairStarted(cost:)
+loop.send(.setWorkers(id: id, count: n))  // survivors working there (0...workers) -> .workersSet; loop.population = working/building/away/defenders/training/idle
+loop.send(.trainDefender) ; loop.send(.cancelTraining(index: 0))  // Barracks queue; loop.trainingProblem() says why not; loop.state.base.defenders / .training
+loop.send(.garrison(defender: d, in: towerId)) ; loop.send(.holdSpot(defender: d, at: tile)) ; loop.send(.recallDefender(d))
+loop.send(.startRun(buildingId: id, runId: "quick")) ; loop.send(.collectRun(buildingId: id))  // -> .runStarted / .collected(Cost); loop.runProblem(...)
+loop.send(.startResearch("marksmanship"))  // loop.researchProblem(id); finished ids in loop.state.group.knowledge; loop.towerRange(id:) includes the bonus
 loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food: 500))) ; loop.send(.debugKillAllZombies)
 ```
 - Grid: `x` right, `y` **down**, (0,0) = top-left tile. the 3D world maps it onto the ground plane (`WorldMapping3D`).
@@ -82,3 +87,4 @@ loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food
 - 2026-10-31 — Added `presentation.json` decoding (`GameContent.presentation`) and `Presentation/GridProjection` (1V; not used by the simulation).
 - 2026-10-31 — Created for milestone 1A (Core half).
 - 2026-11-01 — 1B queue: Command `.upgrade`, `.cancelJob`; `Base.jobs`; `buildQueue`, `upgradeProblem`, `upgradeCost`; `PlacementProblem.queueFull`; save v3.
+- 2026-11-01 — 2B/2C: commands `.setWorkers`, `.trainDefender`, `.cancelTraining`, `.garrison`, `.holdSpot`, `.recallDefender`, `.startRun`, `.collectRun`, `.startResearch`; `population`, `trainingProblem`, `runProblem`, `researchProblem`, `towerRange`; new events; save v5.

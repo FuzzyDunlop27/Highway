@@ -49,6 +49,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Where the save file lives / when it saves | `App/Platform/SaveFileStore.swift`, `App/Platform/AppLifecycle.swift` |
 | Top bar (resources, clock) | `App/UI/HUDView.swift` |
 | Pause / 1x / 2x buttons | `App/UI/SpeedButtonsView.swift` (speeds from `Content/economy.json speedOptions`) |
+| How many survivors work where, defenders, garrison, hold a spot | `docs/features/jobs-defenders.md`; code `Core/.../Systems/Jobs/`; numbers in `Content/units.json` and Barracks in `Content/buildings.json` |
+| Scavenging runs (time, reward, which level unlocks) | `Content/buildings.json` scavenger `runs` + level `effects`; code `Core/.../Systems/Scavenging/ScavengingSystem.swift` |
+| Research items, cost, time, what they do | `Content/research.json`; code `Core/.../Systems/Research/`; notes `docs/features/scavenging-research.md` |
 | Build slots, queue length, builders per job, cancel refund | `Content/buildings.json rules`; code `Core/.../Systems/Construction/BuildQueue.swift` |
 | Upgrading a building | `Core/.../Systems/Construction/UpgradeSystem.swift`; level data in `Content/buildings.json` |
 | Build menu | `App/UI/BuildMenuView.swift` |
@@ -87,7 +90,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] _TEMPLATE.md   Copy this to start a new feature note
 │     ├─ [x] balance.md     Pacing targets, formulas, timeline, tuning knobs
 │     ├─ [x] core-api.md    What the App calls in Core (load, tick, commands, placement, save)
-│     ├─ [x] economy.md     Production, caps, housing, survivor arrival, auto-staffing
+│     ├─ [x] economy.md     Production, caps, housing, survivor arrival, staffing
+│     ├─ [x] jobs-defenders.md  Worker counts, Barracks training, garrison, hold a spot (2B)
+│     ├─ [x] scavenging-research.md  Runs, held rewards, Workshop research (2C)
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
@@ -116,6 +121,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] Group.swift       Survivors + Knowledge (carries to future bases)
 │  │  │  ├─ [x] Building.swift    A placed building: level, origin, build progress, staffed
 │  │  │  ├─ [x] ConstructionJob.swift  One build / upgrade / rebuild job, waiting or running (Base.jobs)
+│  │  │  ├─ [x] Defender.swift    A defender + its post; TrainingJob (Barracks queue)
+│  │  │  ├─ [x] ScavengingRun.swift  A run in progress; ActiveResearch (Workshop)
 │  │  │  └─ [x] GridPoint.swift   Tile x/y (y down) + footprint tiles
 │  │  ├─ Simulation/
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
@@ -130,13 +137,14 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ Systems/           One folder per game system:
 │  │  │  ├─ Economy/        [x] EconomySystem, StorageRules, Staffing, ResourceSnapshot
 │  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish), BuildQueue + BuildQueueStatus (slots, queue, builders), UpgradeSystem
-│  │  │  ├─ [ ] Jobs/           Assign survivors to work; defender training & garrison
+│  │  │  ├─ Jobs/           [x] Roster (who is where), WorkerAssignment, DefenderTraining, DefenderPosts, DefenderCombat (2B)
 │  │  │  ├─ Pathing/        [x] FlowField (Dijkstra cost to HQ; walls cost by hp), FlowFieldCache (rebuild on change)
 │  │  │  ├─ Combat/         [x] ZombieMovement, WallBashing, Traps (spikes/barbed wire), TargetingSystem, TowerFiring
 │  │  │  ├─ Hordes/         [x] HordeSystem (clock, warning, spawn), HordeComposer (size/mix/edges),
 │  │  │  │                  HordeResolution (deaths, loot, rubble), HordeOutcome (held bonus, HQ fall), HordeStatus
 │  │  │  ├─ Construction/   [x] RepairSystem (repair damage at once, rebuild rubble on a timer; cost preview)
-│  │  │  ├─ [ ] Research/       Knowledge items (stored on Group, not Base)
+│  │  │  ├─ Research/       [x] ResearchSystem, ResearchEffects (Knowledge stored on Group, not Base) (2C)
+│  ├─ Scavenging/     [x] ScavengingSystem: runs, held rewards, collect (2C)
 │  │  │  └─ [ ] OfflineCatchUp/ Time-factor catch-up: resources/builds only, never attacks
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
@@ -145,6 +153,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
+│     ├─ [x] Systems/Jobs/{WorkerAssignment,DefenderTraining,DefenderPosts}Tests (+ JobsTestSupport) · Systems/Scavenging/ScavengingTests · Systems/Research/ResearchTests
 │     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift, BuildQueueTests.swift
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
@@ -211,8 +220,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 
 ## Feature notes (`docs/features/`)
 Create a note from `_TEMPLATE.md` the first time a feature is built. Planned names:
-`economy.md` · `construction.md` · `jobs.md` · `pathing.md` · `combat.md` · `hordes.md` ·
-`research.md` · `offline-catchup.md` · `save.md` · `rendering-art.md` · `input.md` ·
+`economy.md` · `construction.md` · `jobs-defenders.md` · `scavenging-research.md` · `pathing.md` · `combat.md` · `hordes.md` ·
+`offline-catchup.md` · `save.md` · `rendering-art.md` · `input.md` ·
 `hud-ui.md` · `notifications.md` · `settings.md` · `balance.md` (which JSON knobs to turn)
 
 ## Art delivery and review

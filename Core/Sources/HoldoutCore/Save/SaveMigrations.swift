@@ -40,7 +40,30 @@ enum SaveMigrations {
             state["bases"] = bases
             json["state"] = state
         },
+        // v3 → v4 (chunk 2B): bases get defenders and a training queue. Buildings keep `assignedWorkers` unset,
+        // which means "fully staffed", exactly what auto-staffing gave them before.
+        3: { json in
+            try addToBases(&json, from: 3) { base in
+                base["defenders"] = [Any]()
+                base["nextDefenderID"] = 1
+                base["training"] = [Any]()
+            }
+        },
+        // v4 → v5 (chunk 2C): bases get a list of scavenging runs. Research and held rewards start empty (absent).
+        4: { json in
+            try addToBases(&json, from: 4) { base in base["runs"] = [Any]() }
+        },
     ]
+
+    /// Edits every base in a save's raw JSON.
+    private static func addToBases(_ json: inout [String: Any], from version: Int, _ edit: (inout [String: Any]) -> Void) throws {
+        guard var state = json["state"] as? [String: Any], var bases = state["bases"] as? [[String: Any]] else {
+            throw SaveError.corrupt("v\(version) save has no state.bases")
+        }
+        for i in bases.indices { edit(&bases[i]) }
+        state["bases"] = bases
+        json["state"] = state
+    }
 
     /// Runs every step from `version` up to `target`. Throws if a step is missing.
     static func migrate(_ json: inout [String: Any], from version: Int, to target: Int,

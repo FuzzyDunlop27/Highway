@@ -18,6 +18,15 @@ public struct Base: Codable, Equatable, Sendable {
     public var zombies: [Zombie]
     /// Horde clock, day count, and the horde in progress.
     public var horde: HordeState
+    /// Trained defenders (they count toward housing like any survivor).
+    public var defenders: [Defender]
+    public var nextDefenderID: DefenderID
+    /// Defenders being trained at the Barracks, first one in progress.
+    public var training: [TrainingJob]
+    /// Scavenging runs under way (survivors are away).
+    public var runs: [ScavengingRun]
+    /// The research being done at the Workshop, if any.
+    public var research: ActiveResearch?
 
     public init(mapId: String, stock: Cost) {
         self.mapId = mapId
@@ -29,6 +38,11 @@ public struct Base: Codable, Equatable, Sendable {
         self.jobs = []
         self.zombies = []
         self.horde = .initial
+        self.defenders = []
+        self.nextDefenderID = 1
+        self.training = []
+        self.runs = []
+        self.research = nil
     }
 
     public func building(_ id: BuildingID) -> Building? { buildings.first { $0.id == id } }

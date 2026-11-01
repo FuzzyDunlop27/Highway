@@ -1,17 +1,23 @@
-// Purpose: 1A auto-staffing: survivors fill worker slots in finished buildings, oldest building first. Notes: docs/features/economy.md
+// Purpose: Gives survivors their worker slots: the player's chosen counts, oldest building first. Notes: docs/features/economy.md
 import Foundation
 
 enum Staffing {
-    /// Sets `staffed` on every building. Survivors go to finished buildings with `workers` > 0 in
-    /// building-id order (oldest first) until everyone is working. Manual jobs replace this in 1C.
+    /// Sets `staffed` on every building. Each finished building wants its `assignedWorkers` (all of `workers` unless
+    /// the player lowered it), less any garrisoned defenders, who count as workers themselves. Civilians come from
+    /// the work pool (survivors minus defenders, trainees, runners and builders) in building-id order (oldest first).
     static func assign(_ state: inout GameState, content: GameContent) {
-        // Builders on running jobs are borrowed first; the rest work (until 2B, jobs are assigned automatically).
-        var available = max(0, state.group.survivors - state.base.jobs.reduce(0) { $0 + $1.builders })
+        var available = Roster.available(state)
+        let garrison = Roster.garrisonCounts(state.base)
         for i in state.base.buildings.indices {
             let b = state.base.buildings[i]
-            let wanted = b.isComplete ? (content.buildingDef(b.defId)?.workers ?? 0) : 0
+            guard b.isComplete, let def = content.buildingDef(b.defId) else {
+                state.base.buildings[i].staffed = 0
+                continue
+            }
+            let posted = min(garrison[b.id] ?? 0, def.workers)
+            let wanted = max(0, min(b.assignedWorkers ?? def.workers, def.workers) - posted)
             let given = min(wanted, available)
-            state.base.buildings[i].staffed = given
+            state.base.buildings[i].staffed = given + posted
             available -= given
         }
     }

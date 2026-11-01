@@ -6,17 +6,18 @@ enum EconomySystem {
     private static let roundingSlack = 1e-9
 
     static func tick(_ state: inout GameState, content: GameContent) {
-        produce(&state.base, content: content)
+        produce(&state.base, knowledge: state.group.knowledge, content: content)
         arriveSurvivors(&state, content: content)
     }
 
     /// Each finished building makes `productionPerMin × staffed / workers` per minute, stopped at the cap.
-    static func produce(_ base: inout Base, content: GameContent) {
+    static func produce(_ base: inout Base, knowledge: [String] = [], content: GameContent) {
         let ticksPerMinute = Double(content.economy.ticksPerSecond) * 60
         for b in base.buildings where b.isComplete {
             guard let def = content.buildingDef(b.defId),
                   let output = def.level(b.level)?.effects.productionPerMin else { continue }
-            let staffShare = def.workers == 0 ? 1 : Double(b.staffed) / Double(def.workers)
+            let staffShare = (def.workers == 0 ? 1 : Double(b.staffed) / Double(def.workers))
+                * ResearchEffects.productionMultiplier(defId: b.defId, knowledge: knowledge, content: content)
             for (kind, perMin) in output {
                 base.productionCarry[kind, default: 0] += perMin * staffShare / ticksPerMinute
             }

@@ -70,4 +70,48 @@ struct SaveCodecTests {
         #expect(decoded.base.horde == .initial && decoded.base.zombies.isEmpty)
         #expect(decoded.base.buildings.allSatisfy { !$0.isRubble })
     }
+
+    // MARK: Chunk 2B / 2C migrations (v3 → v4 → v5)
+
+    /// Today's save turned back into what a v3 save looked like: no defenders, training, runs, or the new building fields.
+    private func version3Save(of loop: GameLoop) throws -> Data {
+        var json = try JSONSerialization.jsonObject(with: SaveCodec.encode(loop.state)) as! [String: Any]
+        var state = json["state"] as! [String: Any]
+        var bases = state["bases"] as! [[String: Any]]
+        for key in ["defenders", "nextDefenderID", "training", "runs", "research"] { bases[0].removeValue(forKey: key) }
+        bases[0]["buildings"] = (bases[0]["buildings"] as! [[String: Any]]).map { b in
+            var b = b; b.removeValue(forKey: "assignedWorkers"); b.removeValue(forKey: "heldReward"); return b
+        }
+        state["bases"] = bases
+        json["state"] = state
+        json["version"] = 3
+        return try JSONSerialization.data(withJSONObject: json)
+    }
+
+    @Test func version3SaveMigratesToTheJobsAndResearchVersion() throws {
+        let loop = try TestSupport.loop()
+        loop.send(.placeBuilding(defId: "farm", at: TestSupport.grassSpot))
+        loop.step(ticks: 300)
+        let decoded = try SaveCodec.decode(version3Save(of: loop))
+        #expect(decoded == loop.state)  // nothing lost; the new parts start empty and auto-staffing is unchanged
+        #expect(decoded.base.defenders.isEmpty && decoded.base.training.isEmpty && decoded.base.runs.isEmpty)
+        #expect(decoded.base.nextDefenderID == 1 && decoded.base.research == nil)
+        let resumed = try GameLoop(content: loop.content, state: decoded)
+        resumed.step(ticks: 600)
+        loop.step(ticks: 600)
+        #expect(resumed.state == loop.state)
+    }
+
+    @Test func version4SaveGainsTheRunsList() throws {
+        let loop = try TestSupport.loop()
+        var json = try JSONSerialization.jsonObject(with: version3Save(of: loop)) as! [String: Any]
+        var state = json["state"] as! [String: Any]
+        var bases = state["bases"] as! [[String: Any]]
+        bases[0]["defenders"] = [Any](); bases[0]["nextDefenderID"] = 1; bases[0]["training"] = [Any]()
+        state["bases"] = bases
+        json["state"] = state
+        json["version"] = 4
+        let decoded = try SaveCodec.decode(JSONSerialization.data(withJSONObject: json))
+        #expect(decoded == loop.state)
+    }
 }

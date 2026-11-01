@@ -7,27 +7,63 @@ enum Spike3DScene: String, CaseIterable {
     case study = "Study models"
     case freeAssets = "Free assets"
 
-    /// Models placed at tile positions (x east, z south), metres. `realScale` = model is in real metres
-    /// (free assets) and gets `freeAssets.metresToTiles`; study models are already 1 tile = 1 m.
-    var layout: [(id: String, x: Float, z: Float, turn: Float, realScale: Bool)] {
+    /// One placed model. Position in tiles (x east, y up, z south). `unitMetres` = how many real metres one model
+    /// unit is (Poly Haven/Quaternius 1, Kenney cells 3); 0 = study model, already 1 tile = 1 m.
+    struct Placement {
+        let id: String
+        let x, y, z, turn, unitMetres: Float
+    }
+
+    var layout: [Placement] {
         switch self {
         case .study: [
-            ("bld_hq", 0, 0, 0, false), ("bld_shelter", -4, -0.5, 0, false), ("bld_farm", 4, -0.5, 0, false),
-            ("def_watchtower_base", 2.5, 3, 0, false), ("dec_car_wreck", -2, 5.5, 0.3, false),
-            ("def_wall_wood", -1, 2.5, 0, false), ("def_wall_wood", 0, 2.5, 0, false), ("def_wall_wood", 1, 2.5, 0, false),
-            ("def_wall_wood", -2.5, 1, .pi / 2, false), ("def_wall_wood", -2.5, 0, .pi / 2, false),
+            .study("bld_hq", 0, 0), .study("bld_shelter", -4, -0.5), .study("bld_farm", 4, -0.5),
+            .study("def_watchtower_base", 2.5, 3), .study("dec_car_wreck", -2, 5.5, turn: 0.3),
+            .study("def_wall_wood", -1, 2.5), .study("def_wall_wood", 0, 2.5), .study("def_wall_wood", 1, 2.5),
+            .study("def_wall_wood", -2.5, 1, turn: .pi / 2), .study("def_wall_wood", -2.5, 0, turn: .pi / 2),
         ]
-        case .freeAssets: [
-            // Kenney / Quaternius buildings join here once downloaded (fa_kn_*, fa_qt_*); missing ones are listed on screen.
-            ("fa_kn_building", -3.5, -2, 0, true), ("fa_qt_building", 3.5, -2.5, 0, true),
-            ("fa_ph_covered_car", -1.5, 5.4, 1.3, true), ("fa_ph_covered_car", 2.5, 5.7, 1.7, true),
-            ("fa_ph_road_barrier", -1, 2.5, 0, true), ("fa_ph_road_barrier", -0.35, 2.5, 0, true),
-            ("fa_ph_road_barrier", 0.3, 2.5, 0, true), ("fa_ph_road_barrier", 0.95, 2.5, 0, true),
-            ("fa_ph_trash_can", -0.5, -0.8, 0, true),
-            ("fa_ph_barrel", 1.4, 0.4, 0, true), ("fa_ph_barrel", 1.65, 0.55, 0.8, true), ("fa_ph_barrel", 1.5, 0.75, 2, true),
-            ("fa_ph_old_tyre", 0.6, 1.2, 0.4, true), ("fa_ph_old_tyre", 0.75, 1.3, 1.9, true),
-        ]
+        case .freeAssets: Self.polyHaven + Self.kenney + Self.quaternius
         }
+    }
+
+    /// Realistic props (real metres).
+    private static let polyHaven: [Placement] = [
+        .init(id: "fa_ph_covered_car", x: -1.5, y: 0, z: 5.4, turn: 1.3, unitMetres: 1),
+        .init(id: "fa_ph_covered_car", x: 2.5, y: 0, z: 5.7, turn: 1.7, unitMetres: 1),
+        .init(id: "fa_ph_road_barrier", x: -1, y: 0, z: 2.5, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_road_barrier", x: -0.35, y: 0, z: 2.5, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_road_barrier", x: 0.3, y: 0, z: 2.5, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_road_barrier", x: 0.95, y: 0, z: 2.5, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_trash_can", x: -0.5, y: 0, z: -0.8, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_barrel", x: 1.4, y: 0, z: 0.4, turn: 0, unitMetres: 1),
+        .init(id: "fa_ph_barrel", x: 1.65, y: 0, z: 0.55, turn: 0.8, unitMetres: 1),
+        .init(id: "fa_ph_barrel", x: 1.5, y: 0, z: 0.75, turn: 2, unitMetres: 1),
+        .init(id: "fa_ph_old_tyre", x: 0.6, y: 0, z: 1.2, turn: 0.4, unitMetres: 1),
+        .init(id: "fa_ph_old_tyre", x: 0.75, y: 0, z: 1.3, turn: 1.9, unitMetres: 1),
+    ]
+
+    /// Low-poly Kenney cells: a two-cell shop (door + window, roof on top), a truck and a dumpster, west of the props.
+    private static let kenney: [Placement] = {
+        let cell: Float = 3 * 0.41  // one Kenney cell ≈ 3 m ≈ 1.23 tiles (keep in step with freeAssets.metresToTiles)
+        return [
+            .init(id: "fa_kn_wall_door", x: -4, y: 0, z: -1.5, turn: 0, unitMetres: 3),
+            .init(id: "fa_kn_wall_window", x: -4 + cell, y: 0, z: -1.5, turn: 0, unitMetres: 3),
+            .init(id: "fa_kn_roof", x: -4, y: cell, z: -1.5, turn: 0, unitMetres: 3),
+            .init(id: "fa_kn_roof", x: -4 + cell, y: cell, z: -1.5, turn: 0, unitMetres: 3),
+            .init(id: "fa_kn_truck", x: -4.5, y: 0, z: 1.5, turn: 0.4, unitMetres: 3),
+            .init(id: "fa_kn_dumpster", x: -2.4, y: 0, z: -0.2, turn: 0, unitMetres: 3),
+        ]
+    }()
+
+    /// Realistic Quaternius city block (12 × 15 × 17 m), beyond the walker rings to the north.
+    private static let quaternius: [Placement] = [
+        .init(id: "fa_qt_building_small", x: 1, y: 0, z: -16.5, turn: 0, unitMetres: 1),
+    ]
+}
+
+private extension Spike3DScene.Placement {
+    static func study(_ id: String, _ x: Float, _ z: Float, turn: Float = 0) -> Self {
+        .init(id: id, x: x, y: 0, z: z, turn: turn, unitMetres: 0)
     }
 }
 #endif

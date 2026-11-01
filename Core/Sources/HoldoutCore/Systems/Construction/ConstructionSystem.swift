@@ -62,6 +62,10 @@ enum ConstructionSystem {
         state.base.buildings.remove(at: index)
         BuildQueue.drop(buildingId: id, &state)
         state.base.stock = state.base.stock + refund
+        ScavengingSystem.postRemoved(building, state: &state, content: content)
+        DefenderTraining.barracksRemoved(&state, content: content)
+        ResearchSystem.workshopRemoved(&state, content: content)
+        DefenderPosts.releaseFromBrokenTowers(&state)
         StorageRules.clampToCaps(&state.base, content: content)
         Staffing.assign(&state, content: content)
         return .success(.demolished(refund: refund))

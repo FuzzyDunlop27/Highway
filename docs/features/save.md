@@ -16,7 +16,7 @@ The whole game is saved as one versioned JSON blob so the town is still there af
 - `Content/economy.json` → `autosaveSeconds` (the App's autosave timer).
 
 ## Key rules
-- Format: `{ "version": 3, "state": { ... } }`, sorted keys. Core never touches the disk.
+- Format: `{ "version": 5, "state": { ... } }`, sorted keys. Core never touches the disk.
 - Content (costs, map tiles) is NOT saved; only ids. Changing a JSON number changes old saves' future behavior, not their past.
 - Random state is saved as a string (a UInt64 doesn't fit a JSON number exactly).
 - Loading a newer version throws `newerVersion`; an older one runs `SaveMigrations.steps` from its version up, then decodes.
@@ -31,3 +31,4 @@ The whole game is saved as one versioned JSON blob so the town is still there af
 - 2026-10-31 — Version 1 save codec + migration hook (1A).
 - 2026-10-31 — App side: save file store, save on background + autosave, load on launch (1A App half).
 - 2026-11-01 — v3 (chunk 1B): `Base.jobs` (build queue); a v2 half-built building becomes a running, already-paid job.
+- 2026-11-01 — v4 (chunk 2B): `Base.defenders`, `nextDefenderID`, `training`; `Building.assignedWorkers` (absent = full staffing). v5 (chunk 2C): `Base.runs`, `Base.research`, `Building.heldReward` (absent = none); `Group.knowledge` was already saved. Tests decode a v3 and a v4 sample.

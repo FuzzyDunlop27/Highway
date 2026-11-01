@@ -15,10 +15,11 @@ enum TowerFiring {
             let tower = state.base.buildings[i]
             guard let def = content.buildingDef(tower.defId),
                   let effects = def.level(tower.level)?.effects,
-                  let range = effects.range, let damage = effects.damage, let fireRate = effects.fireRate,
+                  let baseRange = effects.range, let damage = effects.damage, let fireRate = effects.fireRate,
                   canFire(tower, def: def),
                   isShotTick(tick: state.tick, towerID: tower.id, fireRate: fireRate,
                              ticksPerSecond: content.economy.ticksPerSecond) else { continue }
+            let range = baseRange + ResearchEffects.towerRangeBonus(defId: def.id, knowledge: state.group.knowledge, content: content)
             if field == nil, TargetingMode(def.targeting) == .nearestToHQ {
                 field = fields.field(weight: hqDistanceFieldWeight, state: state, content: content)
             }
@@ -26,13 +27,14 @@ enum TowerFiring {
                 field?.distance(at: tile) ?? .infinity
             }
             guard let targetID, let z = state.base.zombies.firstIndex(where: { $0.id == targetID }) else { continue }
-            state.base.zombies[z].hp -= damage
+            let boosted = damage * DefenderCombat.towerDamageMultiplier(state, content: content, towerId: tower.id)
+            state.base.zombies[z].hp -= boosted
             events.append(.shot(from: tower.id, at: targetID))
         }
     }
 
     /// A tower works only when finished (not building, not rubble) and fully staffed.
-    /// 1C: a garrisoned defender will also count as the worker (units.json garrison) — not built yet.
+    /// A garrisoned defender counts as the worker (Staffing adds it to `staffed`).
     static func canFire(_ tower: Building, def: BuildingDef) -> Bool {
         tower.isComplete && tower.staffed >= def.workers
     }

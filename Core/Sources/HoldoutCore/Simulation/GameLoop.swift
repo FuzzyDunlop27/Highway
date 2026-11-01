@@ -44,11 +44,16 @@ public final class GameLoop {
     public func step(ticks: Int = 1) {
         for _ in 0..<max(0, ticks) {
             BuildQueue.tick(&state, content: content)
+            DefenderPosts.releaseFromBrokenTowers(&state)
+            DefenderTraining.tick(&state, content: content, events: &events)
+            ScavengingSystem.tick(&state, content: content, events: &events)
+            ResearchSystem.tick(&state, content: content, events: &events)
             Staffing.assign(&state, content: content)
             EconomySystem.tick(&state, content: content)
             HordeSystem.tick(&state, content: content, events: &events)
             ZombieMovement.tick(&state, content: content, fields: flowFields, events: &events)
             TowerFiring.tick(&state, content: content, fields: flowFields, events: &events)
+            DefenderCombat.tick(&state, content: content, events: &events)
             HordeResolution.tick(&state, content: content, events: &events)
             state.tick += 1
         }
@@ -97,6 +102,24 @@ public final class GameLoop {
             return result
         case .cancelJob(let id):
             return BuildQueue.cancel(buildingId: id, state: &state, content: content)
+        case .setWorkers(let id, let count):
+            return WorkerAssignment.set(id: id, count: count, state: &state, content: content)
+        case .trainDefender:
+            return DefenderTraining.queue(&state, content: content)
+        case .cancelTraining(let index):
+            return DefenderTraining.cancel(index: index, state: &state, content: content)
+        case .garrison(let defender, let tower):
+            return DefenderPosts.garrison(defender, in: tower, state: &state, content: content)
+        case .holdSpot(let defender, let tile):
+            return DefenderPosts.hold(defender, at: tile, state: &state, content: content)
+        case .recallDefender(let defender):
+            return DefenderPosts.recall(defender, state: &state, content: content)
+        case .startRun(let id, let runId):
+            return ScavengingSystem.start(buildingId: id, runId: runId, state: &state, content: content)
+        case .collectRun(let id):
+            return ScavengingSystem.collect(buildingId: id, state: &state, content: content)
+        case .startResearch(let id):
+            return ResearchSystem.start(id, state: &state, content: content)
         case .debugStartHorde:
             HordeSystem.startNow(&state, content: content, events: &events)
             return .success(.debugDone)
@@ -141,6 +164,26 @@ public final class GameLoop {
     /// What upgrading `id` to its next level would cost, or nil at the top level (for the Upgrade button).
     public func upgradeCost(id: BuildingID) -> Cost? {
         state.base.building(id).flatMap { UpgradeSystem.nextLevel(of: $0, content: content) }?.cost
+    }
+
+    /// Why a defender can't be queued at the Barracks right now (nil = `.trainDefender` would be accepted).
+    public func trainingProblem() -> TrainingProblem? { DefenderTraining.problem(state, content: content) }
+
+    /// Why a run can't start (nil = `.startRun` would be accepted).
+    public func runProblem(buildingId: BuildingID, runId: String) -> RunProblem? {
+        ScavengingSystem.problem(buildingId: buildingId, runId: runId, state: state, content: content)
+    }
+
+    /// Why research `id` can't start (nil = `.startResearch` would be accepted).
+    public func researchProblem(_ id: String) -> ResearchProblem? { ResearchSystem.problem(id, state: state, content: content) }
+
+    /// Who is working, building, away, defending or idle.
+    public var population: PopulationSnapshot { Roster.snapshot(state) }
+
+    /// A tower's range in tiles right now, including researched bonuses (nil if the building isn't a tower).
+    public func towerRange(id: BuildingID) -> Double? {
+        guard let b = state.base.building(id), let range = content.buildingDef(b.defId)?.level(b.level)?.effects.range else { return nil }
+        return range + ResearchEffects.towerRangeBonus(defId: b.defId, knowledge: state.group.knowledge, content: content)
     }
 
     /// Build slots, queue and builders, for the build-queue strip.

@@ -11,9 +11,9 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 1B | Core: upgrades + build queue + builders | — | Done 2026-11-01 (D-033); 152 Core tests, save v3 |
 | 1C | App: speed buttons + menu thumbnails | — | Done 2026-11-01 — speed buttons checked in the simulator; all 13 cards already had a picture (8 older iso renders; kit-style art is an art task) |
 | 1D | Art: realistic static walker pilot | — | Done — 2026-10-31 |
-| 2B | Core: jobs (manual workers) + defenders | 1B only | Ready |
-| 2C | Core: scavenging runs + research stub | 1B only | Ready |
-| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Blocked by 2B, 2C |
+| 2B | Core: jobs (manual workers) + defenders | 1B only | Done 2026-11-01 (D-034); save v4 |
+| 2C | Core: scavenging runs + research stub | 1B only | Done 2026-11-01 (D-035); save v5; 198 Core tests |
+| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Ready |
 | 4B | Core: offline catch-up, tamper guard, bonus horde, settings in save | 3B (not the A art track) | Blocked by 3B |
 | 5B | App: settings, welcome back, Horde Alerts, Engage + 1D exit check | 4B | Blocked by 4B |
 | 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
@@ -29,7 +29,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 Track A = zombie art (details at the bottom of this file; 2D zombie art is retired, D-030). Track B = 1C–1E gameplay. Track C = small parallel side work.
 Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2026-11-01, D-027). R/M "Needs" lines override the wave rule: they depend only on each other, not on track B. Full scope, exit checks and start prompts: `docs/plans/3d-rendering-plan.md` §6. The 2D living-world plan (`docs/plans/living-world-plan.md`, chunks 1K 1N 1F 1U 1S 2F 2S) is parked, not queued.
 
-**Save versions:** the save is v3 now. Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (2B → v4, 2C → v5, or the other way round).
+**Save versions:** the save is v5 now (2B → v4, 2C → v5). Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (2B → v4, 2C → v5, or the other way round).
 
 ## Chunk details
 
@@ -56,7 +56,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** in the simulator, pause stops the horde clock and production, 2x doubles them, the speed survives a relaunch, and every build card shows a picture.
 - **Start prompt:** "Implement chunk 1C: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/hud-ui.md, and the 1C section of docs/BUILD-QUEUE.md only."
 
-### 2B — Core: jobs + defenders
+### 2B — Core: jobs + defenders [Done 2026-11-01]
+- **Result:** `Command.setWorkers`, `.trainDefender`, `.cancelTraining`, `.garrison`, `.holdSpot`, `.recallDefender` in Core (`Systems/Jobs/`, notes `docs/features/jobs-defenders.md`, D-034). `GameLoop.population` (working / building / away / defenders / training / idle, adds up to survivors), `trainingProblem()`. New events `defenderShot`, `defenderKnockedOut`, `defenderReady`. Save v4 (a v3 town keeps its full staffing). 46 new tests across 2B and 2C. **Notes for 3B:** `Building.assignedWorkers == nil` means full; defenders are `loop.state.base.defenders` (post `.hq`, `.garrison(buildingId:)`, `.hold(at:)`, `.knockedOut(ticksLeft:)`); the Barracks queue is `loop.state.base.training`. Training only progresses while the Barracks is staffed, so the panel should say so.
 - **Goal:** the player chooses how many survivors work each building, and the Barracks trains defenders who garrison towers or hold a spot.
 - **Needs:** 1B only, because builders and workers share the same idle survivors.
 - **Scope (Core only):**
@@ -67,7 +68,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** `swift test` passes, with tests for: worker limits, survivors never double-booked, staffing scaling production, training queue/cost/time, garrison counting as a worker with the boost, hold-spot combat, knock-out and return, and migration.
 - **Start prompt:** "Implement chunk 2B: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/economy.md and combat.md, and the 2B section of docs/BUILD-QUEUE.md only."
 
-### 2C — Core: scavenging runs + research stub
+### 2C — Core: scavenging runs + research stub [Done 2026-11-01]
+- **Result:** `Command.startRun`, `.collectRun`, `.startResearch` (`Systems/Scavenging/`, `Systems/Research/`, notes `docs/features/scavenging-research.md`, D-035). Runs: `loop.state.base.runs` (timer + survivors), reward waits in `Building.heldReward`; research: `loop.state.base.research`, results in `loop.state.group.knowledge`. Effects live: metal wall unlock, tower range +1 (`loop.towerRange(id:)` is the number the range ring should draw), farms × 1.25 (also in the HUD rates). `runProblem(buildingId:runId:)`, `researchProblem(_:)` give the reason a button is greyed. Save v5. **Note for 4B:** training, runs and research all tick inside `GameLoop.step`, so catch-up by stepping advances them with no extra code.
 - **Goal:** send survivors on timed runs for loot, and research the 3 stub items at the Workshop.
 - **Needs:** 1B only, because both use idle survivors and the same save. It can run in parallel with 2B.
 - **Scope (Core only):**
@@ -80,7 +82,7 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 
 ### 3B — App: 1C panels + 1C exit check
 - **Goal:** everything from 1B/2B/2C can be used on screen, and a 30-minute session feels like progress.
-- **Needs:** 1B, 2B, 2C (not the A art track).
+- **Needs:** 1B, 2B, 2C (not the A art track). All three are done; the Core calls to use are listed in the Results of 1B, 2B and 2C above and in `docs/features/core-api.md`. `PlacementMessages` already has text for every new Core error.
 - **Scope (App only):** upgrade button (cost, `ui_level_badge` + tint per level), build-queue strip, worker −/+ on the building panel, Barracks panel (training queue), assigning a defender to a tower, defender units (directional) with a hold-spot command, Scavenger Post panel (start run, timer, collect), Workshop research panel. Optional, only if cheap: cosmetic survivors walking between the HQ and workplaces.
 - **Do NOT build:** settings / welcome back / notifications (5B).
 - **Exit check (milestone 1C):** a 30-minute session from a fresh start reaches HQ level 2–3 and faces brutes. Write down any balance knobs that feel off for 6B.

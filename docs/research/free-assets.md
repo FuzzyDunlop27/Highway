@@ -56,12 +56,24 @@ Models stay in real metres; the spike shrinks them by `freeAssets.metresToTiles`
   Loading the 14 placements took about 1.1 s on the main thread. Not yet measured on the real phone.
 - **Size is the real cost:** ~14.6 MB for 5 props, mostly textures (a 1-tyre file is 2.3 MB). A full world needs shared
   texture sets or 512 px textures; decide that in the conversion script (step 3).
-- **Not done yet: buildings.** Kenney's site and itch.io block scripted downloads, and the built-in browser can't save files.
-  The layout already has slots `fa_kn_building` and `fa_qt_building`; the screen lists them as missing.
-  To finish: download the Kenney Retro Urban Kit zip and the Quaternius Downtown City MegaKit [Standard] zip by hand into
-  `HighwayHoldout_3D_Sources/free-assets/kenney/` and `.../quaternius/`, unzip, then rerun the export with
-  `fa_kn_building=kenney/**/<file>.glb fa_qt_building=quaternius/**/<file>.gltf`.
+| Kenney Retro Urban Kit (CC0) | Triangles | Size | USDZ |
+|---|---|---|---|
+| 2-cell shop (wall-a-door + wall-a-window + 2 roofs) | 112 | 1 cell ≈ 3 m | 0.1 MB |
+| truck-grey-cargo, detail-dumpster-open | 12, 24 | cells | 0.02-0.03 MB |
+
+| Quaternius Downtown City MegaKit (CC0) | Triangles | Real size (m) | USDZ |
+|---|---|---|---|
+| Building_Small_1 (prebuilt 5-storey block) | 18,344 | 12.5 × 14.5 × 17 | 19.6 MB |
+
+- **Buildings (added after the owner downloaded the zips):**
+  - **Kenney** has no finished buildings, only 1-cell modular pieces (walls, roofs, windows) plus props and trucks. It's tiny (a few hundred triangles, 128 px textures) and reads as a tidy, slightly toy-like brick shop next to the realistic props: workable, but less gritty. Its glTF uses unlit materials; the converter now rebuilds them as normal textured materials (`fix_unlit`).
+  - **Quaternius** buildings are real city blocks: the "small" one is 5 storeys, about 5 × 6 × 7 tiles at our scale (the HQ is 3 × 3). Looks right with the zombies, but far too big for a base building as-is and **19.6 MB** for one model. Use its modular pieces (a 1–2 storey shop) rather than the prebuilt blocks.
+- **Speed with buildings:** still 60 fps at 100 walkers (simulator). Loading the scene on the main thread rose to ~3 s, mostly the Quaternius block (the game's ModelRegistry already loads in the background).
+- **Total spike size:** 33 MB of USDZ for 11 models. Texture budget is the main problem to solve before replacing the world.
+- **Screenshots:** `01-closeup-35-walkers.png`, `02-100-walkers.png`, `03-kenney-vs-polyhaven.png`, `04-quaternius-building.png`.
+- **Suggested direction (owner decides):** Poly Haven for props, Quaternius modular pieces for buildings (assembled into small 2-storey shapes), shared/smaller textures; Kenney only as a fallback. Still to do: measure on the real phone.
 
 ## Change log
 - 2026-11-01: first research pass.
 - 2026-11-01: spike: 5 Poly Haven props as USDZ in a "Free assets" scene of the DEBUG 3D spike; 60 fps at 100 walkers (simulator). Buildings pending manual download.
+- 2026-11-01: added Kenney (modular shop, truck, dumpster) and a Quaternius 5-storey block; Kenney unlit materials fixed in the converter; still 60 fps at 100 walkers.

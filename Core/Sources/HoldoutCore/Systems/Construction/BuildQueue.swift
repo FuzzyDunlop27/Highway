@@ -12,10 +12,8 @@ enum BuildQueue {
     static func activeCount(_ base: Base) -> Int { base.jobs.filter(\.started).count }
     static func queuedCount(_ base: Base) -> Int { base.jobs.count - activeCount(base) }
 
-    /// Survivors not currently borrowed as builders.
-    static func freeBuilders(_ state: GameState) -> Int {
-        max(0, state.group.survivors - state.base.jobs.reduce(0) { $0 + $1.builders })
-    }
+    /// Survivors a job could borrow: not already builders, defenders, trainees or on a run (workers step aside).
+    static func freeBuilders(_ state: GameState) -> Int { Roster.available(state) }
 
     /// A job could start this instant, as far as slots and builders go (resources are checked separately).
     static func canStartNow(_ state: GameState, content: GameContent) -> Bool {

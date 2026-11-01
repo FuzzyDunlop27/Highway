@@ -7,6 +7,7 @@ enum ContentValidator {
         try validateResources(c.resources)
         try validateBuildings(c)
         try validatePresentation(c.presentation)
+        try validateJobsAndResearch(c)
         if c.maps.isEmpty { throw ContentError.invalid(file: "maps/", detail: "no map files found") }
         for map in c.maps.values { try validateMap(map, content: c) }
     }
@@ -18,6 +19,32 @@ enum ContentValidator {
         if !e.speedOptions.contains(1) { throw fail("economy.json", "speedOptions must include 1") }
         if e.speedOptions.contains(where: { $0 < 0 }) { throw fail("economy.json", "speedOptions can't be negative") }
         if e.maxFrameSeconds <= 0 { throw fail("economy.json", "maxFrameSeconds must be above 0") }
+    }
+
+    private static func validateJobsAndResearch(_ c: GameContent) throws {
+        for unit in c.units.units {
+            if let t = unit.training, c.buildingDef(t.at) == nil { throw fail("units.json", "'\(unit.id)' trains at unknown building '\(t.at)'") }
+            for id in unit.garrison?.allowedIn ?? [] where c.buildingDef(id) == nil {
+                throw fail("units.json", "'\(unit.id)' garrison allowedIn unknown building '\(id)'")
+            }
+        }
+        let effectTypes: Set = ["unlockBuilding", "towerRangeBonusTiles", "productionMultiplier"]
+        for item in c.research.items {
+            let e = item.effect
+            if !effectTypes.contains(e.type) { throw fail("research.json", "'\(item.id)' has unknown effect type '\(e.type)'") }
+            if item.researchSeconds <= 0 { throw fail("research.json", "'\(item.id)' researchSeconds must be above 0") }
+            for id in [e.building].compactMap({ $0 }) + (e.towers ?? []) + (e.buildings ?? []) where c.buildingDef(id) == nil {
+                throw fail("research.json", "'\(item.id)' effect names unknown building '\(id)'")
+            }
+        }
+        for def in c.allBuildingDefs {
+            let runIDs = Set(def.runs?.types.map(\.id) ?? [])
+            for level in def.levels {
+                for id in level.effects.runsUnlocked ?? [] where !runIDs.contains(id) {
+                    throw fail("buildings.json", "'\(def.id)' level \(level.level) unlocks unknown run '\(id)'")
+                }
+            }
+        }
     }
 
     private static func validatePresentation(_ p: PresentationContent) throws {

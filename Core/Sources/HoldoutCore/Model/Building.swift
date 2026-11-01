@@ -22,6 +22,10 @@ public struct Building: Codable, Equatable, Identifiable, Sendable {
     public var staffed: Int
     /// Destroyed in a horde (hp reached 0): does nothing and blocks nothing until rebuilt (`Command.repair`).
     public var isRubble: Bool
+    /// How many civilians the player wants working here (nil = as many as it takes: the default for new buildings).
+    public var assignedWorkers: Int?
+    /// Scavenger Post: run rewards waiting to be collected (nil = none).
+    public var heldReward: Cost?
 
     /// Finished, standing, and working. False while building/repairing and while rubble.
     public var isComplete: Bool { constructionTicksLeft == 0 && !isRubble }
@@ -33,7 +37,7 @@ public struct Building: Codable, Equatable, Identifiable, Sendable {
 
     public init(id: BuildingID, defId: String, level: Int, origin: GridPoint, hp: Int,
                 constructionTicksLeft: Int, constructionTicksTotal: Int, invested: Cost, staffed: Int = 0,
-                isRubble: Bool = false) {
+                isRubble: Bool = false, assignedWorkers: Int? = nil, heldReward: Cost? = nil) {
         self.id = id
         self.defId = defId
         self.level = level
@@ -44,5 +48,7 @@ public struct Building: Codable, Equatable, Identifiable, Sendable {
         self.invested = invested
         self.staffed = staffed
         self.isRubble = isRubble
+        self.assignedWorkers = assignedWorkers
+        self.heldReward = heldReward
     }
 }

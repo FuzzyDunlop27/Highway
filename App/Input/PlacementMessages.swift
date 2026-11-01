@@ -28,6 +28,65 @@ enum PlacementMessages {
         case .upgrade(let problem): text(for: problem, content: content)
         case .noJob: "Nothing is being built there."
         case .queueFull: "The build queue is full. Wait for a job to finish."
+        case .jobs(let problem): text(for: problem)
+        case .training(let problem): text(for: problem)
+        case .defender(let problem): text(for: problem)
+        case .run(let problem): text(for: problem)
+        case .research(let problem): text(for: problem)
+        }
+    }
+
+    static func text(for problem: JobsProblem) -> String {
+        switch problem {
+        case .notAWorkplace: "Nobody works there."
+        case .tooManyWorkers(let max): "It only has room for \(max) workers."
+        }
+    }
+
+    static func text(for problem: TrainingProblem) -> String {
+        switch problem {
+        case .needsBarracks: "Build a Barracks first."
+        case .maxDefenders(let max): "You already have the most defenders the Barracks allows (\(max))."
+        case .queueFull: "The training queue is full."
+        case .noFreeSurvivor: "No free survivor to train."
+        case .notEnoughResources(let needed): "Not enough resources. Costs \(costText(needed))."
+        case .noSuchTraining: "That training is already done."
+        }
+    }
+
+    static func text(for problem: DefenderProblem) -> String {
+        switch problem {
+        case .unknownDefender: "That defender is gone."
+        case .knockedOut: "Knocked out. Wait for it to recover."
+        case .unknownBuilding: "That building no longer exists."
+        case .notAGarrisonBuilding: "Defenders can only man towers."
+        case .buildingNotFinished: "Wait until it is finished."
+        case .garrisonFull: "That tower is already manned."
+        case .offMap: "That spot is off the map."
+        }
+    }
+
+    static func text(for problem: RunProblem) -> String {
+        switch problem {
+        case .unknownBuilding, .notAPost: "That isn't a finished Scavenger Post."
+        case .unknownRun: "No such run."
+        case .notUnlocked: "Upgrade the Scavenger Post to unlock this run."
+        case .postBusy: "This post already has a run out."
+        case .noFreeSurvivors(let needed): "Needs \(needed) free survivors."
+        case .notEnoughResources(let needed): "Not enough resources. Costs \(costText(needed))."
+        case .nothingToCollect: "Nothing to collect."
+        }
+    }
+
+    static func text(for problem: ResearchProblem) -> String {
+        switch problem {
+        case .unknownItem: "No such research."
+        case .alreadyKnown: "Already researched."
+        case .alreadyResearching: "Finish the current research first."
+        case .needsWorkshop: "Build a Workshop first."
+        case .workshopNotStaffed: "The Workshop needs its workers."
+        case .needsHqLevel(let level): "Needs HQ level \(level)."
+        case .notEnoughResources(let needed): "Not enough resources. Costs \(costText(needed))."
         }
     }
 

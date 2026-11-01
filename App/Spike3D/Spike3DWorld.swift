@@ -57,9 +57,9 @@ final class Spike3DWorld {
             }
             cache[item.id] = model
             let copy = model.clone(recursive: true)
-            copy.position = [item.x, 0, item.z]
+            copy.position = [item.x, item.y, item.z]
             copy.orientation = simd_quatf(angle: item.turn, axis: [0, 1, 0])
-            if item.realScale { copy.scale = .init(repeating: config.freeAssets.metresToTiles) }
+            if item.unitMetres > 0 { copy.scale = .init(repeating: item.unitMetres * config.freeAssets.metresToTiles) }
             root.addChild(copy)
         }
         let modelsMs = Date().timeIntervalSince(start) * 1000

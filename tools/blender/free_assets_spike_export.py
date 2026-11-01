@@ -18,6 +18,14 @@ PICKS = {
     'fa_ph_trash_can': 'polyhaven/metal_trash_can/*.gltf',
     'fa_ph_barrel': 'polyhaven/Barrel_01/*.gltf',
     'fa_ph_old_tyre': 'polyhaven/old_tyre/*.gltf',
+    # Kenney Retro Urban Kit: low-poly, 1 unit = 1 cell (not metres); the spike scales these separately.
+    'fa_kn_truck': 'kenney/Models/GLB format/truck-grey-cargo.glb',
+    'fa_kn_dumpster': 'kenney/Models/GLB format/detail-dumpster-open.glb',
+    'fa_kn_wall_window': 'kenney/Models/GLB format/wall-a-window.glb',
+    'fa_kn_wall_door': 'kenney/Models/GLB format/wall-a-door.glb',
+    'fa_kn_roof': 'kenney/Models/GLB format/wall-a-roof.glb',
+    # Quaternius Downtown City MegaKit: a prebuilt 5-storey block (~12 x 15 x 17 m).
+    'fa_qt_building_small': 'quaternius/**/Building_Small_1.gltf',
 }
 
 
@@ -33,9 +41,25 @@ def import_any(path):
         raise ValueError(f'unsupported file type {ext}')
 
 
+def fix_unlit(mat):
+    """Kenney's glTF uses unlit (emission) materials, which USD export drops; rebuild as a textured Principled BSDF."""
+    nodes, links = mat.node_tree.nodes, mat.node_tree.links
+    image = next((n for n in nodes if n.type == 'TEX_IMAGE'), None)
+    if image is None or any(n.type == 'BSDF_PRINCIPLED' for n in nodes):
+        return
+    output = next(n for n in nodes if n.type == 'OUTPUT_MATERIAL')
+    bsdf = nodes.new('ShaderNodeBsdfPrincipled')
+    bsdf.inputs['Roughness'].default_value = 0.9
+    links.new(image.outputs['Color'], bsdf.inputs['Base Color'])
+    links.new(bsdf.outputs['BSDF'], output.inputs['Surface'])
+
+
 def convert(name, path, out):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     import_any(path)
+    for mat in bpy.data.materials:
+        if mat.use_nodes:
+            fix_unlit(mat)
     meshes = [o for o in bpy.data.objects if o.type == 'MESH']
     pts = [o.matrix_world @ Vector(v) for o in meshes for v in o.bound_box]
     lo = Vector([min(p[i] for p in pts) for i in range(3)])
