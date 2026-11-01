@@ -1,6 +1,6 @@
 # Feature: 3D models (buildings, defenses, decorations)
 
-_Chunk 2M. Characters (zombies, survivors, defenders) are chunk 3M._
+_Chunk 2M. Characters (zombies, survivors, defenders) are chunk 3M: `characters-3d.md`._
 
 ## Purpose
 Every building, defense, construction/rubble state and map decoration has a realistic 3D model, so the map no longer shows labeled boxes for them.

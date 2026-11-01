@@ -1,3 +1,5 @@
+> **3D (chunk 3M):** the same FBX now feed `tools/blender/export_characters.py`; see `docs/features/characters-3d.md`.
+
 > **Cleanup 2026-11-01:** the 2D walker frames, renderer scripts and Iso art folder were deleted (D-030). The FBX files now live in `HighwayHoldout_3D_Sources/mixamo-walker/`; only the Mixamo source/licence notes here still apply (chunk 3M). Paths below to deleted files are history (see git).
 
 # ZWALK-1M — Walker limb animation via Mixamo (alternative route for chunk 2A)

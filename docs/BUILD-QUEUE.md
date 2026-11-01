@@ -21,8 +21,8 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 2R | 3D: game playable in 3D, labeled boxes | 1R | Done 2026-11-01 — 3D view, ticker, camera, ModelRegistry (switch then removed by 6R) |
 | 2M | 3D art: models for buildings, defenses, decorations (CC0, D-036) | 1R | Done 2026-11-01 — 19 models in App/Models, checker 19/19 (D-037) |
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
-| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Ready |
-| 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Blocked by 3R, 3M |
+| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Done 2026-11-01 (D-038) — walk/attack/idle walker, runner/brute variants; Mixamo files local only; defenders still boxes |
+| 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Ready |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Blocked by 4R |
 | 6R | 3D: retire 2D | owner yes | Done 2026-11-01 early, owner's call (D-030) |
 
@@ -156,15 +156,18 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Start prompt:** "Implement chunk 3R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/input.md, docs/features/rendering-art.md and the 3R section of docs/BUILD-QUEUE.md only."
 - **Result:** exit check passed in the iPhone 18 Pro simulator at two camera angles: HQ roof tap selects (outline + range ring), Move HQ + drag onto the highway (red, reason, Confirm off) + Cancel = unchanged, farm (2×2) blocked on a wall then placed inside the walls (−50 scrap; HQ and watchtower faded in front of the ghost), demolish refunded 25 scrap; second angle: two-finger pan in the wall tool, 9 wood walls along the map edge (−90 scrap), a line across the farm showed red skipped tiles and the wall limit, watchtower roof tap selects with its ring. 134 Core tests pass; build has no warnings. Simulator save restored byte-for-byte.
 
-## Chunk 3M — Animated zombies (+ survivors/defenders) in 3D [Ready]
+## Chunk 3M — Animated zombies (+ survivors/defenders) in 3D [Done 2026-11-01, D-038]
 - **Goal:** zombies (and survivors/defenders) are real animated 3D characters instead of green boxes: they walk without foot sliding, turn smoothly and attack.
 - **Needs:** 2R and 2M (both done).
 - **Scope:** export the Mixamo walker (`HighwayHoldout_3D_Sources/mixamo-walker/`, D-026; the 1R spike already exports it with `tools/blender/spike_export_usdz.py`) as `zmb_walker.usdz` with walk + attack (+ idle if available) at the game scale (0.41 tiles per metre, like D-037); `ZombieLayer3D` plays walk at a speed matched to movement (stride 0.6149 tiles, as measured), turns smoothly, holds attack while bashing; runner and brute: a Mixamo variant or the walker re-tinted/re-scaled at first; survivors/defenders: one simple Mixamo character if quick, else keep boxes; decide how the Mixamo-derived USDZ is kept (today it is git-ignored, D-026 terms) and record it in DECISIONS.
 - **Do NOT build:** effects, health bars, turret aiming (4R); new zombie types or gameplay; building models (2M, done).
 - **Exit check:** a normal horde in the simulator: no visible foot sliding from all 4 camera angles, turning looks smooth, attack plays while bashing a wall; removing a character USDZ shows the labeled box; a day-40 horde stays smooth (fps readout); `cd Core && swift test` and the simulator build pass.
 - **Start prompt:** "Implement chunk 3M: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/zombie-walk-mixamo.md, docs/features/rendering-art.md, docs/features/models-3d.md and the 3M section of docs/BUILD-QUEUE.md only."
+- **Progress (2026-11-01):** built: `tools/blender/export_characters.py` (walker → `App/Models/zmb_walker.usdz` + `.anim.json`, stride 0.6095 tiles, 2.4 MB), `CharacterMotion3D` in Core (glide between ticks, capped turning, walk rate = speed ÷ stride; 6 tests, 204 Core tests pass), `CharacterAnimator3D`, runner/brute = walker scaled/tinted (`presentation.json reality3d.characters`), defenders play idle once a model exists. Checked in the iPhone 18 Pro simulator: zombies are animated models facing their way of travel; removing the USDZ shows labeled boxes; build clean; save restored byte-for-byte. Mixamo files git-ignored (public repo, D-038).
+- **Result (2026-11-01):** owner signed in to Mixamo; downloaded Zombie Attack + Zombie Idle for Yaku J Ignite (FBX Binary, With Skin, 30 fps) into `HighwayHoldout_3D_Sources/mixamo-walker/`; exporter now writes walk (0–4.0 s), attack (4.03–8.63 s), idle (8.67–14.73 s), 3.0 MB. In the simulator a temporary log confirmed walkers, runners and brutes switch to attack while bashing and idle when standing (probe removed). 204 Core tests pass; build clean; save restored byte-for-byte.
+- **Not checked / left:** close visual foot-sliding check from all 4 camera angles (stills + maths only); day-40 fps (no in-game readout until 5R); defenders stay boxes (no defender model downloaded; drop `mixamo-defender/defender_idle.fbx` in and rerun the exporter).
 
-## Chunk 4R — Effects, overlays and health bars in 3D [Blocked by 3M]
+## Chunk 4R — Effects, overlays and health bars in 3D [Ready]
 - **Goal:** watching a horde reads as well as it did in 2D: you can see who shoots whom, what is hurt, what broke, and where the next horde comes from.
 - **Needs:** 3R (done) and 3M (animated zombies; 3M needs 2M). Effects can be prototyped on boxes, but the exit check needs 3M's zombies.
 - **Scope:** draw Core's `SimEvent`s (today `World3D.update` drains and drops them): tracers and muzzle flash from towers, hit/goo decals on the ground, dust when a wall breaks, short building shake on damage, trap flash; floating health bars over damaged buildings/walls and progress bars over buildings under construction (billboards); turret tops that turn toward their target (2M did not split them: add a separate turret model for the watchtower and MG nest here); horde warning arrows at the map edges during the warning time. Same caps as the old 2D `EventPlayer` (git history before c7a8e9c) so a day-40 horde can't flood the scene; any new caps or timings are look constants, or JSON if they're tuning.

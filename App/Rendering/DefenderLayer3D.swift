@@ -1,19 +1,21 @@
-// Purpose: Keeps one 3D entity per defender: beside the HQ, on its tower, or on its held spot; hidden while knocked out. Notes: docs/features/rendering-art.md
+// Purpose: Keeps one 3D entity per defender: beside the HQ, on its tower, or on its held spot; hidden while knocked out. Notes: docs/features/characters-3d.md
 import RealityKit
 import HoldoutCore
 
-/// Defenders are labeled boxes until chunk 3M brings character models. They face the same way always (no directions yet).
+/// Defenders are labeled boxes until a `unit_defender.usdz` exists (tools/blender/export_characters.py); then they play
+/// its idle clip. They face the same way always (no directions yet).
 @MainActor
 final class DefenderLayer3D {
     let root = Entity()
     private var entities: [DefenderID: Entity] = [:]
+    private var animators: [DefenderID: CharacterAnimator3D] = [:]
     /// Look-only: how far (tiles) waiting defenders stand below the HQ, and the gap between them.
     private static let hqRowOffsetTiles = 0.6
     private static let hqRowSpacingTiles = 0.7
 
     init() { root.name = "defenders" }
 
-    func sync(loop: GameLoop, mapping: WorldMapping3D, settings: Reality3DDef, registry: ModelRegistry) {
+    func sync(loop: GameLoop, mapping: WorldMapping3D, settings: Reality3DDef, registry: ModelRegistry, gameSpeed: Double) {
         let defenders = loop.state.base.defenders
         let sprite = loop.content.units.units.first { $0.id == "defender" }?.sprite ?? "unit_defender"
         let box = settings.zombieBoxTiles
@@ -34,9 +36,15 @@ final class DefenderLayer3D {
             }
             entity.isEnabled = true
             entity.position = Reality3DSizes.vector(mapping.world(gx: spot.x, gy: spot.y))
+            animators[d.id, default: CharacterAnimator3D()].update(entity, artId: sprite, clip: .idle, rate: gameSpeed,
+                                                                   blendSeconds: settings.characters.clipBlendSeconds,
+                                                                   registry: registry)
         }
         let live = Set(defenders.map(\.id))
-        for id in entities.keys where !live.contains(id) { entities.removeValue(forKey: id)?.removeFromParent() }
+        for id in entities.keys where !live.contains(id) {
+            entities.removeValue(forKey: id)?.removeFromParent()
+            animators.removeValue(forKey: id)
+        }
     }
 
     /// Where the defender stands in tile coordinates, or nil when it isn't on the map (knocked out).

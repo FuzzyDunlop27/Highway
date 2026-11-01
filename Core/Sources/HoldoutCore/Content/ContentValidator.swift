@@ -55,6 +55,13 @@ enum ContentValidator {
         let file = "presentation.json", c = r.camera
         if r.metresPerTile <= 0 { throw fail(file, "reality3d.metresPerTile must be above 0") }
         if r.zombieBoxTiles.width <= 0 || r.zombieBoxTiles.height <= 0 { throw fail(file, "reality3d.zombieBoxTiles must be above 0") }
+        let ch = r.characters
+        if ch.minGlideSeconds <= 0 || ch.minGlideSeconds > ch.maxGlideSeconds || ch.turnRadiansPerSecond <= 0 || ch.maxWalkRate <= 0 {
+            throw fail(file, "reality3d.characters: need 0 < minGlideSeconds <= maxGlideSeconds, turnRadiansPerSecond and maxWalkRate > 0")
+        }
+        for (id, v) in ch.variants where v.scale <= 0 || v.model.isEmpty {
+            throw fail(file, "reality3d.characters.variants.\(id): needs a model and a scale above 0")
+        }
         if c.minDistance <= 0 || c.minDistance > c.startDistance || c.startDistance > c.maxDistance {
             throw fail(file, "reality3d.camera: need 0 < minDistance <= startDistance <= maxDistance")
         }

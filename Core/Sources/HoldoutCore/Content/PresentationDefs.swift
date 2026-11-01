@@ -20,6 +20,8 @@ public struct Reality3DDef: Codable, Sendable {
     public let placeholderHeightTiles: [String: Double]
     /// Zombie placeholder box: width (and depth) and height, in tiles.
     public let zombieBoxTiles: ZombieBox3D
+    /// Animated zombies/defenders (chunk 3M): gliding, turning, walk speed, look variants.
+    public let characters: Characters3DDef
     public let camera: Camera3DDef
     public let light: Light3DDef
 }
@@ -27,6 +29,34 @@ public struct Reality3DDef: Codable, Sendable {
 public struct ZombieBox3D: Codable, Sendable {
     public let width: Double
     public let height: Double
+}
+
+/// How 3D characters move between Core ticks and play their clips (CharacterMotion3D). Look only.
+public struct Characters3DDef: Codable, Sendable {
+    public let turnRadiansPerSecond: Double
+    /// Each Core step is glided over the time the last step took, kept within these bounds.
+    public let minGlideSeconds: Double
+    public let maxGlideSeconds: Double
+    /// A move longer than this (tiles) is drawn as a jump (spawn, reload).
+    public let snapDistanceTiles: Double
+    /// Slower than this (tiles/s) for longer than standGraceSeconds = standing.
+    public let standSpeedTiles: Double
+    public let standGraceSeconds: Double
+    public let speedSmoothingSeconds: Double
+    /// Walk-cycle speed cap (× as authored), so a runner using the walker's shamble doesn't blur.
+    public let maxWalkRate: Double
+    /// Cross-fade between walk, attack and idle.
+    public let clipBlendSeconds: Double
+    /// Art id → drawn with another model, scaled and tinted, until it gets its own model.
+    public let variants: [String: CharacterVariant3D]
+}
+
+public struct CharacterVariant3D: Codable, Sendable {
+    /// Art id of the model file to use (`<model>.usdz`).
+    public let model: String
+    public let scale: Double
+    /// Hex color multiplied into the model's textures.
+    public let tint: String
 }
 
 /// Orbit camera (D-029): turns in `snapAngles` steps, eased; pan, pinch zoom toward the fingers and limited tilt.

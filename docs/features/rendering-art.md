@@ -12,7 +12,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - `App/Rendering/GroundMesh3D.swift` — **one merged ground mesh** for the whole map (one part per tile art id × checker parity), plus the map's decorations; `Reality3DSizes` (placeholder heights, Core point → simd).
 - `App/Rendering/BuildingLayer3D.swift` — one entity per building; rebuilt only when its `Signature` changes (def, level, origin, finished, rubble, wall direction). Picks the art id: finished → `sprite`, building (2×2+) → `constructionSprites`, building (1×1) → own art faded, rubble → `rubbleSprite1x1/2x2`. Walls in a north-south line turn 90°. `pickBoxes` gives one footprint box per building for taps and fading.
 - `App/Rendering/PlacementLayer3D.swift`, `SelectionLayer3D.swift`, `OccluderFader3D.swift`, `OverlayMeshes3D.swift` — placement ghost, grid, footprint, wall line, selection outline, range ring, fading in front of the ghost (chunk 3R; rules in `input.md`). Overlays are unlit, see-through merged meshes just above the ground that cast no shadow.
-- `App/Rendering/ZombieLayer3D.swift` — one entity per zombie; moved and turned every frame; small fixed crowd spread per zombie id.
+- `App/Rendering/ZombieLayer3D.swift` — one animated zombie per zombie (3M: glide, turn, walk/attack/idle; see `characters-3d.md`); small fixed crowd spread per zombie id.
 - `App/Rendering/ModelRegistry.swift` — art id → entity. Returns at once with a box (footprint × height, art id written above it, always facing the camera); loads `<artId>.usdz` from the app bundle in the background (`Entity(contentsOf:)`) and swaps the box for the model in every entity still showing it. Missing or broken file → the box stays. Never crashes.
 - `App/Rendering/ArtRegistry.swift` — 2D pictures for SwiftUI only: HUD icons (`Art/UI`) and build-menu pictures (`Art/UI` `ui_build_<id>`, else `Art/Menu/<sprite>`); `UIColor.hex`, `ArtCategory`.
 - `App/Rendering/PlaceholderArt.swift` — labeled flat box picture for missing menu art; `color(for:)` = one color per art-id prefix, also used for the 3D boxes and ground.
@@ -35,15 +35,15 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - Models: one USDZ per art id named exactly like the art id (`bld_hq.usdz`), origin at the footprint's ground middle, front facing +X; scaled by `metresPerTile`. Zombie heading → `WorldMapping3D.yaw(heading:)` = −heading.
 - Placeholder box = footprint (minus a small gap) × `placeholderHeightTiles[category]` tiles, colored by art-id prefix (`PlaceholderArt.color`), art id written above it (billboard, no shadow). Ground tiles aren't labeled.
 - The renderer never changes game state. Clock = `GameTicker`; Core events are drained each frame and dropped until effects exist (4R).
-- Not drawn yet: turret tops, health/progress bars, effects, warning arrows (4R); animated zombies (3M).
+- Not drawn yet: turret tops, health/progress bars, effects, warning arrows (4R). Characters: `characters-3d.md`.
 - Look-only constants (box gap, label size/lift, faded opacity, checker, crowd spread) are named constants in the files above, not JSON.
 
 ## Known issues
 - Models take a few seconds to load in the simulator; boxes show meanwhile (intended).
 - No fps readout in the game since SpriteKit's went away; the 1R spike still has one. Add one with 5R's performance pass.
-- Zombie boxes jump at Core's 10 ticks/s like the 2D sprites did; smooth movement comes with 3M animation.
 
 ## Change log
+- 2026-11-01 — Chunk 3M: animated zombies, gliding between ticks, runner/brute variants (`characters-3d.md`, D-038).
 - 2026-11-01 — Chunk 3R: placement/selection overlays (`PlacementLayer3D`, `SelectionLayer3D`, `OccluderFader3D`, `OverlayMeshes3D`); `BuildingLayer3D.pickBoxes`.
 - 2026-11-01 — 2D retired (D-030): SpriteKit scene, node factories, iso/top-down sprites, GridProjection/Facing, view toggle removed; 3D files moved into `App/Rendering/`; 8 menu pictures kept in `Art/Menu`.
 - 2026-11-01 — Chunk 2R: RealityKit 3D view (merged ground, labeled boxes, background model loading, buildings/zombies synced), shared `GameTicker`, `WorldMapping3D` + `OrbitCamera3D` in Core with tests.

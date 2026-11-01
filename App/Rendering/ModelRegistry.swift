@@ -1,6 +1,8 @@
 // Purpose: Art id → 3D model loaded in the background, or a labeled colored box until then / if missing (never crashes). Notes: docs/features/rendering-art.md
+import Foundation
 import RealityKit
 import UIKit
+import HoldoutCore
 
 /// The 3D twin of `ArtRegistry`. `entity(...)` always returns at once: a box the size of the footprint with the art id
 /// written above it. If `<artId>.usdz` is in the app bundle (2M puts them there), it loads in the background and replaces
@@ -12,6 +14,8 @@ final class ModelRegistry {
     /// presentation.json `reality3d.loadModels` (false = boxes only) and `metresPerTile` (models are 1 tile = 1 m).
     var loadModels = true
     var modelScale: Float = 1
+    /// presentation.json `reality3d.characters.variants`: art ids drawn with another model, scaled and tinted (3M).
+    var variants: [String: CharacterVariant3D] = [:]
 
     private var templates: [String: Entity] = [:]
     private var failed: Set<String> = []
@@ -19,6 +23,8 @@ final class ModelRegistry {
     private var materials: [String: PhysicallyBasedMaterial] = [:]
     private var boxMeshes: [SIMD3<Float>: MeshResource] = [:]
     private var labelMeshes: [String: MeshResource] = [:]
+    private var animFiles: [String: CharacterAnimFile?] = [:]
+    private var clips: [String: AnimationResource?] = [:]
 
     /// Look-only: gap left around each placeholder box, label size and lift, and how see-through a half-built 1×1 is.
     private static let boxInset: Float = 0.06
@@ -26,6 +32,8 @@ final class ModelRegistry {
     private static let labelLift: Float = 0.2
     static let underConstructionOpacity: Float = 0.45
     static let placeholderName = "placeholder"
+    /// Name of the loaded model inside a container (CharacterAnimator3D looks for it).
+    static let modelName = "model"
 
     private final class WeakEntity {
         weak var entity: Entity?
@@ -53,7 +61,7 @@ final class ModelRegistry {
 
     private func startLoading(_ id: String) {
         guard waiting[id]?.count == 1 else { return }  // already loading
-        guard let url = Bundle.main.url(forResource: id, withExtension: "usdz") else {
+        guard let url = Bundle.main.url(forResource: variants[id]?.model ?? id, withExtension: "usdz") else {
             finish(id, model: nil)
             return
         }
@@ -69,12 +77,58 @@ final class ModelRegistry {
             failed.insert(id)
             return
         }
-        model.scale = .init(repeating: modelScale)
+        model.scale = .init(repeating: modelScale * Float(variants[id]?.scale ?? 1))
+        model.name = Self.modelName
+        if let tint = variants[id]?.tint { Self.tint(model, UIColor.hex(tint)) }
         templates[id] = model
         for container in containers.compactMap(\.entity) {
             container.findEntity(named: Self.placeholderName)?.removeFromParent()
             container.addChild(model.clone(recursive: true))
         }
+    }
+
+    // MARK: Character clips (3M)
+
+    /// The model file's `.anim.json` (clip times, stride) and the variant scale art `id` is drawn at.
+    func animInfo(_ id: String) -> (file: CharacterAnimFile, scale: Double)? {
+        let fileId = variants[id]?.model ?? id
+        if animFiles[fileId] == nil {
+            let url = Bundle.main.url(forResource: fileId + ".anim", withExtension: "json")
+            animFiles[fileId] = url.flatMap { try? Data(contentsOf: $0) }.flatMap { try? JSONDecoder().decode(CharacterAnimFile.self, from: $0) }
+        }
+        guard let file = animFiles[fileId] ?? nil else { return nil }
+        return (file, variants[id]?.scale ?? 1)
+    }
+
+    /// `clip` cut out of the loaded model's single timeline, looping; nil until the model has loaded or if it lacks it.
+    func clip(_ id: String, _ clip: CharacterClip3D) -> AnimationResource? {
+        let key = "\(id)#\(clip.rawValue)"
+        if let cached = clips[key] { return cached }
+        guard let model = templates[id] else { return nil }
+        var resource: AnimationResource?
+        if let whole = model.availableAnimations.first {
+            if let range = animInfo(id)?.file.range(clip) {
+                let view = AnimationView(source: whole.definition, trimStart: range.lowerBound, trimEnd: range.upperBound)
+                resource = try? AnimationResource.generate(with: view).repeat()
+            } else if clip == .walk, animInfo(id) == nil {
+                resource = whole.repeat()  // no .anim.json: the whole timeline is the walk
+            }
+        }
+        clips[key] = resource
+        return resource
+    }
+
+    /// Multiplies every material's base color by `color` (variants until they get their own textures).
+    private static func tint(_ entity: Entity, _ color: UIColor) {
+        if var model = entity.components[ModelComponent.self] {
+            model.materials = model.materials.map { material in
+                guard var pbr = material as? PhysicallyBasedMaterial else { return material }
+                pbr.baseColor.tint = color
+                return pbr
+            }
+            entity.components.set(model)
+        }
+        entity.children.forEach { tint($0, color) }
     }
 
     // MARK: Placeholder box

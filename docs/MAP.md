@@ -59,6 +59,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
 | 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
 | Free CC0 asset spike (DEBUG, "Free assets" scene) | layout `App/Spike3D/Spike3DLayouts.swift`; convert `tools/blender/free_assets_spike_export.py`; results `docs/research/free-assets.md` |
+| Zombie/defender animation: walk speed, turning, gliding, runner/brute look | `Content/presentation.json` `reality3d.characters`; math `Core/.../Presentation/CharacterMotion3D.swift`; playback `App/Rendering/CharacterAnimator3D.swift`; export `tools/blender/export_characters.py`; notes `docs/features/characters-3d.md` |
 | Building / defense / decoration 3D models (2M) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
 | Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
@@ -132,7 +133,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits) — App only
+│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits), CharacterMotion3D.swift (character glide/turn/walk rate, 3M) — App only
 │  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
@@ -153,7 +154,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
 │     ├─ [x] TestSupport.swift  Finds repo Content/ via #filePath, builds test games
-│     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift, RayPicking3DTests.swift
+│     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift, RayPicking3DTests.swift, CharacterMotion3DTests.swift
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
@@ -174,8 +175,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
 │  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (3R)
 │  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
-│  │  ├─ [x] DefenderLayer3D.swift  one box per defender: by the HQ, on its tower or held spot (3B)
-│  │  ├─ [x] ZombieLayer3D.swift   one entity per zombie, moved/turned every frame
+│  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (3B); idle clip if a model exists (3M)
+│  │  ├─ [x] ZombieLayer3D.swift   one animated zombie per zombie: glides, turns, walk/attack/idle (3M)
+│  │  ├─ [x] CharacterAnimator3D.swift  plays a character's clip (cut from its one USDZ timeline) at the right speed (3M)
 │  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
 │  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
 │  │  └─ [x] PlaceholderArt.swift  labeled flat box for missing menu art; per-prefix colors (also 3D boxes)
@@ -201,6 +203,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
 │  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
+│  │                        3M: zmb_*.usdz / unit_*.usdz + <artId>.anim.json from tools/blender/export_characters.py — git-ignored (Mixamo, D-038)
 │  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
 │  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, scene/walker/shadow/host/cap toggles, launch args
 │  │  ├─ [x] Spike3DLayouts.swift      which models each spike scene places (study town / free-asset lineup)
@@ -227,6 +230,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
       ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
       ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres; textures=512, only=<name> options)
       ├─ [x] free_assets_assemblies.py   free-asset spike: assembles buildings (fa_qt_shop) from Quaternius modular pieces
+      ├─ [x] export_characters.py  3M: Mixamo FBX clips → animated App/Models/<artId>.usdz + .anim.json (clip times, stride)
       ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
       ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
       ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble

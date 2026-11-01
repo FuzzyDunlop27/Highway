@@ -28,3 +28,10 @@ App/Spike3D/FreeAssets/
 
 # Mixamo FBX kept in the 3D sources folder stay local too (same rule as above).
 HighwayHoldout_3D_Sources/mixamo-walker/*.fbx
+
+# Chunk 3M: animated characters are Mixamo-derived, so they stay local like their FBX (D-038, public repo).
+# Rebuild with tools/blender/export_characters.py; a fresh clone shows labeled boxes for zombies and defenders.
+App/Models/zmb_*.usdz
+App/Models/unit_*.usdz
+App/Models/*.anim.json
+HighwayHoldout_3D_Sources/mixamo-*/*.fbx

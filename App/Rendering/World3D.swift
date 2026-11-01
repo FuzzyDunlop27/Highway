@@ -31,6 +31,7 @@ final class World3D {
         orbit = OrbitCamera3D(settings.camera, mapping: mapping)
         registry.loadModels = settings.loadModels
         registry.modelScale = Float(settings.metresPerTile)
+        registry.variants = settings.characters.variants
 
         camera.camera.fieldOfViewInDegrees = Float(settings.camera.fieldOfViewDegrees)
         camera.camera.far = Float(settings.camera.maxDistance * 3)
@@ -59,8 +60,8 @@ final class World3D {
         applyCamera()
         guard let loop = store.loop else { return }
         buildings.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
-        zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
-        defenders.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
+        zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, seconds: dt, gameSpeed: Double(store.speed))
+        defenders.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, gameSpeed: Double(store.speed))
         placement.sync(placement: store.placement, viewCenter: store.viewCenterTile, loop: loop, mapping: mapping,
                        settings: settings, registry: registry)
         selection.sync(selected: store.selectedBuilding, range: store.selectedBuilding.flatMap { loop.towerRange(id: $0.id) },
