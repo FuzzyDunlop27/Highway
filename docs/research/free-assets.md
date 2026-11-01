@@ -70,10 +70,14 @@ Models stay in real metres; the spike shrinks them by `freeAssets.metresToTiles`
   - **Quaternius** buildings are real city blocks: the "small" one is 5 storeys, about 5 × 6 × 7 tiles at our scale (the HQ is 3 × 3). Looks right with the zombies, but far too big for a base building as-is and **19.6 MB** for one model. Use its modular pieces (a 1–2 storey shop) rather than the prebuilt blocks.
 - **Speed with buildings:** still 60 fps at 100 walkers (simulator). Loading the scene on the main thread rose to ~3 s, mostly the Quaternius block (the game's ModelRegistry already loads in the background).
 - **Total spike size:** 33 MB of USDZ for 11 models. Texture budget is the main problem to solve before replacing the world.
-- **Screenshots:** `01-closeup-35-walkers.png`, `02-100-walkers.png`, `03-kenney-vs-polyhaven.png`, `04-quaternius-building.png`.
-- **Suggested direction (owner decides):** Poly Haven for props, Quaternius modular pieces for buildings (assembled into small 2-storey shapes), shared/smaller textures; Kenney only as a fallback. Still to do: measure on the real phone.
+- **Screenshots:** `01-closeup-35-walkers.png`, `02-100-walkers.png`, `03-kenney-vs-polyhaven.png`, `04-quaternius-building.png`, `05-quaternius-modular-shop.png`.
+- **Owner's choice (D-036): Quaternius modular pieces for buildings, Poly Haven for props.**
+- **Modular shop test:** `free_assets_assemblies.py` builds a 6 × 6 m two-storey shop (metal-and-glass shopfront, brick upper floor with windows, cornice, flat roof, AC unit) from 10 kit pieces: **2,921 triangles**, about 2.5 tiles across. USDZ: **17.3 MB at 1024 px, 4.8 MB at 512 px** (15 shared kit texture maps, embedded in every USDZ; geometry is only 0.2 MB). Both versions stand in the spike (`fa_qt_shop`, `fa_qt_shop_512`). Still 60 fps at 100 walkers. Windows lose the kit's fake-interior shader and read as pale glass. In-app check (`05-quaternius-modular-shop.png`, front = 512 px, back = 1024 px): at game zoom the two look the same, so 512 px is enough.
+- **For the 2M pipeline:** share one texture set across all buildings (or accept 512 px), skip normal maps if they don't show at game zoom, and add a fake-interior or darker glass material.
 
 ## Change log
 - 2026-11-01: first research pass.
 - 2026-11-01: spike: 5 Poly Haven props as USDZ in a "Free assets" scene of the DEBUG 3D spike; 60 fps at 100 walkers (simulator). Buildings pending manual download.
 - 2026-11-01: added Kenney (modular shop, truck, dumpster) and a Quaternius 5-storey block; Kenney unlit materials fixed in the converter; still 60 fps at 100 walkers.
+- 2026-11-01: owner chose Quaternius modular + Poly Haven (D-036); modular shop assembled (2,921 tris; 17.3 MB / 4.8 MB at 1024 / 512 px).
+- 2026-11-01: chunk 2M used this direction for all 19 game models (`docs/features/models-3d.md`, D-037); extra Poly Haven props and textures downloaded for it.

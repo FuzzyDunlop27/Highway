@@ -47,3 +47,4 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - 2026-11-01 — Chunk 3R: placement/selection overlays (`PlacementLayer3D`, `SelectionLayer3D`, `OccluderFader3D`, `OverlayMeshes3D`); `BuildingLayer3D.pickBoxes`.
 - 2026-11-01 — 2D retired (D-030): SpriteKit scene, node factories, iso/top-down sprites, GridProjection/Facing, view toggle removed; 3D files moved into `App/Rendering/`; 8 menu pictures kept in `Art/Menu`.
 - 2026-11-01 — Chunk 2R: RealityKit 3D view (merged ground, labeled boxes, background model loading, buildings/zombies synced), shared `GameTicker`, `WorldMapping3D` + `OrbitCamera3D` in Core with tests.
+- 2026-11-01 — 2M: real models now load from `App/Models/` (see `models-3d.md`); the 1R spike's study USDZ were removed.

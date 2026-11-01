@@ -19,9 +19,9 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers with shadows |
 | 2R | 3D: game playable in 3D, labeled boxes | 1R | Done 2026-11-01 — 3D view, ticker, camera, ModelRegistry (switch then removed by 6R) |
-| 2M | 3D art: Blender → USDZ pipeline + buildings/props | 1R | Ready |
+| 2M | 3D art: models for buildings, defenses, decorations (CC0, D-036) | 1R | Done 2026-11-01 — 19 models in App/Models, checker 19/19 (D-037) |
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
-| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Blocked by 2M |
+| 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Ready |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Blocked by 3R, 3M |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Blocked by 4R |
 | 6R | 3D: retire 2D | owner yes | Done 2026-11-01 early, owner's call (D-030) |
@@ -156,10 +156,18 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Start prompt:** "Implement chunk 3R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/input.md, docs/features/rendering-art.md and the 3R section of docs/BUILD-QUEUE.md only."
 - **Result:** exit check passed in the iPhone 18 Pro simulator at two camera angles: HQ roof tap selects (outline + range ring), Move HQ + drag onto the highway (red, reason, Confirm off) + Cancel = unchanged, farm (2×2) blocked on a wall then placed inside the walls (−50 scrap; HQ and watchtower faded in front of the ghost), demolish refunded 25 scrap; second angle: two-finger pan in the wall tool, 9 wood walls along the map edge (−90 scrap), a line across the farm showed red skipped tiles and the wall limit, watchtower roof tap selects with its ring. 134 Core tests pass; build has no warnings. Simulator save restored byte-for-byte.
 
+## Chunk 3M — Animated zombies (+ survivors/defenders) in 3D [Ready]
+- **Goal:** zombies (and survivors/defenders) are real animated 3D characters instead of green boxes: they walk without foot sliding, turn smoothly and attack.
+- **Needs:** 2R and 2M (both done).
+- **Scope:** export the Mixamo walker (`HighwayHoldout_3D_Sources/mixamo-walker/`, D-026; the 1R spike already exports it with `tools/blender/spike_export_usdz.py`) as `zmb_walker.usdz` with walk + attack (+ idle if available) at the game scale (0.41 tiles per metre, like D-037); `ZombieLayer3D` plays walk at a speed matched to movement (stride 0.6149 tiles, as measured), turns smoothly, holds attack while bashing; runner and brute: a Mixamo variant or the walker re-tinted/re-scaled at first; survivors/defenders: one simple Mixamo character if quick, else keep boxes; decide how the Mixamo-derived USDZ is kept (today it is git-ignored, D-026 terms) and record it in DECISIONS.
+- **Do NOT build:** effects, health bars, turret aiming (4R); new zombie types or gameplay; building models (2M, done).
+- **Exit check:** a normal horde in the simulator: no visible foot sliding from all 4 camera angles, turning looks smooth, attack plays while bashing a wall; removing a character USDZ shows the labeled box; a day-40 horde stays smooth (fps readout); `cd Core && swift test` and the simulator build pass.
+- **Start prompt:** "Implement chunk 3M: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/zombie-walk-mixamo.md, docs/features/rendering-art.md, docs/features/models-3d.md and the 3M section of docs/BUILD-QUEUE.md only."
+
 ## Chunk 4R — Effects, overlays and health bars in 3D [Blocked by 3M]
 - **Goal:** watching a horde reads as well as it did in 2D: you can see who shoots whom, what is hurt, what broke, and where the next horde comes from.
 - **Needs:** 3R (done) and 3M (animated zombies; 3M needs 2M). Effects can be prototyped on boxes, but the exit check needs 3M's zombies.
-- **Scope:** draw Core's `SimEvent`s (today `World3D.update` drains and drops them): tracers and muzzle flash from towers, hit/goo decals on the ground, dust when a wall breaks, short building shake on damage, trap flash; floating health bars over damaged buildings/walls and progress bars over buildings under construction (billboards); turret tops that turn toward their target (2M models the turret as a separate part); horde warning arrows at the map edges during the warning time. Same caps as the old 2D `EventPlayer` (git history before c7a8e9c) so a day-40 horde can't flood the scene; any new caps or timings are look constants, or JSON if they're tuning.
+- **Scope:** draw Core's `SimEvent`s (today `World3D.update` drains and drops them): tracers and muzzle flash from towers, hit/goo decals on the ground, dust when a wall breaks, short building shake on damage, trap flash; floating health bars over damaged buildings/walls and progress bars over buildings under construction (billboards); turret tops that turn toward their target (2M did not split them: add a separate turret model for the watchtower and MG nest here); horde warning arrows at the map edges during the warning time. Same caps as the old 2D `EventPlayer` (git history before c7a8e9c) so a day-40 horde can't flood the scene; any new caps or timings are look constants, or JSON if they're tuning.
 - **Do NOT build:** new kinds of effects beyond the 2D set, sound, particles that need iOS 26, the performance pass and fps readout (5R), new gameplay or Core rules.
 - **Exit check:** the 1B on-screen defense check in 3D: horde from the debug menu walks to a weakened wall, breaks through (dust + rubble), pours in, towers aim and fire with visible tracers, damaged walls show health bars, "Held!" banner; a day-40 horde (debug) stays smooth in the simulator; `cd Core && swift test` and the simulator build pass.
 - **Start prompt:** "Implement chunk 4R: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/rendering-art.md, docs/features/hordes.md and the 4R section of docs/BUILD-QUEUE.md only."
@@ -167,12 +175,9 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 ## Chunk 6R — Retire 2D [Done 2026-11-01, D-030]
 - Owner asked to move to full 3D right after 2R. Removed the SpriteKit renderer, iso/top-down sprites and Core 2D projection math; kept menus, `PlacementController` logic, the DEBUG spike, tools and source art folders. Building stays off until 3R.
 
-## Chunk 2M — 3D model pipeline + buildings/props [Ready]
-- **Direction changed (D-036, 2026-11-01):** buildings now come from Quaternius modular pieces and props from Poly Haven, not the Blender study models. The scope below still describes the old plan; rewrite it before starting (start from `tools/blender/free_assets_spike_export.py` + `free_assets_assemblies.py`, and solve the texture budget).
-- **Goal:** every building, defense and decoration has a 3D model the 3D view can load.
-- **Needs:** 1R (done). Can run alongside 2R: 2M touches `tools/blender/` and a model folder, 2R touches App code.
-- **Scope:** `tools/blender/export_usdz.py` built from the spike's one-off script, keeping the 1R rules (1 tile = 1 m, origin at footprint ground centre, Z-up→Y-up with `convert_orientation`, curves converted to mesh, bevels applied); one USDZ per art id named like today (`bld_hq.usdz`…); a model folder in `App/` that both Debug and Release use; a missing-model checker listing art ids with no USDZ; export the study models; finish backs/roofs that were only modelled for one angle; model the missing assets in the same style; tower base and turret as separate parts so the turret can aim.
-- **Do NOT build:** characters/zombies (3M), renderer code (2R), materials/lighting polish beyond "reads clearly" (5R).
-- **Exit check:** the checker reports zero missing buildings/props; a review sheet shows each model from the 4 camera angles (D-029); models load in the 1R spike screen without errors.
-- **Start prompt:** "Implement chunk 2M: read AGENTS.md, HighwayHoldout_Blender_Study/CLAUDE_HANDOFF.md, docs/plans/3d-spike-1R-results.md and the 2M sections of docs/BUILD-QUEUE.md and docs/plans/3d-rendering-plan.md only."
+## Chunk 2M — 3D models for buildings, defenses and decorations [Done 2026-11-01, D-036, D-037]
+- **Goal:** every building, defense, construction/rubble state and decoration has a 3D model the game loads.
+- **Scope (as rewritten after D-036):** realistic CC0 models: buildings assembled from Quaternius Downtown City MegaKit modular pieces, props from Poly Haven, simple barricades/stakes/wire modelled with Poly Haven textures; pipeline `tools/blender/export_usdz.py` + `model_kit.py` + `recipes_{buildings,defenses}.py` → `App/Models/<artId>.usdz`; missing-model checker `tools/check_models.py`; 4-angle review sheets.
+- **Result:** 19 models (7 buildings, 6 defenses, 2 construction sites, 2 rubble, car wreck, dead tree), ~20 MB in all (512 px textures, no normal maps, props ≤ ~1,500 triangles). `check_models.py`: 19/19. Review sheets `docs/plans/models-2m/`; in the game on the iPhone 18 Pro simulator they replace the boxes (`docs/plans/models-2m/in-game.jpg`); the 1R spike's study scene loads them too (old study USDZ removed). 198 Core tests pass; build clean; simulator save restored byte-for-byte. Notes: `docs/features/models-3d.md`.
+- **Not done (moved on):** separate turret tops that can aim (now in 4R); a different look per building level (L2/L3); measuring on a real phone (5R).
 

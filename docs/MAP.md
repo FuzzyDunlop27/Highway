@@ -59,11 +59,12 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
 | 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
 | Free CC0 asset spike (DEBUG, "Free assets" scene) | layout `App/Spike3D/Spike3DLayouts.swift`; convert `tools/blender/free_assets_spike_export.py`; results `docs/research/free-assets.md` |
-| Blender model scripts (source for 2M's USDZ export) | `tools/blender/*_models.py` |
+| Building / defense / decoration 3D models (2M) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
+| Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
 | Horde Alert notification text/timing | `App/Platform/NotificationScheduler.swift` |
-| Replace a placeholder box with a real model | add `<artId>.usdz` to the app (chunk 2M pipeline); menu PNGs: `python3 tools/import_art.py <folder> --view ui` |
+| Replace a placeholder box with a real model | add a recipe and run `tools/blender/export_usdz.py` (→ `App/Models/<artId>.usdz`), then `python3 tools/check_models.py`; menu PNGs: `python3 tools/import_art.py <folder> --view ui` |
 
 ## Folder tree
 
@@ -77,6 +78,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] DECISIONS.md      Why things are the way they are
 │  ├─ [x] BUILD-QUEUE.md    Build chunks (1A, 2A, 1B…): dependencies, status, start prompts
 │  ├─ [x] GAME-DESIGN.md    What the game is; Phase 1 content list
+│  ├─ [x] IDEAS.md          Owner's parked future ideas (not approved to build)
 │  ├─ [x] PHASE1-PLAN.md    Stack, milestones 1A–1E, exit checks, kickoff prompts
 │  ├─ [x] PHASE1-TASKS.md   Task-by-task plan for what's left (1V two views → 1E), owner decisions
 │  ├─ [x] graphics-spec-phase1.md  Art ids/filenames (still the id list); its top-down sprite specs are retired (D-030)
@@ -97,6 +99,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
+│     ├─ [x] models-3d.md      2M: building/defense/decoration models, pipeline, CC0 sources, rules
 │     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for 3M
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
@@ -197,7 +200,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SaveFileStore.swift        Read/write Application Support/HighwayHoldout/save.json
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
-│  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its Models/*.usdz also show in the game until 2M); notes: docs/plans/3d-spike-1R-results.md
+│  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
+│  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
 │  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, scene/walker/shadow/host/cap toggles, launch args
 │  │  ├─ [x] Spike3DLayouts.swift      which models each spike scene places (study town / free-asset lineup)
 │  │  ├─ [x] Spike3DWorld.swift        scene: ground, models, dusk sun + fill, walker rings, per-frame update
@@ -205,7 +209,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] Spike3DOrbitCamera.swift  pan / zoom / twist / limited tilt → camera transform
 │  │  ├─ [x] Spike3DGestureLayer.swift UIKit touch recognizers driving the orbit camera
 │  │  ├─ [x] Spike3DConfig.swift + spike3d.json  spike-only tuning
-│  │  ├─ Models/               USDZ from tools/blender/spike_export_usdz.py (walker USDZ is git-ignored, Mixamo)
+│  │  ├─ Models/               only the git-ignored Mixamo walker USDZ (tools/blender/spike_export_usdz.py); study models were replaced by App/Models (2M)
 │  │  └─ FreeAssets/           git-ignored fa_*.usdz from tools/blender/free_assets_spike_export.py (sources in HighwayHoldout_3D_Sources/free-assets/, also git-ignored)
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
 │  └─ Assets.xcassets/      AppIcon + Art/UI/ (UI kit, tools/import_art.py --view ui) + Art/Menu/ (8 old iso building pictures for menu cards)
@@ -217,11 +221,16 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
 └─ tools/
    ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
+   ├─ [x] check_models.py   2M: lists art ids with no App/Models/<id>.usdz (exit 1 if a non-character one is missing)
    └─ blender/
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
       ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
       ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres; textures=512, only=<name> options)
       ├─ [x] free_assets_assemblies.py   free-asset spike: assembles buildings (fa_qt_shop) from Quaternius modular pieces
+      ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
+      ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
+      ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble
+      ├─ [x] recipes_defenses.py   2M: walls, watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```
@@ -229,7 +238,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ## Feature notes (`docs/features/`)
 Create a note from `_TEMPLATE.md` the first time a feature is built. Planned names:
 `economy.md` · `construction.md` · `jobs-defenders.md` · `scavenging-research.md` · `pathing.md` · `combat.md` · `hordes.md` ·
-`offline-catchup.md` · `save.md` · `rendering-art.md` · `input.md` ·
+`offline-catchup.md` · `save.md` · `rendering-art.md` · `models-3d.md` · `input.md` ·
 `hud-ui.md` · `notifications.md` · `settings.md` · `balance.md` (which JSON knobs to turn)
 
 ## Art delivery and review

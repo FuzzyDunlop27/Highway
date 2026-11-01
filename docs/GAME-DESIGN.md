@@ -35,6 +35,7 @@ Zombie-apocalypse town builder + tower defense for iPhone (15+) and iPad. Grow a
 - **Phase 2:** more maps; the highway as a route between bases; choose when to leave.
 - **Phase 3:** Oregon Trail-style travel — pick what to bring, defend en route.
 - **Phase 4:** take over occupied bases (outcome depends on supplies brought); attack mode.
+- Owner's parked ideas (Lake Michigan setting, supply-run risk + mini-game, real-time weather, fortify-a-found-neighborhood): `docs/IDEAS.md`.
 - Leaving a base is always optional. Playing one base forever is valid.
 - Progress that carries over: Knowledge + what you pack. Timing must avoid "hours of play, then start over" feeling.
 
