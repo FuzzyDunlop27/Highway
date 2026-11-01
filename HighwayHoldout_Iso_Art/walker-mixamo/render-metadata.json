@@ -1,0 +1,31 @@
+{
+  "source": "walker_walk_inplace.fbx",
+  "character": "Yaku J Ignite",
+  "animation": "Zombie Walk",
+  "start": 1.0,
+  "end": 122.0,
+  "sampleFrames": [
+    1.0,
+    21.166666666666668,
+    41.333333333333336,
+    61.5,
+    81.66666666666667,
+    101.83333333333333
+  ],
+  "scale": 0.4136158405392225,
+  "canvas": [
+    256,
+    232
+  ],
+  "bodyHeightPx": 160,
+  "baselinePx": 184,
+  "rootDistanceMeters": 1.4866750240325983,
+  "rootDeltaMeters": [
+    1.2968666851520538e-07,
+    -1.4866750240325928,
+    1.1920928955078125e-07
+  ],
+  "strideTiles": 0.614912339673912,
+  "endpointMaxDifferencePx": 7.126841410392572e-05,
+  "endpointMeanDifferencePx": 1.6330217628169407e-05
+}

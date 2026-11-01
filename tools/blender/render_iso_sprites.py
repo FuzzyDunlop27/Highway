@@ -167,4 +167,5 @@ def main():
     print('ISO_RENDER_COMPLETE', flush=True)
 
 
-main()
+if __name__ == '__main__':
+    main()

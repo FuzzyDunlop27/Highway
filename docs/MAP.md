@@ -81,7 +81,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  SpriteKit scene, ArtRegistry/placeholders, node factories
-│     ├─ [x] zombie-walk-mixamo.md  ZWALK-1M: approved stock Mixamo route; waiting for source FBX
+│     ├─ [x] zombie-walk-mixamo.md  ZWALK-1M: implemented stock Mixamo route; normal-horde acceptance pending
 │     ├─ [x] zombie-walk-animation.md  ZWALK-1: realistic walker limb prototype + remaining checks
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
@@ -191,6 +191,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
    ├─ [x] import_art.py     PNGs → imagesets: --view topdown (trimmed), iso (untrimmed), ui (UI kit as-is)
    └─ blender/
       ├─ [x] render_iso_sprites.py  Blender script: renders isometric sprites + ground tiles
+      ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
+      ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```
 
@@ -213,3 +215,5 @@ Create a note from `_TEMPLATE.md` the first time a feature is built. Planned nam
 - `docs/BUILD-QUEUE.md`: dependency-labelled chunks and paste-ready next-chat handoffs.
 
 - Walker limb animation: `HighwayHoldout_Iso_Art/walker-walk/{source/,png/,prepare.py,preview.gif,in-game.png,PROMPTS.md,README.md}`; twelve `_w0…_w5.imageset` entries under `App/Assets.xcassets/Art/Iso/`. Runtime in `ZombieNodeFactory.swift` + `ArtRegistry.swift`; configuration in `Content/presentation.json` and `PresentationDefs.swift`.
+
+- Current Mixamo walker: `HighwayHoldout_Iso_Art/walker-mixamo/` contains production `png/`, render metadata, README, comparison/GIF and actual simulator evidence. `source/*.fbx` and `local-review/` remain local and ignored by Git; source FBX never ships. The shared iso renderer main guard allows safe helper imports.

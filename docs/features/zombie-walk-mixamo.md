@@ -13,10 +13,12 @@ slide (`zombie-walk-animation.md` → "Still pending"). Mixamo (free, Adobe acco
 the still if the owner decides so in step 0.
 
 ## Current session — 2026-10-31
-- Step 0 complete: owner selected stock zombie, matching SE/NE stills from frame 0, approved Mixamo as an asset source after explanation, and approved the prototype backup commit (`c12e557`). Decision D-026.
-- Step 1 waiting for owner downloads: Chrome's logged-in Mixamo page was visible, but native browser control failed (`noWindowsAvailable`, then ScreenCaptureKit audio/video capture failure). No character or animation was selected by the agent.
-- Save the in-place FBX and preferably the same root-motion FBX to `HighwayHoldout_Iso_Art/walker-mixamo/source/`; record exact character and animation names. Steps 2–5 are pending these files.
-- Blender and Xcode 27.1 are installed. No render, new app build, Core test or simulator check has been run in this session. Interactive simulator control may have the same capture limitation; verify later.
+- Steps 0–3 implemented: D-026 approval; prototype `c12e557`; Chrome extension connected; stock **Yaku J Ignite / Zombie Walk** downloaded with both in-place and root motion. All sliders default 50, full trim, mirror off; FBX Binary, With Skin, 30 fps, reduction none.
+- Renderer: `tools/blender/render_mixamo_walk.py`; shared iso staging imported after making `render_iso_sprites.py` import-safe. Separate `preview_mixamo_walk.py` builds comparison/GIF artifacts. Test overlay inspected before all-frame render. Embedded textures intact.
+- Outputs: 12 frames + 2 matching stills imported, zero warnings. Fixed 256×232 canvas / 160 px global envelope / y=184 cycle baseline. Actual action frames 1–122, six evenly spaced samples excluding duplicate endpoint. Root 1.486675 m × scale 0.41361584 = stride **0.6149123397 tiles**. No Swift/Core/save implementation changes.
+- Step 4: 119 Core tests and simulator builds pass. Actual-app fixtures checked four facings, paused stability, attacking hold, missing-frame fallback and crowd rendering. Missing SE w0 restored and full build reinstalled. Two later day-40 crowd captures read 60 fps (32 zombies / 1,389 nodes; protected HQ fixture).
+- **Still pending:** native simulator clicks failed, so long-press → Horde now and hands-on smoothness/foot-sliding acceptance over a normal horde remain unchecked. Chunk 2A remains in progress for that visual acceptance; runner/brute not started.
+- Original town restored byte-for-byte; app stopped. Full evidence, limits and reproduction commands: `HighwayHoldout_Iso_Art/walker-mixamo/README.md`. Raw FBX and local review recordings stay local and ignored by Git.
 
 ## Step 0 — Owner decisions (before any work)
 1. **Character source.** Mixamo animates a 3D model, but the approved realistic walker is 2D art with no 3D model. Pick one:
@@ -102,3 +104,5 @@ Runner and brute (same recipe later, one at a time), attack swings, top-down art
 - 2026-10-31 — Spec written (Claude) as a Mixamo alternative to the generated-pose prototype. Not started.
 
 - 2026-10-31 — Step 0 approved (D-026), prototype committed as c12e557; step 1 handed to owner after browser-control failures. Waiting for FBX files before steps 2–5.
+
+- 2026-10-31 — Chrome extension resolved download blocker; implemented Mixamo render/import pipeline (Yaku J Ignite / Zombie Walk), measured stride, matching stills and actual-app fixture checks. Normal-horde hands-on visual acceptance remains; original town restored.

@@ -43,7 +43,7 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - `Content/presentation.json` → `defaultView`, `autoTopDownWhilePlacing`, `switchFadeSeconds`, `outsideMapColor`; per view: `tileWidthPt/tileHeightPt`, `artNamespace`, `facings`, `turretFacings`, `minScale/startScale`, `placeholderHeightTiles`, `assets.<id>` (`anchor`, `scale`, `mirrorable`).
 
 ## Key rules
-- Realistic walker pilot: use `realistic-walker/png/` for the three isometric walker images. Existing SE/NE mirroring gives four directions. These are 2D cutouts, not the Blender walker; reapply after full Blender renders. Limb animation belongs to separate chunk 1B (ZWALK-1).
+- Current walker: D-026 / ZWALK-1M uses `walker-mixamo/png/` for twelve walk frames and matching SE/NE stills; re-import that folder after full old Blender renders. `realistic-walker/` and `walker-walk/` are historical recovery sources. Existing mirroring supplies SW/NW. See `zombie-walk-mixamo.md` for evidence and pending acceptance.
 - The simulation is one square grid; views only change drawing. Every position comes from `GridGeometry` (never assume top-down).
 - Top-down: sprite = footprint rectangle, anchored at its middle. Isometric: sprite is as wide as the footprint diamond, any height, anchored at the diamond's bottom point (`[0.5, 1.0]` from the image's top-left unless `assets.<id>.anchor` says otherwise).
 - Upright things (buildings, decorations, later units/zombies) use `ZLayer.sorted(depth:)`; depth = footprint middle's `x + y` in iso (bigger = in front). Ground stays flat underneath.
@@ -80,3 +80,5 @@ Draws the map, decorations, buildings, defenses, zombies, and combat effects wit
 - 2026-10-31 — Zombies now shamble: a 4 pt hop and ±0.1 rad lean per step (was a barely visible 1.5 pt bob that never stopped); step time from `speed`; idle while bashing. Single sprite per facing, so it's a procedural walk; real frame animation would need new art.
 
 - 2026-10-31 — ZWALK-1/chunk 2A prototype: realistic walker limb textures advance by distance; attack holds frame zero; still fallback retained. Frames use ArtRegistry cache and presentation.json zombieWalk; importer accepts `_wN`. See zombie-walk-animation.md for files and remaining gait checks.
+
+- 2026-10-31 — ZWALK-1M replaced walker frames and directional stills with Mixamo Yaku J Ignite / Zombie Walk; existing rendering reused, stride measured in JSON; fixture verification recorded, normal-horde acceptance pending.

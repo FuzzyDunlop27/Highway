@@ -1,5 +1,7 @@
 # Realistic walker — static sprite pilot
 
+**Historical source:** D-026 / ZWALK-1M now uses `../walker-mixamo/` for production walker frames and directional stills. Preserve this pilot for recovery; do not re-import it over the current Mixamo walker unless deliberately reverting.
+
 Only the isometric walker is replaced. These are realistic generated 2D cutouts, not a rigged 3D model. The original requested appearance was adapted to intact skin and non-graphic detail after the image service rejected an earlier attempt. Runner, brute, buildings and top-down art are unchanged by this pilot.
 
 - `source/walker-se.png`, `source/walker-ne.png`: full-resolution transparent originals from built-in image generation. RGB in transparent pixels can look like a glow in viewers that ignore alpha; actual compositing is clean.

@@ -30,7 +30,7 @@
       "assets": {},
       "zombieWalk": {
         "frames": 6,
-        "strideTiles": 0.36
+        "strideTiles": 0.6149123397
       }
     },
     "topDown": {

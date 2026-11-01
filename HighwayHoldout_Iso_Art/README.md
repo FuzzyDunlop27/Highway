@@ -1,6 +1,6 @@
 # Isometric art
 
-**Walker exception:** `realistic-walker/` now supplies the isometric walker as realistic generated cutouts. After any full Blender render, reapply its three PNGs and import them; see that folder’s README. Its source is not a rigged Blender model.
+**Current walker:** `walker-mixamo/` supplies the stock Mixamo Yaku J Ignite / Zombie Walk as 12 limb frames and matching SE/NE stills (D-026). Re-import `walker-mixamo/png/` after full old Blender renders. Read its README for reproducible rendering, measured stride, verified checks and pending normal-horde acceptance. `realistic-walker/` and `walker-walk/` preserve the earlier 2D pilot/prototype; they are no longer the current production route. Raw FBX sources stay local and never ship.
 
 These PNGs are the game's **isometric view** art. They were rendered by `tools/blender/render_iso_sprites.py`
 from the Blender study's 3D models (`HighwayHoldout_Blender_Study/scripts`) with the camera in `docs/graphics-spec-iso.md`.

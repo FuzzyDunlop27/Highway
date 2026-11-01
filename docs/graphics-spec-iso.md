@@ -44,3 +44,5 @@ P1 for the isometric view to look finished: `tile_grass`, `tile_dirt`, `tile_asp
 
 ## Walker animation frames (chunk 2A prototype)
 `zmb_walker_se_w0.png` through `_w5.png`, and `zmb_walker_ne_w0.png` through `_w5.png`. Twelve transparent 256×232 masters, unchanged scale/baseline across frames; mirror for SW/NW. Preserve the approved realistic walker source, not the old Blender model. Still-facing sprites remain fallbacks. Source: `HighwayHoldout_Iso_Art/walker-walk/`.
+
+Current production exception (D-026 / ZWALK-1M): the walker now uses stock Mixamo Yaku J Ignite / Zombie Walk renders in `walker-mixamo/png/`, with matching frame-zero directional stills. Earlier generated-cutout sources above are historical; the 256×232 canvas and 6×2 naming stay unchanged.
