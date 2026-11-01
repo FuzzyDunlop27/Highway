@@ -51,6 +51,7 @@ loop.send(.repair(id: id)) // repair damage or rebuild rubble (Building.isRubble
 loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food: 500))) ; loop.send(.debugKillAllZombies)
 ```
 - Grid: `x` right, `y` **down**, (0,0) = top-left tile. SpriteKit's y is up, so the App flips it.
+- 3D view math (App only, never used by the simulation): `WorldMapping3D` (tile ↔ metres), `OrbitCamera3D` (camera; `ray(screenX:…)` for touches), `RayPicking3D` (`Ray3D`, `Box3D`, `nearest`, `occluders`).
 - A building's `origin` is its top-left tile; its size is `content.buildingDef(defId)!.footprint`.
 - `PlacementProblem` cases map to messages: `offMap`, `blockedTerrain`, `occupied`, `limitReached(max:)`, `needsHqLevel`, `needsBuilding`, `needsResearch`, `notEnoughResources(needed:)`, `unknownBuilding`.
 

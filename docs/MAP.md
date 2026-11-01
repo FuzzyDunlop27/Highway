@@ -40,8 +40,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Tile ↔ 3D world position | `Core/.../Presentation/WorldMapping3D.swift` |
 | Ground look (merged mesh, colors) | `App/Rendering/GroundMesh3D.swift` |
 | Game clock (who advances Core each frame) | `App/GameTicker.swift` |
-| Wall tool (drag a line, cost, Build) — off until 3R | `App/Input/PlacementController.swift` (`.drawingLine`), `App/UI/WallLineBarView.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
-| Tap-to-place, ghost, invalid-spot red — off until 3R | `App/Input/PlacementController.swift` (logic); 3D drawing is chunk 3R |
+| Wall tool (drag a line, cost, Build) | `App/Input/PlacementController.swift` (`.drawingLine`), `App/UI/WallLineBarView.swift`; drawn by `App/Rendering/PlacementLayer3D.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
+| Tap-to-place, ghost, grid, invalid-spot red | logic `App/Input/PlacementController.swift`; touches `App/Input/PlacementTouches3D.swift`; drawing `App/Rendering/PlacementLayer3D.swift` |
+| What a tap hits (roof vs ground), what fades in front of the ghost | `Core/.../Presentation/RayPicking3D.swift`; boxes `BuildingLayer3D.pickBoxes`; fading `App/Rendering/OccluderFader3D.swift` |
+| Selection outline, range ring | `App/Rendering/SelectionLayer3D.swift` (shapes `OverlayMeshes3D.swift`) |
 | Text shown when a spot is invalid | `App/Input/PlacementMessages.swift` |
 | Confirm/Cancel and Move/Demolish bars | `App/UI/PlacementBarView.swift` |
 | Where the save file lives / when it saves | `App/Platform/SaveFileStore.swift`, `App/Platform/AppLifecycle.swift` |
@@ -116,7 +118,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math) — App only
+│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits) — App only
 │  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
@@ -136,7 +138,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
 │     ├─ [x] TestSupport.swift  Finds repo Content/ via #filePath, builds test games
-│     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift
+│     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift, RayPicking3DTests.swift
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
@@ -150,17 +152,22 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] Reality3DView.swift   SwiftUI host: RealityView (virtual camera) + touch layer
 │  │  ├─ [x] World3D.swift         scene: camera, sun/fill light, ground, layers; per-frame sync to Core
 │  │  ├─ [x] GroundMesh3D.swift    one merged ground mesh + decorations; Reality3DSizes helpers
-│  │  ├─ [x] BuildingLayer3D.swift one entity per building, rebuilt on Signature change; wall direction
+│  │  ├─ [x] BuildingLayer3D.swift one entity per building, rebuilt on Signature change; wall direction; pick boxes
+│  │  ├─ [x] PlacementLayer3D.swift ghost, tile grid, green/red footprint, planned wall line (3R)
+│  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
+│  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (3R)
+│  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
 │  │  ├─ [x] ZombieLayer3D.swift   one entity per zombie, moved/turned every frame
 │  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
 │  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
 │  │  └─ [x] PlaceholderArt.swift  labeled flat box for missing menu art; per-prefix colors (also 3D boxes)
 │  ├─ Input/
-│  │  ├─ [x] OrbitGestures3D.swift      3D camera touches: pan, pinch toward fingers, twist snap, tilt
-│  │  ├─ [x] PlacementController.swift  Mode (select/place/move/line), ghost spot, validity, Confirm command (drawn again in 3R)
+│  │  ├─ [x] OrbitGestures3D.swift      3D touches: pan, pinch toward fingers, twist snap, tilt (pan in wall tool); routes taps/drags
+│  │  ├─ [x] PlacementTouches3D.swift   tap select/place, lifted ghost drag, wall-line drag (finger → ray)
+│  │  ├─ [x] PlacementController.swift  Mode (select/place/move/line), ghost spot, validity, Confirm command
 │  │  └─ [x] PlacementMessages.swift    Core placement problems/errors → player text
 │  ├─ UI/                   SwiftUI
-│  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen (Build hidden until 3R)
+│  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen
 │  │  ├─ [x] HUDView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners

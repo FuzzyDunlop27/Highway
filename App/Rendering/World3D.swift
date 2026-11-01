@@ -1,4 +1,4 @@
-// Purpose: The 3D scene: camera, dusk light, merged ground, decorations, and buildings/zombies synced to Core every frame. Notes: docs/features/rendering-art.md
+// Purpose: The 3D scene: camera, dusk light, ground, decorations, buildings/zombies and placement/selection overlays synced every frame. Notes: docs/features/rendering-art.md
 import RealityKit
 import UIKit
 import HoldoutCore
@@ -12,11 +12,14 @@ final class World3D {
     var orbit: OrbitCamera3D
     let settings: Reality3DDef
     let mapping: WorldMapping3D
-    private let store: GameStore
+    let store: GameStore
     private let ticker: GameTicker
     private let registry = ModelRegistry.shared
-    private let buildings = BuildingLayer3D()
+    let buildings = BuildingLayer3D()
     private let zombies = ZombieLayer3D()
+    let placement = PlacementLayer3D()
+    private let selection = SelectionLayer3D()
+    private let fader = OccluderFader3D()
 
     init?(store: GameStore, ticker: GameTicker) {
         guard let loop = store.loop else { return nil }
@@ -35,6 +38,8 @@ final class World3D {
         root.addChild(GroundMesh3D.decorations(map: loop.map, mapping: mapping, settings: settings, registry: registry))
         root.addChild(buildings.root)
         root.addChild(zombies.root)
+        root.addChild(selection.root)
+        root.addChild(placement.root)
         addLights()
         lookAtHQ(loop)
         #if DEBUG
@@ -45,7 +50,7 @@ final class World3D {
         update(dt: 0)
     }
 
-    /// Called every rendered frame: finish any camera turn, then match Core's buildings and zombies.
+    /// Called every rendered frame: finish any camera turn, then match Core's buildings and zombies, then the overlays.
     func update(dt: Double) {
         _ = ticker.drainEvents()  // effects come in chunk 4R; until then this frame's events are simply dropped
         orbit.advance(seconds: dt)
@@ -53,6 +58,10 @@ final class World3D {
         guard let loop = store.loop else { return }
         buildings.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
         zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry)
+        placement.sync(placement: store.placement, viewCenter: store.viewCenterTile, loop: loop, mapping: mapping,
+                       settings: settings, registry: registry)
+        selection.sync(selected: store.selectedBuilding, content: loop.content, mapping: mapping)
+        fader.sync(ghost: placement.ghostBox, eye: orbit.position, buildings: buildings, mapping: mapping)
     }
 
     func applyCamera() {

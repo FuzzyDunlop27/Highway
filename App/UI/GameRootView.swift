@@ -30,7 +30,7 @@ struct GameRootView: View {
                             .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     Spacer()
-                    bottomBar
+                    placementBar
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
@@ -39,22 +39,6 @@ struct GameRootView: View {
             .animation(.easeInOut(duration: 0.15), value: store.placement.mode)
             .animation(.easeInOut(duration: 0.15), value: showBuildMenu)
             .animation(.easeInOut(duration: 0.25), value: store.banner)
-        }
-    }
-
-    /// Building, selecting and walls in 3D are chunk 3R. Until then the map is for watching; `placementBar` (the build
-    /// menu and placement bars) is kept for 3R to switch back on.
-    private static let canBuildIn3D = false
-
-    @ViewBuilder private var bottomBar: some View {
-        if !Self.canBuildIn3D {
-            Text("Building in 3D comes next (chunk 3R)")
-                .font(.caption).foregroundStyle(Kit.ink)
-                .padding(.horizontal, 12).padding(.vertical, 6)
-                .kitPanel()
-                .frame(maxWidth: .infinity, alignment: .trailing)
-        } else {
-            placementBar
         }
     }
 

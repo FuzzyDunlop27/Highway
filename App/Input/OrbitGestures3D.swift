@@ -1,9 +1,10 @@
-// Purpose: 3D camera touches: one finger pans, pinch zooms toward the fingers, two-finger twist snaps 90°, two-finger drag tilts. Notes: docs/features/input.md
+// Purpose: 3D map touches: one finger pans (or drags the ghost / draws walls), tap, pinch zoom, twist snaps 90°, two fingers tilt. Notes: docs/features/input.md
 import SwiftUI
 import UIKit
 
 /// A clear UIKit layer over the RealityView that turns touches into `OrbitCamera3D` moves (all limits live there).
-/// Taps do nothing yet: selecting and placing in 3D is chunk 3R.
+/// Taps and one-finger drags that are about building go to `PlacementTouches3D` first. In the wall tool one finger
+/// draws, so two fingers pan the map instead of tilting.
 struct OrbitGestures3D: UIViewRepresentable {
     let world: World3D
 
@@ -18,7 +19,8 @@ struct OrbitGestures3D: UIViewRepresentable {
         tilt.minimumNumberOfTouches = 2
         let pinch = UIPinchGestureRecognizer(target: c, action: #selector(Coordinator.pinch(_:)))
         let twist = UIRotationGestureRecognizer(target: c, action: #selector(Coordinator.twist(_:)))
-        for g in [pan, tilt, pinch, twist] as [UIGestureRecognizer] {
+        let tap = UITapGestureRecognizer(target: c, action: #selector(Coordinator.tap(_:)))
+        for g in [pan, tilt, pinch, twist, tap] as [UIGestureRecognizer] {
             g.delegate = c
             view.addGestureRecognizer(g)
         }
@@ -41,6 +43,7 @@ struct OrbitGestures3D: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
         var world: World3D
+        private let building = PlacementTouches3D()
 
         init(world: World3D) { self.world = world }
 
@@ -50,8 +53,13 @@ struct OrbitGestures3D: UIViewRepresentable {
             world.applyCamera()
         }
 
-        @objc func pan(_ g: UIPanGestureRecognizer) {
+        @objc func tap(_ g: UITapGestureRecognizer) {
             guard let view = g.view else { return }
+            building.tap(at: g.location(in: view), in: view, world: world)
+        }
+
+        @objc func pan(_ g: UIPanGestureRecognizer) {
+            guard let view = g.view, !building.pan(g, world: world) else { return }
             let d = g.translation(in: view)
             world.orbit.pan(dx: d.x, dy: d.y, viewHeight: view.bounds.height)
             g.setTranslation(.zero, in: view)
@@ -60,7 +68,12 @@ struct OrbitGestures3D: UIViewRepresentable {
 
         @objc func tilt(_ g: UIPanGestureRecognizer) {
             guard let view = g.view else { return }
-            world.orbit.tilt(dy: g.translation(in: view).y)
+            let d = g.translation(in: view)
+            if world.store.placement.isDrawingLine {
+                world.orbit.pan(dx: d.x, dy: d.y, viewHeight: view.bounds.height)
+            } else {
+                world.orbit.tilt(dy: d.y)
+            }
             g.setTranslation(.zero, in: view)
             world.applyCamera()
         }

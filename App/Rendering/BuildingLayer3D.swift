@@ -1,4 +1,4 @@
-// Purpose: Keeps one 3D entity per building in Core state; rebuilds it only when its look changes (Signature). Notes: docs/features/rendering-art.md
+// Purpose: Keeps one 3D entity per building in Core state; rebuilds it only when its look changes; boxes for taps and fading. Notes: docs/features/rendering-art.md
 import RealityKit
 import HoldoutCore
 
@@ -18,7 +18,15 @@ final class BuildingLayer3D {
     }
 
     let root = Entity()
-    private var entries: [BuildingID: (signature: Signature, entity: Entity)] = [:]
+    private struct Entry {
+        let signature: Signature
+        let entity: Entity
+        /// Footprint and placeholder height, for taps and fading (3R).
+        let width: Int, height: Int, boxHeight: Float
+        /// Height of the real model once it has replaced the box (measured once).
+        var modelHeight: Float?
+    }
+    private var entries: [BuildingID: Entry] = [:]
 
     init() { root.name = "buildings" }
 
@@ -37,7 +45,9 @@ final class BuildingLayer3D {
             let entity = make(building, def: def, signature: signature, content: loop.content, mapping: mapping,
                               settings: settings, registry: registry)
             root.addChild(entity)
-            entries[building.id] = (signature, entity)
+            let category = building.isRubble ? ArtCategory.decoration : def.category
+            entries[building.id] = Entry(signature: signature, entity: entity, width: def.width, height: def.height,
+                                         boxHeight: Reality3DSizes.height(category: category, settings: settings))
         }
         guard entries.count != seen.count else { return }
         for id in entries.keys where !seen.contains(id) {
@@ -73,6 +83,23 @@ final class BuildingLayer3D {
         return entity
     }
 
+    // MARK: Taps and fading (3R)
+
+    func entity(for id: BuildingID) -> Entity? { entries[id]?.entity }
+
+    /// One upright box per building: its footprint up to its roof (the model's real height once loaded, else the box's).
+    func pickBoxes(mapping: WorldMapping3D) -> [(id: BuildingID, box: Box3D)] {
+        Array(entries.keys).compactMap { id in
+            guard var e = entries[id] else { return nil }
+            if e.modelHeight == nil, e.entity.findEntity(named: ModelRegistry.placeholderName) == nil, !e.entity.children.isEmpty {
+                e.modelHeight = e.entity.visualBounds(relativeTo: e.entity).max.y
+                entries[id] = e
+            }
+            return (id, Box3D(footprint: e.signature.origin, width: e.width, height: e.height,
+                              tall: Double(e.modelHeight ?? e.boxHeight), mapping: mapping))
+        }
+    }
+
     private static let wallCategory = "wall"
 
     /// Tiles holding a standing wall (rubble doesn't count).
@@ -86,7 +113,11 @@ final class BuildingLayer3D {
     /// A wall with more wall neighbours north/south than east/west is part of a north-south line.
     static func runsNorthSouth(_ b: Building, def: BuildingDef, wallTiles: Set<GridPoint>) -> Bool {
         guard def.category == wallCategory else { return false }
-        let p = b.origin
+        return runsNorthSouth(tile: b.origin, wallTiles: wallTiles)
+    }
+
+    /// The same rule for any tile (the wall tool's planned walls use it with the planned tiles added).
+    static func runsNorthSouth(tile p: GridPoint, wallTiles: Set<GridPoint>) -> Bool {
         let alongX = [GridPoint(x: p.x - 1, y: p.y), GridPoint(x: p.x + 1, y: p.y)].filter(wallTiles.contains).count
         let alongY = [GridPoint(x: p.x, y: p.y - 1), GridPoint(x: p.x, y: p.y + 1)].filter(wallTiles.contains).count
         return alongY > alongX

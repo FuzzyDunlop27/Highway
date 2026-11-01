@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-11-01 (chunk 2R done; 2D retired, D-030 — the game is 3D only; 3R next)
+**Last updated:** 2026-11-01 (chunk 3R done: building works again in 3D, D-032; next: 2M, then 3M → 4R)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -14,6 +14,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Chunk 3R done (D-032): building is back on in 3D.** Taps become a ray from the camera (Core `RayPicking3D`, 5 new tests): tall roofs in front win. Selecting shows a yellow outline and, for towers/HQ, a range ring on the ground. Placing/moving: see-through ghost, 13×13 tile grid (unbuildable tiles red), green/red footprint + reason, ghost held 56 pt above the finger while dragging, buildings between camera and ghost fade (any of the 4 angles). Wall tool: one finger draws the line (see-through planned walls, red skipped tiles, count + cost), two fingers pan. Exit check passed in the iPhone 18 Pro simulator at two angles (details in `BUILD-QUEUE.md` 3R). 134 Core tests pass; build has no warnings; simulator save restored byte-for-byte. Simulator tip: use `touch_path` taps (plain taps stay pressed until the next input).
 - **2D retired (D-030, owner's call):** the game now opens straight into 3D; SpriteKit scene, node factories, iso/top-down sprites (~4.6 MB), view toggle, 2D camera/taps and Core `GridProjection`/`Facing` removed; `presentation.json` is 3D-only (schema 2). Kept: menus/HUD, UI-kit art, 8 building pictures in `Art/Menu` for menu cards, `PlacementController` logic for 3R, the DEBUG 1R spike, `tools/` and the source art folders. **Building, moving, selecting and walls are off until chunk 3R** (bottom of the screen says so). 129 Core tests pass; iPhone 18 Pro simulator build clean; checked in the simulator on the existing save (opens in 3D, pan and pinch work). Simulator save restored byte-for-byte afterwards.
 - **Chunk 2R done:** RealityKit 3D view: one merged ground mesh, labeled boxes (art id above each), buildings/zombies synced to Core, dusk sun with shadows; `ModelRegistry` loads `<artId>.usdz` in the background, so the spike's HQ/shelter/farm/watchtower/wall/car models already appear after a few seconds. `GameTicker` (display link) runs the clock and pauses behind the DEBUG spike. Camera: snaps to 4 angles (one 90° step per two-finger twist; a simulator check found a 60° twist turned 180°, fixed test-first), pan, pinch toward the fingers, tilt, minimum height (no flying into roofs), zoom-out clamped to the map; all numbers in `presentation.json reality3d`. Core: tested `WorldMapping3D` + `OrbitCamera3D` (D-031). Simulator: horde started from the debug menu, zombie boxes walked along the road to the broken wall, "Held".
 - **3D GO + iOS 18 (D-028):** deployment target raised to 18.0 (project file, owner-approved) and Core package `.iOS(.v18)`. 119 Core tests pass; iPhone 18 Pro simulator build succeeds with no code warnings.
@@ -44,8 +45,8 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **Chunk 3R (3D placement, selection, walls) is next**: it turns building back on. Start prompt in `BUILD-QUEUE.md`. 2M (models) can run alongside; 3M waits for 2M.
-- 2M ready (Blender → USDZ models). An older-phone check and a heat check stay with 5R.
+- **Chunk 2M (Blender → USDZ models) is next on the 3D track**; then 3M (animated zombies) → 4R (effects, health bars, turret aiming; written up in `BUILD-QUEUE.md`). An older-phone check and a heat check stay with 5R.
+- Gameplay track B (1B upgrades + build queue, 1C speed buttons) is also ready now; building works again, so those can be checked on screen.
 - Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
 
 ## Decided

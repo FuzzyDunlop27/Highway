@@ -66,6 +66,11 @@ public struct OrbitCamera3D: Sendable {
 
     /// The ground point (y = 0) under a screen point, or nil if that point shows sky. Screen y grows downward.
     public func groundPoint(screenX: Double, screenY: Double, viewWidth: Double, viewHeight: Double) -> (x: Double, z: Double)? {
+        ray(screenX: screenX, screenY: screenY, viewWidth: viewWidth, viewHeight: viewHeight)?.groundHit
+    }
+
+    /// The ray from the camera through a screen point (what a finger there points at). Screen y grows downward.
+    public func ray(screenX: Double, screenY: Double, viewWidth: Double, viewHeight: Double) -> Ray3D? {
         guard viewWidth > 0, viewHeight > 0 else { return nil }
         let t = tan(fov / 2)
         let nx = (2 * screenX / viewWidth - 1) * t * viewWidth / viewHeight
@@ -73,10 +78,9 @@ public struct OrbitCamera3D: Sendable {
         let forward = (x: -sin(yaw) * cos(pitch), y: -sin(pitch), z: -cos(yaw) * cos(pitch))
         let right = (x: cos(yaw), z: -sin(yaw))
         let up = (x: -sin(yaw) * sin(pitch), y: cos(pitch), z: -cos(yaw) * sin(pitch))
-        let dir = (x: forward.x + right.x * nx + up.x * ny, y: forward.y + up.y * ny, z: forward.z + right.z * nx + up.z * ny)
-        guard dir.y < -1e-6 else { return nil }
-        let eye = position, k = -eye.y / dir.y
-        return (eye.x + dir.x * k, eye.z + dir.z * k)
+        let dir = Point3(x: forward.x + right.x * nx + up.x * ny, y: forward.y + up.y * ny,
+                         z: forward.z + right.z * nx + up.z * ny)
+        return Ray3D(origin: position, direction: dir)
     }
 
     // MARK: Moving it

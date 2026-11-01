@@ -7,7 +7,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - `App/HighwayHoldoutApp.swift` — entry point; creates `GameStore`, saves when the app leaves the foreground.
 - `App/GameStore.swift` — @Observable bridge: loads content + save, owns Core's `GameLoop`, advances it when `GameTicker` asks (returns the frame's events), sends Commands, exposes `resources` / `hordeStatus` / `banner` / `selectedBuilding` / `notice`; `isClockPaused`.
 - `App/GameTicker.swift` — the game clock (display link), separate from drawing.
-- `App/UI/GameRootView.swift` — the 3D map (`Reality3DView`) + overlays; `ArtIcon` (art id in SwiftUI); notice banner; load-error screen. Until 3R the bottom shows "Building in 3D comes next (chunk 3R)" instead of the Build button (`canBuildIn3D = false`).
+- `App/UI/GameRootView.swift` — the 3D map (`Reality3DView`) + overlays; `ArtIcon` (art id in SwiftUI); notice banner; load-error screen. The Build button is back since chunk 3R.
 - `App/UI/KitStyle.swift` — ChatGPT's UI kit (`HighwayHoldout_UI_Kit/`): token colors, stretchable panels/buttons/cards, tinted glyphs, icon buttons, labels.
 - `App/UI/HUDView.swift` — dark kit chips: food, scrap (amount/cap, +rate/min), survivors (count/housing, idle), then the horde chip.
 - `App/UI/HordeChipView.swift` — "Day N / next horde 3:12" (clock glyph); red with the alert glyph during the warning; "Horde! / 23 left" during an attack. Long-press (DEBUG) opens the debug menu.
@@ -34,6 +34,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - No speed buttons yet (pause/1x/2x is 1C).
 
 ## Change log
+- 2026-11-01 — Chunk 3R: Build button and placement/selection bars switched back on (the `canBuildIn3D` flag is gone).
 - 2026-11-01 — 2D retired (D-030): view toggle and its UserDefaults settings removed (old keys cleared on launch); Build button hidden until 3R; game clock moved to `GameTicker`; clock pauses behind the DEBUG spike.
 - 2026-10-31 — Finished portable UI art delivery: 89 PNGs, editable sources, manifest/cap insets, four previews and Claude handoff; review recorded under docs/reviews. Inventory/pause previews remain design references.
 - 2026-10-31 — 1B App: horde chip + debug menu, horde banners, build menu tabs (Buildings / Defenses), health bar + Repair/Rebuild in the selection bar.
