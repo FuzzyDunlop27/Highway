@@ -8,12 +8,12 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 |---|---|---|---|
 | 1A | Art: realistic walker static cutouts (Codex) | — | Done |
 | 2A | Art: ZWALK-1 realistic walker limb animation | 1A only | Retired 2026-11-01 — 2D walker frames no longer used (D-030); animated 3D zombie = 3M |
-| 1B | Core: upgrades + build queue + builders | — | Ready |
-| 1C | App: speed buttons + menu thumbnails | — | Ready |
+| 1B | Core: upgrades + build queue + builders | — | Done 2026-11-01 (D-033); 152 Core tests, save v3 |
+| 1C | App: speed buttons + menu thumbnails | — | Done 2026-11-01 — speed buttons checked in the simulator; all 13 cards already had a picture (8 older iso renders; kit-style art is an art task) |
 | 1D | Art: realistic static walker pilot | — | Done — 2026-10-31 |
-| 2B | Core: jobs (manual workers) + defenders | 1B only | Blocked by 1B |
-| 2C | Core: scavenging runs + research stub | 1B only | Blocked by 1B |
-| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Blocked by 1B, 2B, 2C |
+| 2B | Core: jobs (manual workers) + defenders | 1B only | Ready |
+| 2C | Core: scavenging runs + research stub | 1B only | Ready |
+| 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Blocked by 2B, 2C |
 | 4B | Core: offline catch-up, tamper guard, bonus horde, settings in save | 3B (not the A art track) | Blocked by 3B |
 | 5B | App: settings, welcome back, Horde Alerts, Engage + 1D exit check | 4B | Blocked by 4B |
 | 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
@@ -29,11 +29,12 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 Track A = zombie art (details at the bottom of this file; 2D zombie art is retired, D-030). Track B = 1C–1E gameplay. Track C = small parallel side work.
 Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2026-11-01, D-027). R/M "Needs" lines override the wave rule: they depend only on each other, not on track B. Full scope, exit checks and start prompts: `docs/plans/3d-rendering-plan.md` §6. The 2D living-world plan (`docs/plans/living-world-plan.md`, chunks 1K 1N 1F 1U 1S 2F 2S) is parked, not queued.
 
-**Save versions:** the save is v2 now. Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (for example v4 instead of v3).
+**Save versions:** the save is v3 now. Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (2B → v4, 2C → v5, or the other way round).
 
 ## Chunk details
 
-### 1B — Core: upgrades + build queue + builders
+### 1B — Core: upgrades + build queue + builders [Done 2026-11-01]
+- **Result:** `BuildQueue`, `UpgradeSystem`, `ConstructionJob` in Core; `Command.upgrade` / `.cancelJob`; `PlacementProblem.queueFull`; `rules.cancelRefundPct` (75) added; save v3 with migration. Tests in `BuildQueueTests.swift` cover every exit-check item. Decision D-033 (replaces D-012). **Notes for 2B/3B:** until 2B, workers are auto-assigned, so builders come out of the whole survivor pool; 3B shows `loop.buildQueue`, `upgradeProblem(id:)`, `upgradeCost(id:)`. Repair of a damaged building is still instant (D-020).
 - **Goal:** buildings level up 1→3, and construction is limited by build slots and free builders, the way `buildings.json rules` describes.
 - **Needs:** nothing.
 - **Scope (Core only):**
@@ -46,7 +47,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** `cd Core && swift test` passes, with new tests for: upgrade cost/time/HQ gate, effects applying only when done, slot limit per HQ level, queue auto-start, pay-on-start, builders borrowed and returned, cancel refunds, and migration of a v2 save that has a half-built building.
 - **Start prompt:** "Implement chunk 1B: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/construction.md, and the 1B section of docs/BUILD-QUEUE.md only."
 
-### 1C — App: speed buttons + menu thumbnails
+### 1C — App: speed buttons + menu thumbnails [Done 2026-11-01]
+- **Result:** `SpeedButtonsView` in the HUD, built from `speedOptions`, current speed highlighted, remembered by the save. Simulator (iPhone 18 Pro): pause froze the horde clock and production, 2x ran twice as fast, 2x survived a relaunch. Menu thumbnails: no card is a placeholder any more (13 of 13 resolve); five use kit art, eight use the old isometric renders from `Art/Menu`. Replacing those with kit-style 3/4 art is an art job for ChatGPT (`tools/import_art.py --view ui`), not code.
 - **Goal:** pause / 1x / 2x in the HUD, and real pictures on the build menu cards that still use placeholders.
 - **Needs:** nothing. Core already has `Command.setSpeed` and `economy.json speedOptions`.
 - **Scope (App only):** three HUD buttons built from `speedOptions` (no hardcoded speeds), with the current speed highlighted and remembered through the save. Finish the menu thumbnails listed in `docs/reviews/2026-10-31-art-and-build-review.md` / the UI kit handoff.
@@ -99,7 +101,7 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 ### 5B — App: time & alerts
 - **Goal:** the player can turn on the time factor and alerts, comes back to a summary, and can fight the bonus horde whenever they choose.
 - **Needs:** 4B.
-- **Scope (App only):** `SettingsView` (Time factor, Horde Alerts, View style); `WelcomeBackView` (when away ≥ `welcomeBackMinAwaySeconds`); `NotificationScheduler` (one alert in the random window, honoring `quietHours` and `minAwayMinutes`, and asking notification permission only when the toggle is first turned on); `AppLifecycle` (saves the wall-clock time, runs catch-up on launch, checks whether the alert fired); an Engage button while a bonus horde waits; a DEBUG "pretend I was away N hours" option.
+- **Scope (App only):** `SettingsView` (Time factor, Horde Alerts); `WelcomeBackView` (when away ≥ `welcomeBackMinAwaySeconds`); `NotificationScheduler` (one alert in the random window, honoring `quietHours` and `minAwayMinutes`, and asking notification permission only when the toggle is first turned on); `AppLifecycle` (saves the wall-clock time, runs catch-up on launch, checks whether the alert fired); an Engage button while a bonus horde waits; a DEBUG "pretend I was away N hours" option.
 - **Exit check (milestone 1D):** queue work, close the app for 4 hours (or use the debug option), reopen. The summary feels good, and ignoring the alert costs nothing.
 - **Start prompt:** "Implement chunk 5B: read AGENTS.md, docs/STATUS.md, docs/MAP.md, the 1D App section of docs/PHASE1-TASKS.md, and the 5B section of docs/BUILD-QUEUE.md only."
 
@@ -114,7 +116,7 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 ## Chunk 1D — Realistic static walker [Done]
 - **Goal:** demonstrate one realistic zombie end to end in the current game.
 - **Needs:** none; owner-authorized art pilot, independent of milestone 1C.
-- **Scope:** front/back transparent cutouts, base fallback, existing mirrored directions, matching canvas, importer, app build and simulator review. Sources and documentation in `HighwayHoldout_Iso_Art/realistic-walker/`.
+- **Scope:** front/back transparent cutouts, base fallback, existing mirrored directions, matching canvas, importer, app build and simulator review. Sources deleted with the 2D cleanup (git history).
 - **What NOT to build:** limb animation, extra zombie types, top-down replacement, new gameplay or 3D rig.
 - **Exit check:** build succeeds; all four directions render with clean transparency in the real app. Passed; `in-game-four-facings.png` uses a paused review fixture. Pre-test save restored byte-for-byte.
 - **Start prompt (review only):** “Review chunk 1D realistic walker: open its README, preview and simulator capture; do not regenerate art.”

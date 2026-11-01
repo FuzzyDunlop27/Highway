@@ -15,6 +15,8 @@ public enum PlacementProblem: Error, Equatable, Sendable {
     case needsHqLevel(Int)
     case needsBuilding(String, level: Int)
     case needsResearch(String)
+    /// Every build slot is busy and the waiting queue is full.
+    case queueFull
     case notEnoughResources(needed: Cost)
 }
 
@@ -79,6 +81,7 @@ enum PlacementRules {
                 return .needsResearch(research)
             }
         }
+        if !BuildQueue.hasRoom(state, content: content) { return .queueFull }
         if !base.stock.covers(level1.cost) { return .notEnoughResources(needed: level1.cost) }
         return nil
     }

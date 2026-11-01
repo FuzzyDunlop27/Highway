@@ -1,3 +1,5 @@
+> **Cleanup 2026-11-01:** the 2D walker frames, renderer scripts and Iso art folder were deleted (D-030). The FBX files now live in `HighwayHoldout_3D_Sources/mixamo-walker/`; only the Mixamo source/licence notes here still apply (chunk 3M). Paths below to deleted files are history (see git).
+
 # ZWALK-1M — Walker limb animation via Mixamo (alternative route for chunk 2A)
 
 > **RETIRED as 2D frames (D-030, 2026-11-01):** the app no longer uses the rendered walker PNGs. The Mixamo source and D-026 terms notes still matter for chunk 3M (animated 3D walker).
@@ -47,7 +49,7 @@ browser, or the owner clicks through this checklist (about 5 minutes).
    sliders at their defaults unless the owner wants it slower.
 4. **Download:** Format **FBX Binary (.fbx)**, Skin **With Skin**, Frames per second **30**, Keyframe Reduction **none**.
 5. Optional, for measuring stride: download the same animation once more with **In Place unticked**.
-6. Save the files in `HighwayHoldout_Iso_Art/walker-mixamo/source/` (`walker_walk_inplace.fbx`, `walker_walk_root.fbx`).
+6. Save the files in `HighwayHoldout_3D_Sources/mixamo-walker/` (`walker_walk_inplace.fbx`, `walker_walk_root.fbx`).
    Keep them as source; never ship them in the app.
 
 ## Step 2 — Blender: render 12 frames (agent; script)

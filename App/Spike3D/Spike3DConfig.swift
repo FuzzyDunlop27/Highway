@@ -15,7 +15,9 @@ struct Spike3DConfig: Decodable {
         let perRing: Int
         let counts: [Int]
     }
+    struct FreeAssets: Decodable { let metresToTiles: Float }
     let ground: Ground
+    let freeAssets: FreeAssets
     let sun: Sun
     let fill: Fill
     let camera: Camera

@@ -51,9 +51,10 @@ enum WallLinePlanner {
         case let other?: return blockedPlan(other)
         }
         let allowance = limitReached ? 0 : Self.remainingAllowance(def: def, state: state, content: content)
+        let queueRoom = BuildQueue.room(state, content: content)
 
         var buildable: [GridPoint] = [], alreadyBuilt: [GridPoint] = [], blocked: [GridPoint] = []
-        var overLimit = false
+        var overLimit = false, overQueue = false
         for t in tiles {
             if let existing = state.base.buildings.first(where: { $0.origin == t }), existing.defId == defId {
                 alreadyBuilt.append(t)
@@ -63,6 +64,9 @@ enum WallLinePlanner {
             } else if buildable.count >= allowance {
                 blocked.append(t)
                 overLimit = true
+            } else if buildable.count >= queueRoom {
+                blocked.append(t)
+                overQueue = true
             } else {
                 buildable.append(t)
             }
@@ -74,6 +78,7 @@ enum WallLinePlanner {
         if overLimit || (limitReached && buildable.isEmpty) {
             problem = .limitReached(max: Self.limit(def: def, state: state))
         }
+        if overQueue || (queueRoom == 0 && buildable.isEmpty) { problem = .queueFull }
         if !canAfford { problem = .notEnoughResources(needed: cost) }
         if buildable.isEmpty && problem == nil { problem = alreadyBuilt.isEmpty ? .blockedTerrain : .occupied }
         return LinePlan(tiles: tiles, buildable: buildable, alreadyBuilt: alreadyBuilt, blocked: blocked, cost: cost,

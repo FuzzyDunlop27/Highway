@@ -12,5 +12,6 @@
     "scale": 0.41361584, "strideTiles": 0.6149123397, "cyclesPerLoop": 1,
     "innerRadius": 6.5, "ringSpacing": 0.9, "perRing": 14, "counts": [0, 35, 100]
   },
-  "cappedFrameRate": 30
+  "cappedFrameRate": 30,
+  "freeAssets": { "_note": "Real-metre CC0 models scaled so a 1.8 m person matches the walker (0.41 x ~1.8 m).", "metresToTiles": 0.41 }
 }

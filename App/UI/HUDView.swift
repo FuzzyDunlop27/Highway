@@ -12,6 +12,7 @@ struct HUDView: View {
                 chip("scrap", content: content, amount: "\(r.scrap)/\(r.scrapCap)", detail: rate(r.scrapPerMin))
                 chip("survivors", content: content, amount: "\(r.survivors)/\(r.housing)", detail: "\(r.idleSurvivors) idle")
                 HordeChipView(store: store)
+                SpeedButtonsView(store: store, options: content.economy.speedOptions)
             }
             .accessibilityIdentifier("hud")
         }

@@ -1,23 +1,31 @@
 // Purpose: Repairs damaged buildings and rebuilds rubble (cost and time from buildings.json rules). Notes: docs/features/construction.md
 import Foundation
 
-/// `Command.repair(id)`. Buildings keep their level and pay at once. Rubble rebuilds on a construction timer (it
-/// isn't working anyway). A damaged building heals at once and keeps working: a timer would switch it off, and a
-/// Storage going off drops the cap and deletes stock (D-020). The repair time in rules.repair waits for 1C builders.
+/// `Command.repair(id)`. Buildings keep their level. A damaged one pays and heals at once; rubble waits in the build
+/// queue (a `.rebuild` job: cost paid when it starts, one builder borrowed). A damaged building heals at once and keeps working: a timer would switch it off, and a
+/// Storage going off drops the cap and deletes stock (D-020). The repair time in rules.repair is still unused.
 enum RepairSystem {
     static func repair(id: BuildingID, state: inout GameState, content: GameContent) -> Result<CommandOutcome, CommandError> {
         guard let index = state.base.buildings.firstIndex(where: { $0.id == id }) else { return .failure(.unknownBuildingID(id)) }
         let building = state.base.buildings[index]
         guard let level = content.buildingDef(building.defId)?.level(building.level),
-              let quote = quote(building, level: level, content: content) else { return .failure(.nothingToRepair(id)) }
+              let quote = quote(building, level: level, content: content),
+              !(building.isRubble && building.constructionTicksLeft > 0) else { return .failure(.nothingToRepair(id)) }
         guard state.base.stock.covers(quote.cost) else { return .failure(.notEnoughResources(needed: quote.cost)) }
-        let ticks = building.isRubble ? content.ticks(forSeconds: quote.seconds) : 0
+        if building.isRubble {
+            // Rubble waits in the build queue like any job; the cost is paid when it starts.
+            guard state.base.job(for: id) == nil else { return .failure(.nothingToRepair(id)) }
+            guard BuildQueue.hasRoom(state, content: content) else { return .failure(.queueFull) }
+            let ticks = content.ticks(forSeconds: quote.seconds)
+            BuildQueue.enqueue(ConstructionJob(buildingId: id, kind: .rebuild, targetLevel: building.level, cost: quote.cost,
+                                               ticksLeft: ticks, ticksTotal: ticks), &state)
+            state.base.buildings[index].constructionTicksLeft = ticks
+            state.base.buildings[index].constructionTicksTotal = ticks
+            return .success(.repairStarted(cost: quote.cost))
+        }
         state.base.stock.scrap -= quote.cost.scrap
         state.base.stock.food -= quote.cost.food
-        state.base.buildings[index].isRubble = false
         state.base.buildings[index].hp = level.hp
-        state.base.buildings[index].constructionTicksLeft = ticks
-        state.base.buildings[index].constructionTicksTotal = ticks
         state.base.buildings[index].invested = building.invested + quote.cost
         return .success(.repairStarted(cost: quote.cost))
     }

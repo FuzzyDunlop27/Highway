@@ -16,6 +16,10 @@ public enum Command: Equatable, Sendable {
     case setSpeed(Int)
     /// Repair a damaged building or rebuild rubble (buildings.json rules.repair / rules.rubble cost and time).
     case repair(id: BuildingID)
+    /// Start upgrading a finished building to its next level (queued like any construction job; cost paid when it starts).
+    case upgrade(id: BuildingID)
+    /// Cancel a building's waiting or running job: a new building, an upgrade, or a rubble rebuild.
+    case cancelJob(buildingId: BuildingID)
     /// Testing only (the App shows these in DEBUG builds): start the next horde now.
     case debugStartHorde
     /// Testing only: add food/scrap (clamped to caps).
@@ -31,6 +35,9 @@ public enum CommandOutcome: Equatable, Sendable {
     case demolished(refund: Cost)
     case speedSet
     case repairStarted(cost: Cost)
+    case upgradeQueued(cost: Cost)
+    /// The job was cancelled; `refund` is zero for a job that hadn't started.
+    case cancelled(refund: Cost)
     case debugDone
 }
 
@@ -44,4 +51,9 @@ public enum CommandError: Error, Equatable, Sendable {
     /// The building is at full health and not rubble.
     case nothingToRepair(BuildingID)
     case notEnoughResources(needed: Cost)
+    case upgrade(UpgradeProblem)
+    /// Nothing waiting or running for this building.
+    case noJob(BuildingID)
+    /// The build queue has no room for another job.
+    case queueFull
 }

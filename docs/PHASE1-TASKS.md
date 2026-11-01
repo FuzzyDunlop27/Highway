@@ -157,7 +157,7 @@ _Now build chunks 4B (Core) and 5B (App) in `docs/BUILD-QUEUE.md`._
 **Tests:** cap; no combat while away; tamper; catch-up = the same as ticking live with no hordes; the bonus horde never moves on its own.
 
 ### App
-- `SettingsView`: Time factor, Horde Alerts, View style.
+- `SettingsView`: Time factor, Horde Alerts. (View style removed with 2D, D-030.)
 - `WelcomeBackView`: shown if away ≥ `welcomeBackMinAwaySeconds`.
 - `NotificationScheduler`: on background, at most one alert in the random window, honoring `quietHours` and `minAwayMinutes`. Notification permission is asked only when the toggle is first turned on.
 - `AppLifecycle`: saves the wall-clock time and, on launch, runs catch-up + checks whether the alert fired.

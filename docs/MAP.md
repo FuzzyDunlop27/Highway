@@ -47,11 +47,15 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Text shown when a spot is invalid | `App/Input/PlacementMessages.swift` |
 | Confirm/Cancel and Move/Demolish bars | `App/UI/PlacementBarView.swift` |
 | Where the save file lives / when it saves | `App/Platform/SaveFileStore.swift`, `App/Platform/AppLifecycle.swift` |
-| Top bar (resources, clock, speed buttons) | `App/UI/HUDView.swift` |
+| Top bar (resources, clock) | `App/UI/HUDView.swift` |
+| Pause / 1x / 2x buttons | `App/UI/SpeedButtonsView.swift` (speeds from `Content/economy.json speedOptions`) |
+| Build slots, queue length, builders per job, cancel refund | `Content/buildings.json rules`; code `Core/.../Systems/Construction/BuildQueue.swift` |
+| Upgrading a building | `Core/.../Systems/Construction/UpgradeSystem.swift`; level data in `Content/buildings.json` |
 | Build menu | `App/UI/BuildMenuView.swift` |
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
 | 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
-| Blender model scripts (source for 2M's USDZ export) | `tools/blender/*_models.py`; old iso sprite renderer `render_iso_sprites.py` is unused since D-030 |
+| Free CC0 asset spike (DEBUG, "Free assets" scene) | layout `App/Spike3D/Spike3DLayouts.swift`; convert `tools/blender/free_assets_spike_export.py`; results `docs/research/free-assets.md` |
+| Blender model scripts (source for 2M's USDZ export) | `tools/blender/*_models.py` |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
 | Horde Alert notification text/timing | `App/Platform/NotificationScheduler.swift` |
@@ -72,7 +76,6 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] PHASE1-PLAN.md    Stack, milestones 1A–1E, exit checks, kickoff prompts
 │  ├─ [x] PHASE1-TASKS.md   Task-by-task plan for what's left (1V two views → 1E), owner decisions
 │  ├─ [x] graphics-spec-phase1.md  Art ids/filenames (still the id list); its top-down sprite specs are retired (D-030)
-│  ├─ [x] graphics-spec-iso.md     RETIRED (D-030): old isometric sprite spec, kept for history
 │  ├─ [x] art-templates/           RETIRED (D-030): iso diamond guides
 │  ├─ plans/                Proposals for the owner to pick from (not yet in BUILD-QUEUE)
 │  │  ├─ [x] living-world-plan.md  Option 1: Tropico-style living world in 2D (chunks 1K 1N 1F 1U 1S 2F 2S)
@@ -89,7 +92,6 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
 │     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for 3M
-│     ├─ [x] zombie-walk-animation.md  RETIRED 2D walker limb prototype (D-030)
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
 ├─ Content/                 ALL tuning data, loaded at runtime. No numbers in Swift.
@@ -113,6 +115,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] Base.swift        One town: map id, buildings, stock (food/scrap)
 │  │  │  ├─ [x] Group.swift       Survivors + Knowledge (carries to future bases)
 │  │  │  ├─ [x] Building.swift    A placed building: level, origin, build progress, staffed
+│  │  │  ├─ [x] ConstructionJob.swift  One build / upgrade / rebuild job, waiting or running (Base.jobs)
 │  │  │  └─ [x] GridPoint.swift   Tile x/y (y down) + footprint tiles
 │  │  ├─ Simulation/
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
@@ -126,7 +129,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  └─ [x] UnitDefs / ZombieDefs / HordeDefs / ResearchDefs / OfflineDefs.swift  (decoded now, used 1B–1D)
 │  │  ├─ Systems/           One folder per game system:
 │  │  │  ├─ Economy/        [x] EconomySystem, StorageRules, Staffing, ResourceSnapshot
-│  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish, build timers)
+│  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish), BuildQueue + BuildQueueStatus (slots, queue, builders), UpgradeSystem
 │  │  │  ├─ [ ] Jobs/           Assign survivors to work; defender training & garrison
 │  │  │  ├─ Pathing/        [x] FlowField (Dijkstra cost to HQ; walls cost by hp), FlowFieldCache (rebuild on change)
 │  │  │  ├─ Combat/         [x] ZombieMovement, WallBashing, Traps (spikes/barbed wire), TargetingSystem, TowerFiring
@@ -142,7 +145,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
-│     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift
+│     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift, BuildQueueTests.swift
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
 │  ├─ [x] HighwayHoldoutApp.swift  App entry point; saves when the app leaves the foreground
@@ -168,7 +171,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ [x] PlacementMessages.swift    Core placement problems/errors → player text
 │  ├─ UI/                   SwiftUI
 │  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen
-│  │  ├─ [x] HUDView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
+│  │  ├─ [x] HUDView.swift / SpeedButtonsView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
 │  │  ├─ [x] DebugMenuView.swift  DEBUG only (long-press horde chip): horde now, +500, kill all, open 3D spike
@@ -179,28 +182,29 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
 │  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its Models/*.usdz also show in the game until 2M); notes: docs/plans/3d-spike-1R-results.md
-│  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, walker/shadow/host/cap toggles, launch args
+│  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, scene/walker/shadow/host/cap toggles, launch args
+│  │  ├─ [x] Spike3DLayouts.swift      which models each spike scene places (study town / free-asset lineup)
 │  │  ├─ [x] Spike3DWorld.swift        scene: ground, models, dusk sun + fill, walker rings, per-frame update
 │  │  ├─ [x] Spike3DHosts.swift        RealityView virtual camera (iOS 18) and ARView non-AR (iOS 17) hosts
 │  │  ├─ [x] Spike3DOrbitCamera.swift  pan / zoom / twist / limited tilt → camera transform
 │  │  ├─ [x] Spike3DGestureLayer.swift UIKit touch recognizers driving the orbit camera
 │  │  ├─ [x] Spike3DConfig.swift + spike3d.json  spike-only tuning
-│  │  └─ Models/               USDZ from tools/blender/spike_export_usdz.py (walker USDZ is git-ignored, Mixamo)
+│  │  ├─ Models/               USDZ from tools/blender/spike_export_usdz.py (walker USDZ is git-ignored, Mixamo)
+│  │  └─ FreeAssets/           git-ignored fa_*.usdz from tools/blender/free_assets_spike_export.py (sources in HighwayHoldout_3D_Sources/free-assets/, also git-ignored)
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
 │  └─ Assets.xcassets/      AppIcon + Art/UI/ (UI kit, tools/import_art.py --view ui) + Art/Menu/ (8 old iso building pictures for menu cards)
-├─ HighwayHoldoutAssets/    ChatGPT's top-down art pack (source PNGs in png/). ChatGPT owns it; don't edit.
 ├─ HighwayHoldout_UI_Kit/   ChatGPT's UI kit (menu panels, buttons, glyphs, 3/4 build cards). Don't edit; import with --view ui.
+├─ HighwayHoldout_3D_Sources/  Raw 3D source files (Mixamo walker FBX for chunk 3M).
 ├─ HighwayHoldout_Blender_Study/  3D art study (models + scripts) the isometric art is rendered from. Art team owns it.
-├─ HighwayHoldout_Iso_Art/  Old rendered isometric PNGs (no longer in the app since D-030); README says what's in it.
-├─ HighwayHoldoutAssets_8bit/  Abandoned pixel-art experiment; not selected for the app.
+├─ HighwayHoldout_3D_Sources/  Raw 3D source files (Mixamo walker FBX for chunk 3M).
 ├─ HighwayHoldout_Blender_Study/  Fresh 3D style study: editable .blend, models/, ten png/ samples, renders/, scripts/, QA and Claude handoff.
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
 └─ tools/
    ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
    └─ blender/
-      ├─ [x] render_iso_sprites.py  UNUSED since D-030: rendered the old isometric sprites
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
       ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
+      ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres, 1K textures)
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```
@@ -218,11 +222,7 @@ Create a note from `_TEMPLATE.md` the first time a feature is built. Planned nam
 
 - Isometric placement direction and acceptance checks: `docs/PHASE1-TASKS.md` → Approved update — isometric placement first; decision D-022; implementation notes in `docs/features/input.md`.
 
-- Zombie detail pass: `tools/blender/zombie_details.py` supplies faces, costumes and materials to `tools/blender/zombie_models.py`; `HighwayHoldout_Iso_Art/zombie-review/` contains original sprites and `comparison.png`.
 
-- Realistic walker pilot: `HighwayHoldout_Iso_Art/realistic-walker/` contains `source/`, `png/`, `previous/`, `prepare.py`, `PROMPTS.md`, `README.md`, `preview.png`, and simulator review captures. Reapply its sprites after old Blender renders.
 - `docs/BUILD-QUEUE.md`: dependency-labelled chunks and paste-ready next-chat handoffs.
 
-- Walker limb animation (RETIRED with 2D, D-030): sources stay in `HighwayHoldout_Iso_Art/walker-walk/`; the app frames and runtime code were removed.
 
-- Mixamo walker (its 2D frames retired with D-030; the FBX source is what 3M converts): `HighwayHoldout_Iso_Art/walker-mixamo/` contains `png/`, render metadata, README, comparison/GIF and actual simulator evidence. `source/*.fbx` and `local-review/` remain local and ignored by Git; source FBX never ships. The shared iso renderer main guard allows safe helper imports.

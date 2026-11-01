@@ -15,6 +15,8 @@ public struct ConstructionRulesDef: Codable, Sendable {
     public let constructionQueueLength: Int
     public let buildDuringHorde: Bool
     public let demolishRefundPct: Int
+    /// Share of a running job's cost refunded when the player cancels it (waiting jobs paid nothing).
+    public let cancelRefundPct: Int
     public let repair: RepairRulesDef
     public let rubble: RubbleRulesDef
     public let constructionSprites: [String: String]

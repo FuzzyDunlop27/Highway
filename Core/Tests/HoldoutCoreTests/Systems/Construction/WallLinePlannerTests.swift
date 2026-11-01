@@ -52,11 +52,33 @@ struct WallLinePlannerTests {
         }
         #expect(ids.count == plan.buildable.count)
         #expect(Set(ids.compactMap { loop.state.base.building($0)?.origin }) == Set(plan.buildable))
-        #expect(loop.state.base.stock == Cost(scrap: stock.scrap - plan.cost.scrap, food: stock.food - plan.cost.food))
+        // Cost is paid as each job starts (D-033): slots allow only some at once, the rest wait in the queue.
+        let started = loop.state.base.jobs.filter { $0.started }.count
+        #expect(started == loop.buildQueue.slots && loop.buildQueue.queued == ids.count - started)
+        let each = loop.content.buildingDef(wall)!.level(1)!.cost
+        #expect(loop.state.base.stock.scrap == stock.scrap - each.scrap * started)
+        loop.step(ticks: 60 * loop.content.economy.ticksPerSecond * 4)
+        #expect(loop.state.base.jobs.isEmpty && ids.allSatisfy { loop.state.base.building($0)?.isComplete == true })
+    }
+
+    @Test func lineStopsWhenTheQueueIsFull() throws {
+        let loop = try TestSupport.loop { $0.base.stock.scrap = 500 }
+        let room = loop.buildQueue.slots + loop.buildQueue.queueLength
+        let plan = loop.planLine(defId: wall, from: GridPoint(x: 0, y: 26), to: GridPoint(x: 39, y: 26))
+        #expect(plan.buildable.count == room)
+        #expect(plan.problem == .queueFull)
+        #expect(plan.canBuild)
     }
 
     @Test func lineStopsAtTheLimit() throws {
-        let loop = try TestSupport.loop { $0.base.stock.scrap = 500 }
+        // Five extra walls leave 7 below the limit, fewer than the queue room (8), so the limit is what stops the line.
+        let loop = try TestSupport.loop {
+            $0.base.stock.scrap = 500
+            for x in 0..<5 {
+                $0.base.buildings.append(Building(id: 900 + x, defId: "wall_wood", level: 1, origin: GridPoint(x: x, y: 29),
+                                                  hp: 1, constructionTicksLeft: 0, constructionTicksTotal: 0, invested: .zero))
+            }
+        }
         let def = loop.content.buildingDef(wall)!
         let left = WallLinePlanner.limit(def: def, state: loop.state) - loop.state.base.buildings.filter { $0.defId == wall }.count
         let plan = loop.planLine(defId: wall, from: GridPoint(x: 0, y: 26), to: GridPoint(x: 39, y: 26))

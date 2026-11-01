@@ -1,6 +1,6 @@
-# Purpose: 3D models for the milestone 1B defenses (metal wall, MG nest, spikes, barbed wire) in the study's style. Spec: docs/graphics-spec-iso.md
+# Purpose: 3D models for the milestone 1B defenses (metal wall, MG nest, spikes, barbed wire) in the study's style.
 """Built with the Blender study's helpers and palette. Sizes are in study units (about 1.55 per map tile);
-render_iso_sprites.py scales them to their 1x1 footprint. Walls run along X like props.wall(), so wood and metal
+the 2M exporter scales them to their 1x1 footprint. Walls run along X like props.wall(), so wood and metal
 walls line up. The MG gun is its own model whose origin is the pivot, so it turns in place on top of the nest."""
 import math
 import bpy

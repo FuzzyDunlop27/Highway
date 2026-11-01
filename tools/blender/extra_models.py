@@ -1,7 +1,7 @@
-# Purpose: Stand-in 3D models for phase 1 buildings the Blender study doesn't have yet, built with its own helpers. Spec: docs/graphics-spec-iso.md
+# Purpose: Stand-in 3D models for phase 1 buildings the Blender study doesn't have yet, built with its own helpers.
 """Simple models in the study's miniature style (same palette and bevel helpers), so the isometric view has art for
 every 1A building. Replace any of them with the art team's models when those exist. Sizes are in study units
-(about 1.55 per map tile); render_iso_sprites.py scales them to their footprint."""
+(about 1.55 per map tile); the 2M exporter scales them to their footprint."""
 import math
 from geometry import box, cyl, beam, roof
 from buildings import sandbag, crate, barrel

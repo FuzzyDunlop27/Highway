@@ -3,7 +3,7 @@
 _The App-facing surface of the `HoldoutCore` package. Keep this in sync when public API changes._
 
 ## Purpose
-One small, documented entry point so the SpriteKit/SwiftUI App can load content, run the simulation, send player actions, and read what to draw — without touching game rules.
+One small, documented entry point so the SwiftUI/RealityKit App can load content, run the simulation, send player actions, and read what to draw — without touching game rules.
 
 ## App-facing API
 ```swift
@@ -47,10 +47,12 @@ loop.drainEvents()         // [SimEvent] since last call: hordeWarning/Started/E
                            // buildingDamaged/Destroyed — draw these as effects, once per frame
 loop.planLine(defId: "wall_wood", from: a, to: b)  // LinePlan: tiles, buildable, skipped, cost, canBuild
 loop.send(.placeLine(defId: "wall_wood", from: a, to: b)) // -> .placedLine(ids), all at once
+loop.send(.upgrade(id: id)) // queue the next level -> .upgradeQueued(cost:); loop.upgradeProblem(id:) says why not
+loop.send(.cancelJob(buildingId: id)) // cancel a waiting/running job -> .cancelled(refund:); loop.buildQueue = slots/queue/builders
 loop.send(.repair(id: id)) // repair damage or rebuild rubble (Building.isRubble); -> .repairStarted(cost:)
 loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food: 500))) ; loop.send(.debugKillAllZombies)
 ```
-- Grid: `x` right, `y` **down**, (0,0) = top-left tile. SpriteKit's y is up, so the App flips it.
+- Grid: `x` right, `y` **down**, (0,0) = top-left tile. the 3D world maps it onto the ground plane (`WorldMapping3D`).
 - 3D view math (App only, never used by the simulation): `WorldMapping3D` (tile ↔ metres), `OrbitCamera3D` (camera; `ray(screenX:…)` for touches), `RayPicking3D` (`Ray3D`, `Box3D`, `nearest`, `occluders`).
 - A building's `origin` is its top-left tile; its size is `content.buildingDef(defId)!.footprint`.
 - `PlacementProblem` cases map to messages: `offMap`, `blockedTerrain`, `occupied`, `limitReached(max:)`, `needsHqLevel`, `needsBuilding`, `needsResearch`, `notEnoughResources(needed:)`, `unknownBuilding`.
@@ -79,3 +81,4 @@ loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food
 - 2026-10-31 — 1B contract: Zombie, HordeState/ActiveHorde, Building.isRubble, SimEvent + drainEvents, hordeStatus, repair/debug commands, save v2 (migration from v1).
 - 2026-10-31 — Added `presentation.json` decoding (`GameContent.presentation`) and `Presentation/GridProjection` (1V; not used by the simulation).
 - 2026-10-31 — Created for milestone 1A (Core half).
+- 2026-11-01 — 1B queue: Command `.upgrade`, `.cancelJob`; `Base.jobs`; `buildQueue`, `upgradeProblem`, `upgradeCost`; `PlacementProblem.queueFull`; save v3.

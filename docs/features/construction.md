@@ -5,26 +5,37 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 
 ## Files involved
 - `Core/Sources/HoldoutCore/Systems/Construction/PlacementRules.swift` — ground check + rule check; `PlacementProblem`, `PlacementCheck`.
-- `Core/Sources/HoldoutCore/Systems/Construction/ConstructionSystem.swift` — place, move, demolish, build countdown.
+- `Core/Sources/HoldoutCore/Systems/Construction/ConstructionSystem.swift` — place, move, demolish (queues a build job).
+- `Core/Sources/HoldoutCore/Systems/Construction/BuildQueue.swift` — slots, waiting queue, builders, start/finish/cancel jobs (D-033); `BuildQueueStatus.swift` — numbers for the HUD strip.
+- `Core/Sources/HoldoutCore/Systems/Construction/UpgradeSystem.swift` — `Command.upgrade`, `UpgradeProblem`.
+- `Core/Sources/HoldoutCore/Model/ConstructionJob.swift` — one job (build / upgrade / rebuild).
 - `Core/Sources/HoldoutCore/Systems/Construction/RepairSystem.swift` — repair damaged buildings, rebuild rubble (`Command.repair`).
 - `Core/Sources/HoldoutCore/Model/Building.swift`, `Model/GridPoint.swift`, `Model/NewGame.swift` (starting layout).
 - `Core/Sources/HoldoutCore/Content/BuildingDefs.swift`, `Content/MapDef.swift`.
 - `Content/maps/phase1_exit.json` — the map.
-- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`
+- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/BuildQueueTests.swift`, `PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`
 
 ## Data files
-- `Content/buildings.json` → `footprint`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `rules.repair`, `rules.rubble`, `startingLayout`.
+- `Content/buildings.json` → `footprint`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `rules.cancelRefundPct`, `rules.constructionSlotsByHq` / `constructionQueueLength` / `buildersPerJob` / `buildDuringHorde`, `rules.repair`, `rules.rubble`, `startingLayout`.
 - `Content/maps/phase1_exit.json` → `rows` + `legend` (`buildable`), `decorations`, `startingPositions`, `spawnEdges`.
 
 ## Key rules
 - Grid y runs down; a footprint's origin is its top-left tile.
 - A spot is bad if any footprint tile is off the map, on an unbuildable tile (highway lanes, highway crossing), on a decoration, or on another building. `badTiles` lists them.
 - Rule checks, in order: HQ level ≥ L1 `requiredHq`, count < `maxCountByHq[hqLevel-1]` (walls share one count), `requires` (finished building at level, or research on the Group), cost affordable.
-- Placing pays the full L1 cost at once and builds for `buildSeconds`; unfinished buildings don't produce or count for caps.
+- Placing adds a build job. It starts (and pays the L1 cost) when a slot, a free builder and the money are all there, usually at once; then it builds for `buildSeconds`. Unfinished buildings don't produce or count for caps.
 - Moving is free and instant (finished or not); it may overlap its own old tiles.
 - Demolish refunds `demolishRefundPct` of `invested`, clamped to caps. The HQ can't be demolished. Starting-layout buildings were free, so they refund nothing.
 - Ramps, side roads and the town road are buildable so players can wall them off; the highway itself isn't.
-- Not yet (1C): build slots, queue, builders, upgrades.
+
+## Build queue and upgrades (chunk 1B, D-033)
+- Slots: `constructionSlotsByHq[hq level − 1]` jobs run at once; up to `constructionQueueLength` more wait. Each running job borrows `buildersPerJob` survivors (`Staffing` hands out the rest). Jobs start oldest first; one that can't be paid yet is skipped. `buildDuringHorde: false` would stop new starts during a horde.
+- Placement/upgrade/rebuild fail with `.queueFull` when slots and queue are full. `GameLoop.buildQueue` → slots, active, queued, free builders.
+- `Command.upgrade(id)` → `.upgradeQueued(cost:)`: next level's `cost`, `buildSeconds`, `requiredHq` gate (`UpgradeProblem`: maxLevel, notFinished, alreadyWorking, needsHqLevel, queueFull, notEnoughResources). The building keeps working at its old level; level, hp and all effects (HQ caps/housing too) switch when it finishes. `invested` grows by the cost at start, so demolish refunds stay right. `GameLoop.upgradeProblem(id:)` / `upgradeCost(id:)` feed the future Upgrade button.
+- `Command.cancelJob(buildingId:)` → `.cancelled(refund:)`: waiting = free; running = `cancelRefundPct` of its cost back. A cancelled new building disappears, a cancelled rebuild goes back to rubble, a cancelled upgrade leaves the old level.
+- Rubble rebuild (`Command.repair`) is a `.rebuild` job. A building destroyed while a job runs loses the job; demolishing drops it.
+- Save v3: `Base.jobs`; a v2 half-built building becomes a running paid job with 0 builders.
+- Not yet: manual worker assignment (2B), App panels (3B).
 
 ## Wall lines
 - `GameLoop.planLine(defId:from:to:)` → `LinePlan` (path, buildable / alreadyBuilt / blocked tiles, total cost, problem, canBuild); `Command.placeLine` builds every buildable tile at once → `.placedLine(ids)`, or nothing if it can't afford the whole line. Path: straight, or an L along the longer axis first. Limit: tiles beyond the HQ-level cap are blocked (`problem = limitReached`) but the rest can still be built. Code: `Systems/Construction/WallLinePlanner.swift`; tests `WallLinePlannerTests.swift`.
@@ -40,6 +51,7 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 ## Known issues
 
 ## Change log
+- 2026-11-01 — Chunk 1B: build slots, queue and builders, pay-on-start, upgrades, cancel, save v3 (D-033); queue-full is a `PlacementProblem`.
 - 2026-10-31 — Wall lines: planLine + placeLine (all-or-nothing on cost).
 - 2026-10-31 — Added repair / rubble rebuild (`RepairSystem`, 1B).
 - 2026-10-31 — Damaged buildings now heal at once instead of going offline (a repaired Storage was deleting stock).

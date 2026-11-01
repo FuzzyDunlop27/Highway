@@ -10,6 +10,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - `App/UI/GameRootView.swift` — the 3D map (`Reality3DView`) + overlays; `ArtIcon` (art id in SwiftUI); notice banner; load-error screen. The Build button is back since chunk 3R.
 - `App/UI/KitStyle.swift` — ChatGPT's UI kit (`HighwayHoldout_UI_Kit/`): token colors, stretchable panels/buttons/cards, tinted glyphs, icon buttons, labels.
 - `App/UI/HUDView.swift` — dark kit chips: food, scrap (amount/cap, +rate/min), survivors (count/housing, idle), then the horde chip.
+- `App/UI/SpeedButtonsView.swift` — pause / 1x / 2x buttons at the end of the HUD row, one per `economy.json speedOptions` entry (kit pause/play/speed glyphs; the current one is teal). Taps send `.setSpeed`; the choice lives in the save.
 - `App/UI/HordeChipView.swift` — "Day N / next horde 3:12" (clock glyph); red with the alert glyph during the warning; "Horde! / 23 left" during an attack. Long-press (DEBUG) opens the debug menu.
 - `App/UI/HordeBannerView.swift` — `HordeBanner` (from `.hordeStarted`, `.hordeEnded(.held)` → "Held! +X scrap", `.hordeEnded(.hqFell)` → "HQ fell: −X") and its kit dialog panel; hides after 4 s or on tap.
 - `App/UI/DebugMenuView.swift` — DEBUG builds only: Horde now, +500 food & scrap, Kill all zombies (Core debug commands), open the 1R 3D spike (the game clock pauses while it's open).
@@ -31,9 +32,10 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - If `Content/` fails to load, a full-screen message shows the loader's error (file + problem) instead of the game.
 
 ## Known issues
-- No speed buttons yet (pause/1x/2x is 1C).
+- Eight build cards (scavenger, workshop, barracks, storage, metal wall, MG nest, spikes, barbwire) still use the old isometric pictures from `Art/Menu`; only five have kit-style `ui_build_*` art. No card is a placeholder. New kit art goes in with `tools/import_art.py --view ui`.
 
 ## Change log
+- 2026-11-01 — Chunk 1C: speed buttons in the HUD (pause/1x/2x from `speedOptions`, remembered by the save). `GameStore.speed` / `setSpeed`.
 - 2026-11-01 — Chunk 3R: Build button and placement/selection bars switched back on (the `canBuildIn3D` flag is gone).
 - 2026-11-01 — 2D retired (D-030): view toggle and its UserDefaults settings removed (old keys cleared on launch); Build button hidden until 3R; game clock moved to `GameTicker`; clock pauses behind the DEBUG spike.
 - 2026-10-31 — Finished portable UI art delivery: 89 PNGs, editable sources, manifest/cap insets, four previews and Claude handoff; review recorded under docs/reviews. Inventory/pause previews remain design references.

@@ -2,12 +2,9 @@
 # Purpose: Turn ChatGPT PNGs into trimmed, resized @1x/@2x/@3x Xcode imagesets. Spec: docs/graphics-spec-phase1.md
 """
 Usage:
-    python3 tools/import_art.py <folder_of_pngs> [--view topdown|iso] [--out App/Assets.xcassets] [--dry-run]
+    python3 tools/import_art.py <folder_of_pngs> [--view ui] [--out App/Assets.xcassets] [--dry-run]
 
-Views (docs/features/rendering-art.md, DECISIONS D-016): the game draws each view from its own folder.
-  --view topdown (default) -> Art/TopDown/  top-down art per docs/graphics-spec-phase1.md (trimmed + fitted).
-  --view iso                -> Art/Iso/      isometric art per docs/graphics-spec-iso.md: NOT trimmed; scaled so its
-                                             width is the footprint diamond width; facing frames like zmb_walker_se.png.
+Views: only the UI kit is imported now (2D map art retired, D-030).
   --view ui                 -> Art/UI/      finished UI kit pieces (HighwayHoldout_UI_Kit/png): every ui_*.png is copied
                                              unchanged as a @2x image; ui_glyph_* are template images (tinted in code).
   UI icons (icon_*, ui_*) always go to Art/UI/, whatever the view.

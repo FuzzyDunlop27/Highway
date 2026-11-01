@@ -9,6 +9,8 @@
     "_queueNote": "cost is paid when a job STARTS, not when queued; a queued job auto-starts when a slot, a free builder and the resources are available (also during offline catch-up)",
     "buildDuringHorde": true,
     "demolishRefundPct": 50,
+    "cancelRefundPct": 75,
+    "_cancelNote": "cancelling a RUNNING construction/upgrade/rebuild refunds this % of its cost; cancelling a queued one costs nothing (it paid nothing)",
     "repair": {
       "costPctOfLevelCost": 50,
       "timePctOfBuildTime": 25,

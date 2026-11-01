@@ -19,6 +19,8 @@ final class GameStore {
     /// Horde start / held / HQ fell message shown over the map (HordeBannerView hides it after a few seconds).
     private(set) var banner: HordeBanner?
     @ObservationIgnored private var bannerCount = 0
+    /// Current game speed (0 = paused), copied from Core so the speed buttons redraw only when it changes.
+    private(set) var speed = 1
     /// The selected building as of the last frame (for the selection bar's live progress).
     private(set) var selectedBuilding: Building?
     /// A short message for the player, e.g. why demolishing failed. The UI clears it.
@@ -117,6 +119,7 @@ final class GameStore {
 
     private func refresh() {
         guard let loop else { return }
+        if loop.state.speed != speed { speed = loop.state.speed }
         let snapshot = loop.resources
         if snapshot != resources { resources = snapshot }
         let horde = loop.hordeStatus
@@ -159,6 +162,11 @@ final class GameStore {
         } else {
             placement.beginPlacing(defId: defId, around: viewCenterTile, loop: loop)
         }
+    }
+
+    /// Pause / 1x / 2x (one of economy.json speedOptions). Core keeps it in the save.
+    func setSpeed(_ speed: Int) {
+        send(.setSpeed(speed))
     }
 
     func beginMoving() {

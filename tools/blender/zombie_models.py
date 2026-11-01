@@ -1,4 +1,4 @@
-# Purpose: 3D models for the runner and brute zombies, in the style of the study's walker (characters.zombie). Spec: docs/graphics-spec-iso.md
+# Purpose: 3D models for the runner and brute zombies, in the style of the study's walker (characters.zombie).
 """Rounded, cartoony green zombies (no gore) modeled facing +X like the study's characters. The walker is about
 1.3 units tall; the runner is ~0.9x and thinner, the brute ~1.6x and much wider."""
 from geometry import box, sphere, beam, rod

@@ -29,16 +29,11 @@ final class Spike3DWorld {
     private var lastStatsUpdate = 0.0
     private var clock = 0.0
 
-    /// Models placed at tile positions (x east, z south), metres. HQ sits at the origin.
-    private static let layout: [(id: String, x: Float, z: Float, turn: Float)] = [
-        ("bld_hq", 0, 0, 0), ("bld_shelter", -4, -0.5, 0), ("bld_farm", 4, -0.5, 0),
-        ("def_watchtower_base", 2.5, 3, 0), ("dec_car_wreck", -2, 5.5, 0.3),
-        ("def_wall_wood", -1, 2.5, 0), ("def_wall_wood", 0, 2.5, 0), ("def_wall_wood", 1, 2.5, 0),
-        ("def_wall_wood", -2.5, 1, .pi / 2), ("def_wall_wood", -2.5, 0, .pi / 2),
-    ]
+    private let scene: Spike3DScene
 
-    init(stats: Spike3DStats) {
+    init(stats: Spike3DStats, scene: Spike3DScene = .study) {
         self.stats = stats
+        self.scene = scene
         orbit = Spike3DOrbitCamera(Spike3DConfig.shared.camera)
         camera.camera.fieldOfViewInDegrees = config.camera.fieldOfViewDegrees
         camera.camera.far = 200
@@ -55,7 +50,7 @@ final class Spike3DWorld {
         let start = Date()
         var missing: [String] = []
         var cache: [String: Entity] = [:]
-        for item in Self.layout {
+        for item in scene.layout {
             guard let model = cache[item.id] ?? (try? Entity.load(named: item.id)) else {
                 missing.append(item.id)
                 continue
@@ -64,6 +59,7 @@ final class Spike3DWorld {
             let copy = model.clone(recursive: true)
             copy.position = [item.x, 0, item.z]
             copy.orientation = simd_quatf(angle: item.turn, axis: [0, 1, 0])
+            if item.realScale { copy.scale = .init(repeating: config.freeAssets.metresToTiles) }
             root.addChild(copy)
         }
         let modelsMs = Date().timeIntervalSince(start) * 1000

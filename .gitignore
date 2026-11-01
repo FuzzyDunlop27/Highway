@@ -21,3 +21,10 @@ HighwayHoldout_Iso_Art/walker-mixamo/local-review/
 
 # Chunk 1R spike: the rigged Mixamo walker as USDZ stays local too (regenerate with tools/blender/spike_export_usdz.py).
 App/Spike3D/Models/zmb_walker_mixamo.usdz
+
+# Free-asset spike: downloaded CC0 sources and their USDZ stay local (regenerate with tools/blender/free_assets_spike_export.py).
+HighwayHoldout_3D_Sources/free-assets/
+App/Spike3D/FreeAssets/
+
+# Mixamo FBX kept in the 3D sources folder stay local too (same rule as above).
+HighwayHoldout_3D_Sources/mixamo-walker/*.fbx

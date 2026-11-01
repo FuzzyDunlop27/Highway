@@ -1,4 +1,4 @@
-// Purpose: Place, move, and demolish buildings, and count down construction each tick. Notes: docs/features/construction.md
+// Purpose: Place, move, and demolish buildings (the build queue runs the timers). Notes: docs/features/construction.md
 import Foundation
 
 enum ConstructionSystem {
@@ -31,11 +31,12 @@ enum ConstructionSystem {
         let ticks = content.ticks(forSeconds: level1.buildSeconds)
         let id = state.base.nextBuildingID
         state.base.nextBuildingID += 1
-        state.base.stock.scrap -= level1.cost.scrap
-        state.base.stock.food -= level1.cost.food
+        // The cost is paid when the job starts (BuildQueue), so `invested` begins at zero.
         state.base.buildings.append(Building(id: id, defId: defId, level: 1, origin: origin, hp: level1.hp,
                                              constructionTicksLeft: ticks, constructionTicksTotal: ticks,
-                                             invested: level1.cost))
+                                             invested: .zero))
+        BuildQueue.enqueue(ConstructionJob(buildingId: id, kind: .build, targetLevel: 1, cost: level1.cost,
+                                           ticksLeft: ticks, ticksTotal: ticks), &state)
         return .success(.placed(id))
     }
 
@@ -59,16 +60,10 @@ enum ConstructionSystem {
         if building.defId == "hq" { return .failure(.cannotDemolish(defId: building.defId)) }
         let refund = building.invested.percent(content.buildings.rules.demolishRefundPct)
         state.base.buildings.remove(at: index)
+        BuildQueue.drop(buildingId: id, &state)
         state.base.stock = state.base.stock + refund
         StorageRules.clampToCaps(&state.base, content: content)
         Staffing.assign(&state, content: content)
         return .success(.demolished(refund: refund))
-    }
-
-    /// One tick of construction progress for every unfinished building.
-    static func tick(_ state: inout GameState) {
-        for i in state.base.buildings.indices where state.base.buildings[i].constructionTicksLeft > 0 {
-            state.base.buildings[i].constructionTicksLeft -= 1
-        }
     }
 }

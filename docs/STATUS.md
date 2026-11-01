@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-11-01 (chunk 3R done: building works again in 3D, D-032; next: 2M, then 3M → 4R)
+**Last updated:** 2026-11-01 (chunks 1B and 1C done; 2B and 2C are ready next on track B; 2M/3M still ready on the 3D track)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -10,10 +10,12 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - **Milestone 1V — Two views** — DONE (2026-10-31).
 - **Milestone 1B — Defense** — DONE (2026-10-31).
 - **Isometric-first placement (D-022)** — DONE (2026-10-31). Next: **milestone 1C Depth, not started; now tracked as build chunks in `docs/BUILD-QUEUE.md`** (ready now: chunks 1B and 1C).
-- Milestones: 1A Foundation → **1V Two views (owner: isometric + top-down for placing)** → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
+- Milestones: 1A Foundation → 1V Two views (retired with 2D, D-030) → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Chunks 1B + 1C done.** 1B (Core): buildings now go through a build queue: the HQ level sets how many jobs run at once (2/3/4), up to 6 more wait, each running job borrows a survivor as builder, and the cost is paid when a job starts (D-033). New `Command.upgrade` (levels 1→3: cost, time, HQ gate; keeps working at the old level until done) and `Command.cancelJob` (running jobs refund 75%, waiting ones are free); rubble rebuilds use the queue too; save is v3 and migrated a real v2 town in the simulator. 152 Core tests pass (18 new). 1C (App): pause / 1x / 2x buttons in the HUD from `speedOptions`; checked in the simulator (pause freezes clock and production, 2x doubles, 2x survives a relaunch). All 13 build cards already show pictures (8 are older iso renders; kit-style art would be a separate art job). The App has no queue/upgrade panels yet: that is 3B. The simulator test town advanced a few minutes and was migrated to v3 (I could not back up the old save first).
+- **Free-asset spike (DEBUG):** the 3D spike has a new **Free assets** scene: 5 realistic Poly Haven CC0 props (covered car, concrete barriers, trash cans, barrels, tyres) converted to USDZ by `tools/blender/free_assets_spike_export.py`, shown next to the Mixamo zombies. Looks realistic and matches the zombies; 60 fps at 100 walkers with shadows (simulator). Cost: ~14.6 MB for 5 props. Buildings (Kenney, Quaternius) still need a manual download (sites block scripted downloads). Results: `docs/research/free-assets.md`. Built in a clean copy of the last commit because uncommitted Core work in progress (looks like chunk 1B) currently breaks the app build. Simulator save restored byte-for-byte.
 - **Chunk 3R done (D-032): building is back on in 3D.** Taps become a ray from the camera (Core `RayPicking3D`, 5 new tests): tall roofs in front win. Selecting shows a yellow outline and, for towers/HQ, a range ring on the ground. Placing/moving: see-through ghost, 13×13 tile grid (unbuildable tiles red), green/red footprint + reason, ghost held 56 pt above the finger while dragging, buildings between camera and ghost fade (any of the 4 angles). Wall tool: one finger draws the line (see-through planned walls, red skipped tiles, count + cost), two fingers pan. Exit check passed in the iPhone 18 Pro simulator at two angles (details in `BUILD-QUEUE.md` 3R). 134 Core tests pass; build has no warnings; simulator save restored byte-for-byte. Simulator tip: use `touch_path` taps (plain taps stay pressed until the next input).
 - **2D retired (D-030, owner's call):** the game now opens straight into 3D; SpriteKit scene, node factories, iso/top-down sprites (~4.6 MB), view toggle, 2D camera/taps and Core `GridProjection`/`Facing` removed; `presentation.json` is 3D-only (schema 2). Kept: menus/HUD, UI-kit art, 8 building pictures in `Art/Menu` for menu cards, `PlacementController` logic for 3R, the DEBUG 1R spike, `tools/` and the source art folders. **Building, moving, selecting and walls are off until chunk 3R** (bottom of the screen says so). 129 Core tests pass; iPhone 18 Pro simulator build clean; checked in the simulator on the existing save (opens in 3D, pan and pinch work). Simulator save restored byte-for-byte afterwards.
 - **Chunk 2R done:** RealityKit 3D view: one merged ground mesh, labeled boxes (art id above each), buildings/zombies synced to Core, dusk sun with shadows; `ModelRegistry` loads `<artId>.usdz` in the background, so the spike's HQ/shelter/farm/watchtower/wall/car models already appear after a few seconds. `GameTicker` (display link) runs the clock and pauses behind the DEBUG spike. Camera: snaps to 4 angles (one 90° step per two-finger twist; a simulator check found a 60° twist turned 180°, fixed test-first), pan, pinch toward the fingers, tilt, minimum height (no flying into roofs), zoom-out clamped to the map; all numbers in `presentation.json reality3d`. Core: tested `WorldMapping3D` + `OrbitCamera3D` (D-031). Simulator: horde started from the debug menu, zombie boxes walked along the road to the broken wall, "Held".
@@ -45,6 +47,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
+- **Track B: chunks 2B (jobs + defenders) and 2C (scavenging + research) are now ready** (each needs only 1B); then 3B shows everything on screen.
 - **Chunk 2M (Blender → USDZ models) is next on the 3D track**; then 3M (animated zombies) → 4R (effects, health bars, turret aiming; written up in `BUILD-QUEUE.md`). An older-phone check and a heat check stay with 5R.
 - Gameplay track B (1B upgrades + build queue, 1C speed buttons) is also ready now; building works again, so those can be checked on screen.
 - Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
@@ -62,6 +65,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Balance: should survivors eat food (upkeep), so food stays useful after ~60 min? (`resources.json foodUpkeepPerSurvivorPerMin`, currently 0; Core rejects non-zero until upkeep is built)
 - Balance: should defenders/survivors ever die permanently? (currently knocked out for 2 min, `units.json`)
 - Balance: Horde Alert ON by default? (`offline.json hordeAlert.defaultEnabled`, currently true; Time factor stays OFF)
-- Cleanup after D-030 (optional): delete the unused 2D art tools/folders outside the app (`render_iso_sprites.py`, `import_art.py` topdown/iso modes, `HighwayHoldout_Iso_Art/`, `HighwayHoldoutAssets/` top-down pack, the 8-bit folder)? They don't ship; 2M reuses the Blender model scripts.
+- Cleanup after D-030: deleted the 2D art folders/tools on 2026-11-01 (Iso art, top-down and 8-bit packs, `render_iso_sprites.py`, 2D walker renderers); Mixamo FBX kept in `HighwayHoldout_3D_Sources/`. Still in git history.
+- Art direction (2026-11-01): owner leans realistic/gritty and open to redoing the world art with free CC0 assets (Kenney, Poly Haven, Quaternius). Research in `docs/research/free-assets.md`; next step is a small spike (a few assets in the game next to the zombie, measure performance). Not yet a decision or build chunk.
 - Art: `tools/import_art.py` also writes `App/AppIconLayers/*.png`, which end up as loose files in the app bundle. They're harmless and small; move them out of `App/` if that matters.
 

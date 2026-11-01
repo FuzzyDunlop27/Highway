@@ -10,8 +10,8 @@ from mathutils import Vector
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 STUDY = os.path.join(ROOT, 'HighwayHoldout_Blender_Study', 'models')
-WALKER_FBX = os.path.join(ROOT, 'HighwayHoldout_Iso_Art', 'walker-mixamo', 'source', 'walker_walk_inplace.fbx')
-TILE_UNITS = 1.55  # same as render_iso_sprites.py
+WALKER_FBX = os.path.join(ROOT, 'HighwayHoldout_3D_Sources', 'mixamo-walker', 'walker_walk_inplace.fbx')
+TILE_UNITS = 1.55  # about 1.55 per map tile
 FIT = 0.97
 # name: (footprint w, footprint h, optional (top model, scale vs base, deck height in base units))
 MODELS = {

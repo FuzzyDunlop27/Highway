@@ -64,7 +64,9 @@ struct SaveCodecTests {
         json["state"] = state
         json["version"] = 1
         let decoded = try SaveCodec.decode(JSONSerialization.data(withJSONObject: json))
-        #expect(decoded == loop.state)
+        // The half-built farm comes through as a running (already paid) build job.
+        #expect(decoded.base.buildings == loop.state.base.buildings)
+        #expect(decoded.base.jobs.count == 1 && decoded.base.jobs[0].started && decoded.base.jobs[0].cost == .zero)
         #expect(decoded.base.horde == .initial && decoded.base.zombies.isEmpty)
         #expect(decoded.base.buildings.allSatisfy { !$0.isRubble })
     }

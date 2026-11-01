@@ -13,7 +13,7 @@ public enum SaveError: Error, Equatable {
 
 /// Save file layout: `{ "version": 1, "state": { ...GameState... } }`.
 public enum SaveCodec {
-    public static let currentVersion = 2
+    public static let currentVersion = 3
 
     struct SaveFile: Codable {
         let version: Int

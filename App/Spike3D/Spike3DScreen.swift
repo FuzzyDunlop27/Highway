@@ -1,4 +1,4 @@
-// Purpose: DEBUG 1R spike screen: 3D scene + touches + fps readout + walker/shadow/host/cap toggles. Notes: docs/plans/3d-spike-1R-results.md
+// Purpose: DEBUG 1R spike screen: 3D scene + touches + fps readout + scene/walker/shadow/host/cap toggles. Notes: docs/plans/3d-spike-1R-results.md
 #if DEBUG
 import SwiftUI
 
@@ -11,11 +11,12 @@ struct Spike3DScreen: View {
     @State private var shadows: Bool
     @State private var compact: Bool
     @State private var capped: Bool
+    @State private var scene: Spike3DScene
     @State private var stats = Spike3DStats()
     @State private var world: Spike3DWorld?
     private let config = Spike3DConfig.shared
 
-    /// Launch arguments let the spike be measured without touches, e.g. `-spike3DWalkers 100 -spike3DHost ar -spike3DCap 1`.
+    /// Launch arguments let the spike be measured without touches, e.g. `-spike3DWalkers 100 -spike3DHost ar -spike3DCap 1 -spike3DScene free`.
     init(close: @escaping () -> Void) {
         self.close = close
         let d = UserDefaults.standard
@@ -25,6 +26,7 @@ struct Spike3DScreen: View {
         _capped = State(initialValue: d.bool(forKey: "spike3DCap"))
         _shadows = State(initialValue: d.object(forKey: "spike3DShadows") == nil || d.bool(forKey: "spike3DShadows"))
         _compact = State(initialValue: d.bool(forKey: "spike3DCompact"))
+        _scene = State(initialValue: d.string(forKey: "spike3DScene") == "free" ? .freeAssets : .study)
     }
 
     var body: some View {
@@ -38,6 +40,7 @@ struct Spike3DScreen: View {
         }
         .onAppear { rebuild() }
         .onChange(of: host) { rebuild() }
+        .onChange(of: scene) { rebuild() }
         .onChange(of: walkers) { world?.setWalkers(walkers) }
         .onChange(of: shadows) { world?.setShadows(shadows) }
     }
@@ -72,6 +75,9 @@ struct Spike3DScreen: View {
 
     @ViewBuilder private var details: some View {
         Text("\(host.rawValue) · iOS \(UIDevice.current.systemVersion) · \(stats.loadNote)").font(.caption2)
+        Picker("Scene", selection: $scene) {
+            ForEach(Spike3DScene.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+        }.pickerStyle(.segmented).frame(width: 240)
         Picker("Walkers", selection: $walkers) {
             ForEach(config.walkers.counts, id: \.self) { Text("\($0) walkers").tag($0) }
         }.pickerStyle(.segmented).frame(width: 240)
@@ -87,7 +93,7 @@ struct Spike3DScreen: View {
     }
 
     private func rebuild() {
-        let fresh = Spike3DWorld(stats: stats)
+        let fresh = Spike3DWorld(stats: stats, scene: scene)
         let d = UserDefaults.standard  // optional fixed camera for repeatable screenshots
         if d.float(forKey: "spike3DDistance") > 0 { fresh.orbit.distance = d.float(forKey: "spike3DDistance") }
         if d.float(forKey: "spike3DPitch") > 0 { fresh.orbit.pitch = d.float(forKey: "spike3DPitch") * .pi / 180 }

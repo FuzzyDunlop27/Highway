@@ -43,7 +43,7 @@ public final class GameLoop {
     /// Runs exactly `ticks` simulation ticks, ignoring speed (tests and, later, offline catch-up).
     public func step(ticks: Int = 1) {
         for _ in 0..<max(0, ticks) {
-            ConstructionSystem.tick(&state)
+            BuildQueue.tick(&state, content: content)
             Staffing.assign(&state, content: content)
             EconomySystem.tick(&state, content: content)
             HordeSystem.tick(&state, content: content, events: &events)
@@ -69,10 +69,12 @@ public final class GameLoop {
         switch command {
         case .placeBuilding(let defId, let at):
             let result = ConstructionSystem.place(defId: defId, at: at, state: &state, content: content)
+            BuildQueue.startJobs(&state, content: content)
             Staffing.assign(&state, content: content)
             return result
         case .placeLine(let defId, let from, let to):
             let result = WallLinePlanner.place(defId: defId, from: from, to: to, state: &state, content: content)
+            BuildQueue.startJobs(&state, content: content)
             Staffing.assign(&state, content: content)
             return result
         case .moveBuilding(let id, let to):
@@ -84,7 +86,17 @@ public final class GameLoop {
             state.speed = speed
             return .success(.speedSet)
         case .repair(let id):
-            return RepairSystem.repair(id: id, state: &state, content: content)
+            let result = RepairSystem.repair(id: id, state: &state, content: content)
+            BuildQueue.startJobs(&state, content: content)
+            Staffing.assign(&state, content: content)
+            return result
+        case .upgrade(let id):
+            let result = UpgradeSystem.upgrade(id: id, state: &state, content: content)
+            BuildQueue.startJobs(&state, content: content)
+            Staffing.assign(&state, content: content)
+            return result
+        case .cancelJob(let id):
+            return BuildQueue.cancel(buildingId: id, state: &state, content: content)
         case .debugStartHorde:
             HordeSystem.startNow(&state, content: content, events: &events)
             return .success(.debugDone)
@@ -120,6 +132,19 @@ public final class GameLoop {
         guard let b = state.base.building(id), let level = content.buildingDef(b.defId)?.level(b.level) else { return nil }
         return RepairSystem.quote(b, level: level, content: content)?.cost
     }
+
+    /// "Why can't building `id` be upgraded?" — nil means `.upgrade(id:)` would be accepted.
+    public func upgradeProblem(id: BuildingID) -> UpgradeProblem? {
+        UpgradeSystem.problem(id: id, state: state, content: content)
+    }
+
+    /// What upgrading `id` to its next level would cost, or nil at the top level (for the Upgrade button).
+    public func upgradeCost(id: BuildingID) -> Cost? {
+        state.base.building(id).flatMap { UpgradeSystem.nextLevel(of: $0, content: content) }?.cost
+    }
+
+    /// Build slots, queue and builders, for the build-queue strip.
+    public var buildQueue: BuildQueueStatus { BuildQueueStatus.make(state: state, content: content) }
 
     /// Day, countdown, warned edges, and zombies left, for the HUD.
     public var hordeStatus: HordeStatus { HordeStatus.make(state: state, content: content) }
