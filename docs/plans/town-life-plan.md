@@ -16,6 +16,7 @@ _Draft 2026-11-01. Owner wants a varied cast of survivors walking around doing d
 - **Naming (owner decided 2026-11-01):** they are **survivors** everywhere (Core, HUD, docs). Not "townspeople" or "settlers".
 
 ## 3. Cast and animations (3M-2)
+> **Update 2026-11-01:** the MakeHuman farmer (rigged in Mixamo, `sv_farmer`) is already in the game for all humans. The table below is now the *optional more-looks* list; the live need is more farmer clips (idle, carry, hammer, dig). See `docs/OWNER-DOWNLOADS.md` Part C.
 Mixamo, one character per file, all clips on one timeline (D-038 pipeline). Download: FBX Binary, With Skin, 30 fps, **In Place** where offered. Folder: `HighwayHoldout_3D_Sources/mixamo-humans/<artId>/`.
 
 | artId | Who | Clips |

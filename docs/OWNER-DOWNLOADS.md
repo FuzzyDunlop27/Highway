@@ -36,6 +36,7 @@ Format: **glTF (.gltf + .bin + textures folder), 1K**, same as the props you alr
 If Poly Haven lacks something (e.g. conifer), **Quaternius "Ultimate Nature"** or **Kenney Nature Kit** (both CC0, glTF/GLB) are fine substitutes; put them in `free-assets/quaternius/` or `free-assets/kenney/`.
 
 ## Part C — Mixamo humans (needed by chunk 3M-2) · mixamo.com (free Adobe account)
+**Update 2026-11-01:** the MakeHuman farmer is already rigged in Mixamo and in the game (`sv_farmer`, used for all humans). So the live need is **more clips for the farmer first**: Idle, carry-box walk, hammering, digging/planting (plus a rifle prop later). The 4 extra civilians and a separate defender below are optional "more looks" until the owner wants them.
 Settings for every download: **Format FBX Binary (.fbx), Skin: With Skin, 30 fps, Keyframe Reduction: none**, and tick **In Place** wherever the animation offers it. Folder: `mixamo-humans/<artId>/`. Full table and rationale: `docs/plans/town-life-plan.md` §3.
 
 | Folder | Character | Animations to download (each its own FBX; first one "With Skin", the rest can be "Without Skin") |
