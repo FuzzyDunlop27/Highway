@@ -22,6 +22,8 @@ public struct Reality3DDef: Codable, Sendable {
     public let zombieBoxTiles: ZombieBox3D
     /// Animated zombies/defenders (chunk 3M): gliding, turning, walk speed, look variants.
     public let characters: Characters3DDef
+    /// Survivors strolling around the base (chunk 3M-2 first look; 3M-3 replaces this with real routines).
+    public let townLife: TownLife3DDef
     public let camera: Camera3DDef
     public let light: Light3DDef
 }
@@ -49,6 +51,21 @@ public struct Characters3DDef: Codable, Sendable {
     public let clipBlendSeconds: Double
     /// Art id → drawn with another model, scaled and tinted, until it gets its own model.
     public let variants: [String: CharacterVariant3D]
+}
+
+/// Look-only strolling survivors: how many, where and how fast. Never changes game state.
+public struct TownLife3DDef: Codable, Sendable {
+    /// Art id the survivors are drawn with (`units.json` survivor sprite or a variant of it).
+    public let survivorArt: String
+    /// At most this many strolling survivors are drawn (the rest are "inside").
+    public let maxVisible: Int
+    public let walkSpeedTiles: Double
+    /// They stroll to random open tiles within this many tiles of the HQ.
+    public let wanderRadiusTiles: Int
+    /// Seconds they stand still between strolls (random in this range).
+    public let pauseSeconds: [Double]
+    /// Seed for the look-only random numbers (not the game's random state).
+    public let seed: UInt64
 }
 
 public struct CharacterVariant3D: Codable, Sendable {

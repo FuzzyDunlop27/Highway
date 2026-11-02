@@ -33,7 +33,7 @@ The owner chose MakeHuman (via ChatGPT/Codex) for the human looks; Mixamo is sti
 | # | Character | State | Notes |
 |---|---|---|---|
 | 1 | Blacksmith (male, 45) | Clothed review draft done (3M-2MH-L) | 9,209 triangles, one atlas, ~1.2 MB FBX/GLB; no rig/animation yet. **Will need scaling:** built at the maximum-height slider (~2.47 m incl. boots/hair), so it must be scaled to normal height (~1.8 m) on export to stand next to the zombie. Medieval costume is a reference exercise; for the game it should read as a modern survivor/Workshop worker. |
-| 2 | Farmer (woman) | In progress (3M-2MH-F, ChatGPT/Codex) | Per §3 cast list. |
+| 2 | Farmer (woman) | **In the game** (2026-11-01) | Owner rigged it in Mixamo (walk, run, shooting rifle) → `sv_farmer`. Used for all defenders and strolling survivors for now. Needs idle + task clips. |
 | 3–4 | Two more civilians | Not started | e.g. mechanic/scrapper, older man (§3). |
 | D | Defender | Not started | Armed survivor; rifle as a separate prop. |
 

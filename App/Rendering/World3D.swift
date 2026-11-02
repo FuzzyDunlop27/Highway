@@ -18,6 +18,7 @@ final class World3D {
     let buildings = BuildingLayer3D()
     private let zombies = ZombieLayer3D()
     private let defenders = DefenderLayer3D()
+    private let survivors = SurvivorLayer3D()
     let placement = PlacementLayer3D()
     private let selection = SelectionLayer3D()
     private let fader = OccluderFader3D()
@@ -45,6 +46,7 @@ final class World3D {
         root.addChild(buildings.root)
         root.addChild(zombies.root)
         root.addChild(defenders.root)
+        root.addChild(survivors.root)
         root.addChild(warning.root)
         root.addChild(effects.root)
         root.addChild(bars.root)
@@ -79,6 +81,7 @@ final class World3D {
         warning.sync(edges: horde?.isActive == false ? horde?.warningEdges ?? [] : [], map: loop.map, mapping: mapping, seconds: dt)
         zombies.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, seconds: dt, gameSpeed: Double(store.speed))
         defenders.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, gameSpeed: Double(store.speed))
+        survivors.sync(loop: loop, mapping: mapping, settings: settings, registry: registry, seconds: dt, gameSpeed: Double(store.speed))
         placement.sync(placement: store.placement, viewCenter: store.viewCenterTile, loop: loop, mapping: mapping,
                        settings: settings, registry: registry)
         selection.sync(selected: store.selectedBuilding, range: store.selectedBuilding.flatMap { loop.towerRange(id: $0.id) },

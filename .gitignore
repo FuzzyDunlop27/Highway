@@ -33,6 +33,7 @@ HighwayHoldout_3D_Sources/mixamo-walker/*.fbx
 # Rebuild with tools/blender/export_characters.py; a fresh clone shows labeled boxes for zombies and defenders.
 App/Models/zmb_*.usdz
 App/Models/unit_*.usdz
+App/Models/sv_*.usdz
 App/Models/*.anim.json
 HighwayHoldout_3D_Sources/mixamo-*/*.fbx
 

@@ -1,5 +1,5 @@
 {
-  "_notes": "How the App draws the map: real 3D with RealityKit (D-027; 2D retired in D-030). Not game tuning; Core ignores it. outsideMapColor = color around and beyond the map. reality3d: metresPerTile = 1 tile in metres; loadModels = load <artId>.usdz in the background (false = labeled boxes only); placeholderHeightTiles = box height per building category in tiles (box = footprint x height, art id written above it); zombieBoxTiles = zombie box size in tiles; camera = orbit camera (D-029: snapAngles steps, twistThresholdDegrees to turn one step per twist, snapTurnSeconds eased turn; distances and minHeightMetres in metres, minHeightMetres keeps the camera out of roofs; pitch = degrees above the ground; tiltDegreesPerPoint = two-finger up/down drag; pinchSensitivity 1 = follow the fingers exactly, lower = calmer; panMarginTiles = how far past the map edge you can pan; zoom-out also stops when the map fills the screen width); light = dusk sun + fill from the 1R spike (lux, hex colors). characters (chunk 3M, docs/features/characters-3d.md): zombies/defenders glide between Core ticks (minGlideSeconds/maxGlideSeconds per step; a jump longer than snapDistanceTiles is drawn as a jump), turn at most turnRadiansPerSecond, count as standing below standSpeedTiles after standGraceSeconds; speedSmoothingSeconds smooths the walk speed; the walk cycle plays at drawn speed / stride (capped at maxWalkRate x) so feet don't slide; clipBlendSeconds = cross-fade between walk/attack/idle; variants = art ids drawn with another model, scaled and tinted (hex multiplies the texture) until they get their own.",
+  "_notes": "How the App draws the map: real 3D with RealityKit (D-027; 2D retired in D-030). Not game tuning; Core ignores it. outsideMapColor = color around and beyond the map. reality3d: metresPerTile = 1 tile in metres; loadModels = load <artId>.usdz in the background (false = labeled boxes only); placeholderHeightTiles = box height per building category in tiles (box = footprint x height, art id written above it); zombieBoxTiles = zombie box size in tiles; camera = orbit camera (D-029: snapAngles steps, twistThresholdDegrees to turn one step per twist, snapTurnSeconds eased turn; distances and minHeightMetres in metres, minHeightMetres keeps the camera out of roofs; pitch = degrees above the ground; tiltDegreesPerPoint = two-finger up/down drag; pinchSensitivity 1 = follow the fingers exactly, lower = calmer; panMarginTiles = how far past the map edge you can pan; zoom-out also stops when the map fills the screen width); light = dusk sun + fill from the 1R spike (lux, hex colors). characters (chunk 3M, docs/features/characters-3d.md): zombies/defenders glide between Core ticks (minGlideSeconds/maxGlideSeconds per step; a jump longer than snapDistanceTiles is drawn as a jump), turn at most turnRadiansPerSecond, count as standing below standSpeedTiles after standGraceSeconds; speedSmoothingSeconds smooths the walk speed; the walk cycle plays at drawn speed / stride (capped at maxWalkRate x) so feet don't slide; clipBlendSeconds = cross-fade between walk/attack/idle; variants = art ids drawn with another model, scaled and tinted (hex multiplies the texture) until they get their own (unit_survivor/unit_defender = the MakeHuman farmer for now). townLife (chunk 3M-2 first look): up to maxVisible survivors (working + building + idle) stroll at walkSpeedTiles to random open tiles within wanderRadiusTiles of the HQ, pausing pauseSeconds [min, max]; hidden while zombies are on the map; seed = look-only random numbers.",
   "schemaVersion": 2,
   "outsideMapColor": "#2B2A26",
   "reality3d": {
@@ -41,8 +41,26 @@
           "model": "zmb_walker",
           "scale": 1.35,
           "tint": "#8FA080"
+        },
+        "unit_survivor": {
+          "model": "sv_farmer",
+          "scale": 1.0,
+          "tint": "#FFFFFF"
+        },
+        "unit_defender": {
+          "model": "sv_farmer",
+          "scale": 1.05,
+          "tint": "#A8B898"
         }
       }
+    },
+    "townLife": {
+      "survivorArt": "unit_survivor",
+      "maxVisible": 40,
+      "walkSpeedTiles": 0.45,
+      "wanderRadiusTiles": 9,
+      "pauseSeconds": [1.5, 6.0],
+      "seed": 20261101
     },
     "camera": {
       "fieldOfViewDegrees": 35,

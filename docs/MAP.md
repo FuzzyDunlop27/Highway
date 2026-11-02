@@ -63,7 +63,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
 | 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
 | Free CC0 asset spike (DEBUG, "Free assets" scene) | layout `App/Spike3D/Spike3DLayouts.swift`; convert `tools/blender/free_assets_spike_export.py`; results `docs/research/free-assets.md` |
-| Zombie/defender animation: walk speed, turning, gliding, runner/brute look | `Content/presentation.json` `reality3d.characters`; math `Core/.../Presentation/CharacterMotion3D.swift`; playback `App/Rendering/CharacterAnimator3D.swift`; export `tools/blender/export_characters.py`; notes `docs/features/characters-3d.md` |
+| Zombie/defender/survivor animation: walk speed, turning, gliding, runner/brute look, which model humans use | `Content/presentation.json` `reality3d.characters` (+ `townLife` for strolling survivors: count, speed, radius); math `Core/.../Presentation/CharacterMotion3D.swift`; playback `App/Rendering/CharacterAnimator3D.swift`; export `tools/blender/export_characters.py`; notes `docs/features/characters-3d.md` |
 | Building / defense / decoration 3D models (2M) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
 | Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
 | Generate a custom MakeHuman body / blacksmith reference | `tools/makehuman/generate_blacksmith.py`, `tools/makehuman/README.md`; `docs/plans/blacksmith-profile.md`; notes `docs/features/characters-3d.md` |
@@ -141,7 +141,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits), CharacterMotion3D.swift (character glide/turn/walk rate, 3M) — App only
+│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits), CharacterMotion3D.swift (character glide/turn/walk rate, 3M), SurvivorWander3D.swift (survivor stroll routes, 3M-2) — App only
 │  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
@@ -183,7 +183,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
 │  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (3R)
 │  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
-│  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (3B); idle clip if a model exists (3M)
+│  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (3B); rifle clip during hordes (3M-2)
+│  │  ├─ [x] SurvivorLayer3D.swift  strolling survivors around the HQ, hidden during hordes (3M-2 first look)
 │  │  ├─ [x] ZombieLayer3D.swift   one animated zombie per zombie: glides, turns, walk/attack/idle (3M)
 │  │  ├─ [x] EffectsLayer3D.swift  plays Core SimEvents: tracers, muzzle flash, goo, dust, trap flash, shake (4R)
 │  │  ├─ [x] EffectMeshes3D.swift  shared shapes/materials for those effects (4R)

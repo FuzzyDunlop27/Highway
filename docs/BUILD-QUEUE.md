@@ -25,7 +25,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props) into the working folder | — | Ready — **you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md`, tick parts A–D |
 | 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | Specced 2026-11-01 — blocked by 1X part A |
 | 2T | 3D: foliage and scatter (trees, bushes, grass, rocks) | 1T; 1X part B | Specced 2026-11-01 — blocked by 1T and 1X part B |
-| 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Specced 2026-11-01 (draft) — **own branch**; needs 1X part C (Mixamo downloads) |
+| 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Doing — first look in game 2026-11-01: farmer drawn for defenders + strolling survivors; more looks/clips (idle, carry, hammer…) still to come |
 | 3M-2MH | MakeHuman trial: body-to-FBX script + medieval blacksmith profile | Owner request only; no wave dependency | Done 2026-11-01 — script/profile preparation; live MakeHuman export/import pending; does not complete 3M-2 |
 | 3M-2MH-I | Install MakeHuman on the owner's Mac | Owner request only; no wave dependency | Done 2026-11-01 — modeling screen opened, scripting/FBX plugins loaded; real export/import next |
 | 3M-2MH-V | Generate the real MakeHuman body and verify FBX in Blender | 3M-2MH, 3M-2MH-I only | Done 2026-11-01 — actual FBX/MHM + Blender model/preview; 2.44386 m, 28,796 triangles; look/optimization/rig still pending |
@@ -246,6 +246,8 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Next / start prompt:** "Continue chunk 3M-2 from the committed farmer: read the asset README and reports, test rig/deformation and walk/carry/dig clips on this normal-height character before expanding the cast."
 
 ## Chunk 3M-2 — Human characters: defender + survivor looks [Specced 2026-11-01, draft]
+**First look in game (2026-11-01):** the owner's MakeHuman farmer, rigged/animated in Mixamo (walk, run, shooting rifle), is exported as `sv_farmer` and used for **every** human for now: defenders (rifle clip during hordes) and up to 40 survivors strolling at random around the HQ (`SurvivorLayer3D`, hidden during hordes). Still to do in 3M-2: an idle clip (humans stand frozen in a walk pose), a rifle prop, more looks (blacksmith + others) and task clips (carry, hammer, dig, talk); 3M-3 then gives them real jobs. Notes: `docs/features/characters-3d.md`.
+
 **Farmer model now ready as the next rig trial source (3M-2MH-F).** Use the committed
 `HighwayHoldout_3D_Sources/makehuman/farmer/` package; normal height, no apron, 9,196 triangles.
 First verify rig/deformation, then idle/walk/run/carry/dig/pick-up/talk clips, 512 px atlas and

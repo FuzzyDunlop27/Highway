@@ -24,6 +24,11 @@ defender model exists (today they stay labeled boxes).
 - `App/Rendering/ModelRegistry.swift` — loads models; `variants` (scaled/tinted stand-ins), `animInfo`, `clip` (cuts a
   clip out of the single timeline with `AnimationView` trims).
 - `App/Rendering/ZombieLayer3D.swift`, `App/Rendering/DefenderLayer3D.swift` — one character per zombie/defender.
+- `App/Rendering/SurvivorLayer3D.swift` — strolling survivors (first look at town life, 3M-2): count from the roster,
+  routes from `Core/Sources/HoldoutCore/Presentation/SurvivorWander3D.swift` (`SurvivorWalkGrid` + `route`; tests in
+  `Core/Tests/HoldoutCoreTests/Presentation/SurvivorWander3DTests.swift`).
+- Farmer model: `HighwayHoldout_3D_Sources/makehuman/sv-farmer_{walking,running,rifle}.fbx` (MakeHuman farmer rigged
+  and animated in Mixamo by the owner; local only, D-038) → `App/Models/sv_farmer.usdz` (git-ignored like the zombie).
 - Sources (local only, D-038): `HighwayHoldout_3D_Sources/mixamo-walker/` (`walker_walk_inplace.fbx`, `walker_walk_root.fbx`,
   and when downloaded `walker_attack_inplace.fbx`, `walker_idle.fbx`); defender: `mixamo-defender/defender_idle.fbx`.
 
@@ -33,6 +38,15 @@ defender model exists (today they stay labeled boxes).
 - `App/Models/<artId>.anim.json` — written by the exporter, never by hand.
 
 ## Key rules
+- **Humans (3M-2 first look):** every human uses the MakeHuman farmer for now: `unit_survivor` and `unit_defender` are
+  variants of `sv_farmer` (presentation.json; defender slightly bigger, olive tint). Clips: walk, `attack` = Mixamo
+  "shooting rifle" (no rifle prop yet), `run` (exported, not used yet). No idle clip yet, so standing humans hold the
+  first walk frame. The farmer's walk/run were downloaded *with* root motion; the exporter strips the hips' forward
+  drift (`rootMotion: true`) and measures the stride from the same file. Its walk starts from standing, so `loopFrom: [walk]` keeps only the last full step (the frame whose pose best matches the last frame, 41 frames ≈ 1.37 s; stride 0.484 tiles). Model 1.21 MB.
+- **Strolling survivors:** up to `townLife.maxVisible` (working + building + idle survivors) walk at
+  `walkSpeedTiles` to random open tiles within `wanderRadiusTiles` of the HQ (straight steps, never through a building,
+  wall, trap or decoration), pause `pauseSeconds`, repeat. Hidden while zombies are on the map. Look only: own seed,
+  no game state. Defenders play the rifle clip while zombies are on the map.
 - MakeHuman trial: exact body sliders (muscle 0.80, weight 0.20, height 1.00), age in years, fresh neutral unrigged body; report actual measured height. Face, weathering, clothing and work posture are a manual art pass. Follow `tools/makehuman/README.md`; the default mesh is not assumed mobile-ready. No game artId or runtime dependency added.
 - Same scale as 2M: 0.41 tiles per metre (Mixamo zombie ≈ 0.78 tiles tall), feet at the origin, front towards +X.
 - Walk playback speed = drawn speed × loop seconds ÷ stride (stride 0.6095 tiles for the walker, × variant scale), capped
@@ -52,11 +66,12 @@ defender model exists (today they stay labeled boxes).
 - Foot sliding was checked by the maths (tests) and by eye on stills only; nobody has watched a horde from all 4 angles
   closely yet. A walk clip starts at a slightly high speed for ~0.15 s after spawning while the speed settles.
 - Runner and brute are the walker scaled/tinted; the runner's 10× shamble looks frantic — a Mixamo run clip would suit it.
-- Defenders stay boxes until a defender model is downloaded.
+- Humans have no idle clip (stand frozen in a walk pose) and no rifle prop; one model for everyone.
 - A fresh clone of the repo shows zombie boxes until the exporter runs with local Mixamo files.
 - No in-game fps readout yet (5R); the 1R spike measured 100 animated walkers at 60 fps on an iPhone 18 Pro.
 
 ## Change log
+- 2026-11-01 — 3M-2 first look: MakeHuman farmer (owner's Mixamo walk/run/rifle) exported as `sv_farmer` with root motion stripped; drawn for defenders (rifle during hordes) and as strolling survivors around the HQ (`SurvivorLayer3D`, `SurvivorWander3D` + 4 tests).
 - 2026-11-01 — 3M-2MH-F: built distinct farmer model; shared character export/bake helper; verified farmer and blacksmith regression, four farmer views and both standalone blend/FBX/GLB packages. Added portable CC0 source/review assets to repo for local commit on human-character branch; no App/Core changes.
 - 2026-11-01 — 3M-2MH-L: fitted source clothing/hair/older skin and jaw modifiers in MakeHuman; built leather apron/beard, corrected visual defects, reduced clothed assembly to 9,209 triangles; baked one atlas, exported blend/FBX/GLB, reviewed four angles and verified clean FBX reimport; packaged review bundle. No rig/animation or game hookup.
 - 2026-11-01 — 3M-2MH-V: actually generated FBX/MHM in live MakeHuman, imported in Blender, checked exact height/finite geometry/images, saved `.blend` and reviewed a clean preview after disabling bad imported custom normals. Output 831,468-byte FBX / 28,796 triangles / 2.443859 m; not phone-ready or dressed/rigged. No App/Core changes.

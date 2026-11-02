@@ -2,8 +2,9 @@
 import RealityKit
 import HoldoutCore
 
-/// Defenders are labeled boxes until a `unit_defender.usdz` exists (tools/blender/export_characters.py); then they play
-/// its idle clip. They face the same way always (no directions yet).
+/// Defenders are labeled boxes until their model exists (`unit_defender` = the MakeHuman farmer variant for now,
+/// presentation.json); then they play its rifle clip (`attack`) while zombies are on the map, else idle. They face the
+/// same way always (no directions yet).
 @MainActor
 final class DefenderLayer3D {
     let root = Entity()
@@ -32,6 +33,7 @@ final class DefenderLayer3D {
         let size = SIMD3<Float>(Float(box.width), Float(box.height), Float(box.width)) * Float(settings.metresPerTile)
         muzzleHeight = size.y * Self.muzzleHeightShare
         var waiting = 0
+        let clip: CharacterClip3D = loop.state.base.zombies.isEmpty ? .idle : .attack
         for d in defenders {
             guard let spot = position(of: d, loop: loop, waitingIndex: &waiting) else {
                 entities[d.id]?.isEnabled = false
@@ -47,7 +49,7 @@ final class DefenderLayer3D {
             }
             entity.isEnabled = true
             entity.position = Reality3DSizes.vector(mapping.world(gx: spot.x, gy: spot.y))
-            animators[d.id, default: CharacterAnimator3D()].update(entity, artId: sprite, clip: .idle, rate: gameSpeed,
+            animators[d.id, default: CharacterAnimator3D()].update(entity, artId: sprite, clip: clip, rate: gameSpeed,
                                                                    blendSeconds: settings.characters.clipBlendSeconds,
                                                                    registry: registry)
         }
