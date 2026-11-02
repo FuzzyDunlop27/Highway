@@ -66,6 +66,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Zombie/defender animation: walk speed, turning, gliding, runner/brute look | `Content/presentation.json` `reality3d.characters`; math `Core/.../Presentation/CharacterMotion3D.swift`; playback `App/Rendering/CharacterAnimator3D.swift`; export `tools/blender/export_characters.py`; notes `docs/features/characters-3d.md` |
 | Building / defense / decoration 3D models (2M) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
 | Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
+| Generate a custom MakeHuman body / blacksmith reference | `tools/makehuman/generate_blacksmith.py`, `tools/makehuman/README.md`; `docs/plans/blacksmith-profile.md`; notes `docs/features/characters-3d.md` |
+| Open the installed MakeHuman app / find its user files | `/Users/rick/Applications/MakeHuman.app`; runtime beside it in `MakeHuman-runtime/`; user files `~/Documents/MakeHuman/v1py3/`; install notes `tools/makehuman/README.md` |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
 | Horde Alert notification text/timing | `App/Platform/NotificationScheduler.swift` |
@@ -91,6 +93,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ plans/                Proposals for the owner to pick from (not yet in BUILD-QUEUE)
 │  │  ├─ [x] living-world-plan.md  Option 1: Tropico-style living world in 2D (chunks 1K 1N 1F 1U 1S 2F 2S)
 │  │  ├─ [x] 3d-rendering-plan.md  Option 2: real 3D drawing with RealityKit (chunks 1R–6R, 2M, 3M)
+│  │  ├─ [x] blacksmith-profile.md  MakeHuman trial: precise age-45 medieval blacksmith art brief (3M-2MH)
 │  │  ├─ [x] 3d-spike-1R-results.md  Chunk 1R results: fps table, iOS 17/18 findings, gaps, go/no-go
 │  │  ├─ [x] spike-1R/     1R screenshots (3D spike + current 2D for comparison)
 │  │  └─ [x] mockups/      Look-alike pictures of each option (painted over a real screenshot / Blender render)
@@ -231,6 +234,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ├─ HighwayHoldout_Blender_Study/  Fresh 3D style study: editable .blend, models/, ten png/ samples, renders/, scripts/, QA and Claude handoff.
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
 └─ tools/
+   ├─ makehuman/
+   │  ├─ [x] generate_blacksmith.py  Body generation + binary FBX + editable MHM + measured-height report
+   │  ├─ [x] dress_blacksmith.py     Fit face/CC0 skin, shirt/trousers, shoes and hair to preserved base; dressed MHM/FBX
+   │  └─ [x] README.md               Run instructions, API sources, verification and integration limits
    ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
    ├─ [x] check_models.py   2M: lists art ids with no App/Models/<id>.usdz (exit 1 if a non-character one is missing)
    └─ blender/
@@ -239,6 +246,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
       ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres; textures=512, only=<name> options)
       ├─ [x] free_assets_assemblies.py   free-asset spike: assembles buildings (fa_qt_shop) from Quaternius modular pieces
       ├─ [x] export_characters.py  3M: Mixamo FBX clips → animated App/Models/<artId>.usdz + .anim.json (clip times, stride)
+      ├─ [x] check_makehuman_fbx.py  Live MakeHuman FBX → Blender height/geometry/budget report, saved blend and neutral preview; ignores defective custom normals
+      ├─ [x] build_blacksmith_draft.py  Clothed source → optimized blacksmith draft, one atlas, portable exports and previews
+      ├─ [x] blacksmith_geometry.py     Draft apron/beard, surface fitting and worn materials
+      ├─ [x] blacksmith_review.py       Atlas bake, FBX/GLB export, four review angles and clean FBX reimport verification
       ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
       ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
       ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble

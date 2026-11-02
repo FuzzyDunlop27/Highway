@@ -27,6 +27,45 @@ Mixamo, one character per file, all clips on one timeline (D-038 pipeline). Down
 - Size budget: ≤ 3 MB per character (walker is 3.0 MB) → ~15 MB total. If too big: fewer clips per civilian, or explore one shared clip library (needs cross-file animation binding, not done in D-038 — note as risk).
 - Small hand props (crate, sack, hoe, hammer) as tiny separate models attached to the hand joint; skip any that's fiddly — the clip alone reads fine from the game camera.
 
+### 3a. Cast progress (MakeHuman route, owner choice 2026-11-01)
+The owner chose MakeHuman (via ChatGPT/Codex) for the human looks; Mixamo is still used for rigging and motion. Model sources and review files live outside the repo in `~/Documents/MakeHuman/v1py3/exports/` (details: `tools/makehuman/README.md`).
+
+| # | Character | State | Notes |
+|---|---|---|---|
+| 1 | Blacksmith (male, 45) | Clothed review draft done (3M-2MH-L) | 9,209 triangles, one atlas, ~1.2 MB FBX/GLB; no rig/animation yet. **Will need scaling:** built at the maximum-height slider (~2.47 m incl. boots/hair), so it must be scaled to normal height (~1.8 m) on export to stand next to the zombie. Medieval costume is a reference exercise; for the game it should read as a modern survivor/Workshop worker. |
+| 2 | Farmer (woman) | In progress (3M-2MH-F, ChatGPT/Codex) | Per §3 cast list. |
+| 3–4 | Two more civilians | Not started | e.g. mechanic/scrapper, older man (§3). |
+| D | Defender | Not started | Armed survivor; rifle as a separate prop. |
+
+Before copying the recipe to the whole cast, finish the **rig + motion trial on model 1** (Mixamo auto-rig, check apron/joint deformation, ≤ 3 MB with clips), so any problem is fixed once.
+
+### 3b. If the owner doesn't like Mixamo's people (added 2026-11-01)
+**Subsequent live result (3M-2MH-V):** generated actual FBX/MHM and verified Blender import;
+max-height body is 2.44386 m, 28,796 triangles. Body/preview and reports are linked in
+`tools/makehuman/README.md`. Use Blender `use_custom_normals=False` to avoid imported shading
+artifacts. Sculpt/clothes, optimization, rig/clips and full 3M-2 integration are still pending.
+
+**Owner selected a MakeHuman trial (2026-11-01, chunk 3M-2MH):** preparation delivered in
+`tools/makehuman/` (80% muscle / 20% weight / maximum-height age-45 male → FBX script) and
+`docs/plans/blacksmith-profile.md` (precise medieval blacksmith brief). This is a base-body trial;
+skin weathering, face sculpt, garments, rigging and animations are separate steps. Live MakeHuman
+generation/import is now verified as described above. Medieval costume is a reference exercise, not a change to
+the game's modern setting. The four-survivor/defender integration remains chunk 3M-2.
+
+**Mixamo is only needed for the motion.** Its animations work on almost any human-shaped 3D model: upload the model to Mixamo's free auto-rigger, then download the same clips onto it. So the *look* can come from anywhere. ChatGPT cannot make a layer to draw "over" a Mixamo character: the game needs 3D models, and a flat picture can't be wrapped onto someone else's 3D body.
+
+Options, best first (check each licence before use; record the pick in DECISIONS):
+1. **MakeHuman** (free, open source; exported models are CC0): realistic adults, any body type, age, clothes and hair. Export FBX, auto-rig and animate in Mixamo. Realistic, so it matches the Mixamo zombie. Recommended.
+2. **Picture → 3D with AI:** ChatGPT draws a character sheet (prompt below), an image-to-3D tool (e.g. Meshy, Tripo, Hyper3D Rodin) turns it into a textured 3D model, then Mixamo rigs and animates it. Most control over the look; quality varies (hands, faces), and the paid tier is usually needed for commercial rights.
+3. **Ready-made packs:** Quaternius characters (CC0, free; stylised low-poly, may clash with the realistic zombie), Synty POLYGON Apocalypse (paid; stylised, zombie-themed, includes survivors), Fab.com / Sketchfab (filter "downloadable", "rigged"; licences vary per model).
+
+Every option goes through the same exporter (`tools/blender/export_characters.py`). Budget per character: ≤ ~10,000 triangles, one 1024 px texture (shrunk to 512 px by the exporter), T-pose or A-pose.
+
+**ChatGPT prompt for option 2 (one per character):**
+> Character turnaround sheet for a 3D model, for an image-to-3D tool. One adult survivor in a realistic zombie-apocalypse town-builder game. [Describe: e.g. "woman, 40s, farmer, faded denim overalls over a grey long-sleeve shirt, work boots, short brown hair, bandana".] Full body, standing in a neutral A-pose (arms 45° down, legs slightly apart, palms facing in, empty hands), shown from the front, left side and back, side by side, same size, feet on one line. Plain flat light-grey background, soft even lighting, no shadows, no props, no weapons, no text, no logos. Realistic proportions (not chibi or cartoon), grounded, slightly worn and dirty clothes. Clothes fit close to the body (no capes, long coats or loose scarves, which animate badly). Face clearly visible, neutral expression.
+
+The cast to ask for: farmer, mechanic/scrapper, builder, older man, young woman, medic, and the defender (same prompt, "armed survivor in a plate-carrier vest and helmet", still with empty hands: the rifle is added as a separate prop). Get the front image right first, then ask for the matching side and back.
+
 ## 4. Who is on screen (3M-3)
 - One visible person per survivor, up to `townLife.maxVisible` (start at 40). Over the cap, each role is scaled down proportionally so the mix still matches.
 - Roles come from Core each tick (`GameLoop.population` + per-building `assignedWorkers`, construction jobs, active runs): **worker@building**, **builder@site**, **away** (not drawn, except leaving/returning), **defender** (3M-2's layer, not town life), **trainee** (drills at the Barracks), **idle**.

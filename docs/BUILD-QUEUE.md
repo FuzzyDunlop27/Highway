@@ -28,6 +28,9 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Specced 2026-11-01 (draft) — **own branch**; needs 1X part C (Mixamo downloads) |
 | 3M-2MH | MakeHuman trial: body-to-FBX script + medieval blacksmith profile | Owner request only; no wave dependency | Done 2026-11-01 — script/profile preparation; live MakeHuman export/import pending; does not complete 3M-2 |
 | 3M-2MH-I | Install MakeHuman on the owner's Mac | Owner request only; no wave dependency | Done 2026-11-01 — modeling screen opened, scripting/FBX plugins loaded; real export/import next |
+| 3M-2MH-V | Generate the real MakeHuman body and verify FBX in Blender | 3M-2MH, 3M-2MH-I only | Done 2026-11-01 — actual FBX/MHM + Blender model/preview; 2.44386 m, 28,796 triangles; look/optimization/rig still pending |
+| 3M-2MH-L | Clothed blacksmith draft within mesh budget | 3M-2MH-V only | Done — 9,209 triangles, one atlas/material, FBX/GLB/blend + four previews, clean FBX reimport; rig/art polish pending |
+| 3M-2MH-F | Farmer survivor model + committed portable review assets | Installed MakeHuman pipeline only | Doing — adult woman farmer per town-life spec, verified exports, previews and commit |
 | 3M-3 | 3D: town life — survivors walk between home and work and do their jobs (Tropico feel) | 3M-2 | Specced 2026-11-01 (draft) — blocked by 3M-2 |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Done 2026-11-01 (D-039) — tracers, muzzle flash, goo, dust, shake, trap flash, health/progress bars, aiming turrets, warning arrows; day-40 ~60 fps (simulator) |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Ready |
@@ -218,7 +221,39 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** modeling window observed; logs confirm both plugins and startup complete; `pip check` passes. Source reports 1.3.0 alpha. Install details in `tools/makehuman/README.md`.
 - **Start prompt / next:** "Continue the MakeHuman trial for chunk 3M-2: open the installed app and verify one real FBX using tools/makehuman/README.md."
 
+## Chunk 3M-2MH-V — Live MakeHuman export and Blender check [Done 2026-11-01]
+- **Goal:** produce a real source body and prove the generated FBX imports correctly.
+- **Needs:** 3M-2MH + 3M-2MH-I only, not wave dependencies.
+- **Scope:** run existing script in MakeHuman, verify FBX height/finite geometry/image paths in Blender, save imported source and preview. Checker `tools/blender/check_makehuman_fbx.py`; exact output folder in `tools/makehuman/README.md`.
+- **Do NOT build:** finished blacksmith sculpt/garments, mobile optimization, rig/animation or game integration.
+- **Exit check:** passed real export/import; exact sliders, height agrees within <0.001 mm, two finite meshes, no missing image paths, reviewed clean preview with imported custom normals disabled. FBX 831,468 bytes; 28,796 triangles exceeds mobile target; requested maximum height = 2.44386 m. No source body rescale.
+- **Next / start prompt:** "Continue chunk 3M-2 from the verified MakeHuman base: read tools/makehuman/README.md and blacksmith-profile.md, apply the intended look and optimize the body/garments to the phone budget before rigging. Keep the original source and its exact slider values."
+
+## Chunk 3M-2MH-L — Clothed blacksmith review model [Done 2026-11-01]
+- **Goal:** move beyond the bare source to a clothed, portable draft under the mesh budget.
+- **Needs:** 3M-2MH-V only; no wave dependency.
+- **Scope:** fitted CC0 source clothes/hair/skin and head modifiers, apron/beard, one atlas, ≤10k triangles, saved blend/FBX/GLB, four-angle review and clean FBX reimport. Bundle/results in `tools/makehuman/README.md`.
+- **Do NOT build:** full cast/game hookup, new gameplay, final historical likeness or custom animation systems.
+- **Exit check:** 9,209 finite triangles; one material/atlas; ~1.22 MB static FBX/GLB; actual FBX reimport preserves count/height/images; four final views reviewed. Fine skin/scar/period-clothes details and deformation/rig/animation explicitly remain.
+- **Next / start prompt:** use the updated 3M-2 continuation below for the rig/motion trial before extending the cast.
+
 ## Chunk 3M-2 — Human characters: defender + survivor looks [Specced 2026-11-01, draft]
+**Clothed review model delivered (3M-2MH-L):** portable `blacksmith_review_bundle.zip` in the
+folder documented by `tools/makehuman/README.md`; 9,209 triangles, one atlas/material, ~1.22 MB
+static FBX/GLB, four reviewed views, clean FBX reimport. Next big step in this chunk is a
+rig/deformation + motion trial on this model (owner Mixamo actions/downloads under 1X), with
+apron clearance, hand/joint preservation and full ≤3 MB animated budget checked before duplicating the cast.
+Art refinement must address the README's explicit costume/face-detail deviations; no game hookup yet.
+Start prompt: "Continue chunk 3M-2 from the clothed blacksmith draft: read the MakeHuman README
+and reports, test rigging/deformation and task motions on this one character before expanding the cast."
+
+**Real base now exists (3M-2MH-V, 2026-11-01):** live export and Blender import passed. Output
+folder and reports in `tools/makehuman/README.md`; clean clay preview reviewed. Next: chosen
+face/weathering/hair/clothes, reduce the 28,796-triangle base plus garments to ≤ ~10,000, atlas,
+rig/clips, then the full integration below. Preserve original body and exact requested sliders.
+Import this FBX with `use_custom_normals=False`; default imported normals render badly.
+Earlier preparation/installation notes below describe the state before this successful test.
+
 **Installation ready (3M-2MH-I, 2026-11-01):** open `/Users/rick/Applications/MakeHuman.app`.
 Official source + CC0 system assets installed; private Python environment; scripting/FBX enabled and
 startup verified. Reports 1.3.0 alpha. Follow `tools/makehuman/README.md` for the real export check;
