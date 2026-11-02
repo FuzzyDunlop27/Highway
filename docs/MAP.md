@@ -37,6 +37,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Save format / old-save migration | `Core/Sources/HoldoutCore/Save/` |
 | How fast farms/posts produce, caps, survivor arrival (code) | `Core/Sources/HoldoutCore/Systems/Economy/EconomySystem.swift` |
 | Why a spot is red / placement rules | `Core/Sources/HoldoutCore/Systems/Construction/PlacementRules.swift` |
+| Building footprint size, which buildings can turn, facing | `Content/buildings.json` `footprint` / `rotatable`; code `Core/.../Model/Facing.swift` |
+| Where the ghost opens (nearest spot that fits) | `Core/.../Systems/Construction/SpotFinder.swift` (`GameLoop.suggestSpot`); radius `buildings.json rules.suggestSpotRadiusTiles` |
 | What the App can call in Core | `docs/features/core-api.md` |
 | Placeholder box size/color/label for a missing 3D model | `App/Rendering/ModelRegistry.swift`; heights in `Content/presentation.json` `reality3d.placeholderHeightTiles` |
 | Which model an entity uses | its art id (`sprite` in buildings/zombies JSON) → `<artId>.usdz` in the app bundle (`ModelRegistry.swift`) |
@@ -138,7 +140,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] NewGame.swift     Fresh game: starting resources + starting layout
 │  │  │  ├─ [x] Base.swift        One town: map id, buildings, stock (food/scrap)
 │  │  │  ├─ [x] Group.swift       Survivors + Knowledge (carries to future bases)
-│  │  │  ├─ [x] Building.swift    A placed building: level, origin, build progress, staffed
+│  │  │  ├─ [x] Building.swift    A placed building: level, origin, facing, build progress, staffed
+│  │  │  ├─ [x] Facing.swift      Which way a building faces; turned footprint size/tiles (CORE-010)
 │  │  │  ├─ [x] ConstructionJob.swift  One build / upgrade / rebuild job, waiting or running (Base.jobs)
 │  │  │  ├─ [x] Defender.swift    A defender + its post; TrainingJob (Barracks queue)
 │  │  │  ├─ [x] ScavengingRun.swift  A run in progress; ActiveResearch (Workshop)
@@ -155,7 +158,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  └─ [x] UnitDefs / ZombieDefs / HordeDefs / ResearchDefs / OfflineDefs.swift  (decoded now, used 1B–1D)
 │  │  ├─ Systems/           One folder per game system:
 │  │  │  ├─ Economy/        [x] EconomySystem, StorageRules, Staffing, ResourceSnapshot
-│  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish), BuildQueue + BuildQueueStatus (slots, queue, builders), UpgradeSystem
+│  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish), BuildQueue + BuildQueueStatus (slots, queue, builders), UpgradeSystem, SpotFinder (nearest spot that fits)
 │  │  │  ├─ Jobs/           [x] Roster (who is where), WorkerAssignment, DefenderTraining, DefenderPosts, DefenderCombat (CORE-002)
 │  │  │  ├─ Pathing/        [x] FlowField (Dijkstra cost to HQ; walls cost by hp), FlowFieldCache (rebuild on change)
 │  │  │  ├─ Combat/         [x] ZombieMovement, WallBashing, Traps (spikes/barbed wire), TargetingSystem, TowerFiring
@@ -173,7 +176,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
 │     ├─ [x] Content/ContentFilesTests.swift · Content/ChicagoMapTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
 │     ├─ [x] Systems/Jobs/{WorkerAssignment,DefenderTraining,DefenderPosts}Tests (+ JobsTestSupport) · Systems/Scavenging/ScavengingTests · Systems/Research/ResearchTests
-│     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift, BuildQueueTests.swift
+│     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift, BuildQueueTests.swift, FootprintRotationTests.swift, SpotFinderTests.swift · Content/StartingCompoundTests.swift
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
 │  ├─ [x] HighwayHoldoutApp.swift  App entry point; saves when the app leaves the foreground

@@ -53,6 +53,14 @@ enum SaveMigrations {
         4: { json in
             try addToBases(&json, from: 4) { base in base["runs"] = [Any]() }
         },
+        // v5 → v6 (ticket CORE-010): buildings get a facing. Every old building faces south and keeps its origin;
+        // the five that shrank from 2×2 to 2×1 now cover only the top row of their old spot (always fits, frees room).
+        5: { json in
+            try addToBases(&json, from: 5) { base in
+                let buildings = base["buildings"] as? [[String: Any]] ?? []
+                base["buildings"] = buildings.map { b in var b = b; b["facing"] = Facing.south.rawValue; return b }
+            }
+        },
     ]
 
     /// Edits every base in a save's raw JSON.

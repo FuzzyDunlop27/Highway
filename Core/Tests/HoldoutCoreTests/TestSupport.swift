@@ -21,7 +21,7 @@ enum TestSupport {
         return try GameLoop(content: content, state: state)
     }
 
-    /// The wall type of the 28-wall starting barricade (buildings.json startingLayout).
+    /// The wall type of the 40-wall (13 × 9) starting barricade (buildings.json startingLayout).
     static let startingWall = "wall_fence"
 
     /// Open grass, far from roads and the starting town: room for a 2×2.

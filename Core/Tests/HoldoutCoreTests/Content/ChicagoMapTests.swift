@@ -10,7 +10,7 @@ struct ChicagoMapTests {
         let content = try TestSupport.content()
         let state = try GameState.newGame(content: content, mapId: mapId, seed: 1)
         let walls = state.base.buildings.filter { $0.defId == TestSupport.startingWall }
-        #expect(walls.count == 28)
+        #expect(walls.count == 40)  // 13 × 9 ring (CORE-010)
         #expect(state.base.buildings.contains { $0.defId == "hq" && $0.origin == GridPoint(x: 15, y: 16) })
         #expect(state.base.buildings.contains { $0.defId == "watchtower" })
     }

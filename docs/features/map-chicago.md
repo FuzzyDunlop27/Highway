@@ -3,7 +3,7 @@
 _Owner request 2026-11-01 (D-044). New games start here; a town saved on the old highway map (`phase1_exit`) keeps that map._
 
 ## Purpose
-The first map feels like a lived-in Chicago neighborhood: a 4-lane street with storefronts, a 2-lane side street, an alley behind houses and garages, vacant lots, a community garden and a parking lot. The town starts inside a closed barricade of 28 Chain Fence sections (D-023 ring, fence since D-044), so you never start from nothing.
+The first map feels like a lived-in Chicago neighborhood: a 4-lane street with storefronts, a 2-lane side street, an alley behind houses and garages, vacant lots, a community garden and a parking lot. The town starts inside a closed 13 × 9 barricade of 40 Chain Fence sections (D-023 ring, fence since D-044, bigger since CORE-010), so you never start from nothing.
 
 ## Layout (40 × 30 tiles, y = 0 is north)
 - **Main street** (rows 4–8, east–west): parking lane, dashed lane line, double yellow, dashed lane line, parking lane; sidewalks on rows 3 and 9; not buildable. Zombies enter at both ends.

@@ -119,6 +119,7 @@ enum ContentValidator {
                 if let r = req.research, !researchIDs.contains(r) { throw fail(file, "'\(def.id)' requires unknown research '\(r)'") }
             }
         }
+        if c.buildings.rules.suggestSpotRadiusTiles < 0 { throw fail(file, "rules.suggestSpotRadiusTiles can't be negative") }
         for entry in c.buildings.startingLayout {
             guard let def = c.buildingDef(entry.id) else { throw fail(file, "startingLayout has unknown building '\(entry.id)'") }
             if def.level(entry.level) == nil { throw fail(file, "startingLayout '\(entry.id)' has no level \(entry.level)") }

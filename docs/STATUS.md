@@ -2,7 +2,7 @@
 
 _Update at the end of every work session. Keep it short; history belongs in feature-note change logs._
 
-**Last updated:** 2026-11-01 (Chicago block map; chain-link starting barricade)
+**Last updated:** 2026-11-02 (ticket CORE-010: 2×1 buildings, rotation, 13 × 9 fence, spot finder)
 
 ## Current phase / milestone
 - **Phase 1** — one base at a highway exit. Plan: `docs/PHASE1-PLAN.md`.
@@ -11,11 +11,12 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - **Milestone 1B — Defense** — DONE (2026-10-31).
 - **Isometric-first placement (D-022)** — DONE (2026-10-31).
 - **Milestone 1C — Depth** — DONE (2026-11-01, chunk APP-002 playtest recorded below and in Craft).
-- **Milestone 1D — Time & alerts** — next gameplay milestone; chunk **CORE-004 ready**, then APP-003. New survival/spotter chunks **CORE-005** and **CORE-007** are also ready (owner design, D-042); then CORE-006 → APP-005. Guns/traps chunks **CORE-008** and **CORE-009** are ready (D-045); then APP-004. Building overhaul **CORE-010** is ready (D-046); looks track starts with **TXT-002** once owner downloads Part E. Art/rendering tracks have their own dependencies in `docs/BUILD-QUEUE.md`.
+- **Milestone 1D — Time & alerts** — next gameplay milestone; chunk **CORE-004 ready**, then APP-003. New survival/spotter chunks **CORE-005** and **CORE-007** are also ready (owner design, D-042); then CORE-006 → APP-005. Guns/traps chunks **CORE-008** and **CORE-009** are ready (D-045); then APP-004. Building overhaul **CORE-010** is done (D-048), **APP-006** is ready next; looks track starts with **TXT-002** once owner downloads Part E. Art/rendering tracks have their own dependencies in `docs/BUILD-QUEUE.md`.
 - Milestones: 1A Foundation → 1V Two views (retired with 2D, D-030) → 1B Defense → 1C Depth → 1D Time & alerts → 1E Art swap & playtest. Task breakdown: `docs/PHASE1-TASKS.md`.
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **Ticket CORE-010 done (D-046, D-048), Core only.** Shelter, Scavenger Post, Workshop, Barracks and Storage are now 2×1 and can be turned (Core stores `facing`; east/west make them 1×2); HQ and Farm unchanged. New towns start inside a 13 × 9 Chain Fence ring (40 pieces, 67 free tiles inside) on both maps; 4 props moved out of the way. The shared wall limit is 52/92/132 (was 40/80/120) so the bigger fence still leaves 12 spare walls. `GameLoop.suggestSpot` finds the nearest spot a building fits. Save v6 (old buildings face south, keep their spot, and shrink). Early hordes still break a fence section (balance.md). 228 Core tests pass; app builds. The App does not use rotation or the spot finder yet (APP-006), and today's 2×2 models overhang the new 2×1 spots until then.
 - **MVP roadmap (D-047).** Ordered ten-ticket MVP path in `BUILD-QUEUE.md`; APP-005 narrowed (spotter screens → new APP-009); new tickets CORE-012 (town ledger), APP-008 (Supplies/People/Log screens), REL-002 (MVP playtest). Docs only.
 - **Spec: building overhaul + better looks (D-046, owner request).** Plan `docs/plans/buildings-and-look-plan.md`; new chunks **CORE-010** (Core: smaller footprints, rotation, bigger fence, spot finder — ready), **APP-006** (easier placing), **TXT-002** (lighting & materials spike — waits on owner downloads Part E), **TXT-003** (Chicago trim sheet + dressing), **MOD-010** (Chicago-style player buildings), **RND-008** (builders at work, Tropico-style; taken out of RND-007), **MAP-001** (Roscoe Village map); owner then said yes to **taking over neighborhood houses**: **CORE-011** (Core) and **APP-007** (App + art). `OWNER-DOWNLOADS.md` Part E added. Docs only; no code, no tests run.
 - **Game logic spec: guns, bullets, traps (D-045).** Owner design added to `docs/GAME-RULES.md` §7: a gun stock handed out automatically (armed survivors shoot from their buildings, so small hordes need no towers), bullets from a new Ammo Bench (owner: towers use bullets too), and three new traps that re-arm themselves. New chunks **CORE-008** and **CORE-009** (Core, ready) and **APP-004** (App); REL-001 now also needs APP-004. Docs only; no code, no tests run.
@@ -70,7 +71,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **MVP path (D-047, owner goal):** work the ten tickets in "MVP path" at the top of `BUILD-QUEUE.md`, in order, one at a time. **Next: CORE-010** ("Implement ticket CORE-010"). Then APP-006 → CORE-005 → APP-005 (first playable checkpoint) → CORE-008 → CORE-009 → APP-004 → CORE-012 → APP-008 → REL-002 (MVP ready to play).
+- **MVP path (D-047, owner goal):** work the ten tickets in "MVP path" at the top of `BUILD-QUEUE.md`, in order, one at a time. CORE-010 done 2026-11-02. **Next: APP-006** ("Implement ticket APP-006", Sonnet). Then CORE-005 → APP-005 (first playable checkpoint) → CORE-008 → CORE-009 → APP-004 → CORE-012 → APP-008 → REL-002 (MVP ready to play).
 - Parked until the owner has played the MVP: CORE-004/APP-003, CORE-006/CORE-007/APP-009, CORE-011/APP-007, RND-005, and the looks track.
 
 ## Decided

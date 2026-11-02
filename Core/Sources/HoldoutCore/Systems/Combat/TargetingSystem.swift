@@ -20,7 +20,8 @@ enum TargetingMode: Equatable {
 enum TargetingSystem {
     /// The middle of a building's footprint, in tiles (same units as `Zombie.x` / `Zombie.y`).
     static func center(of tower: Building, def: BuildingDef) -> (x: Double, y: Double) {
-        (Double(tower.origin.x) + Double(def.width) / 2, Double(tower.origin.y) + Double(def.height) / 2)
+        let s = tower.size(def)
+        return (Double(tower.origin.x) + Double(s.width) / 2, Double(tower.origin.y) + Double(s.height) / 2)
     }
 
     /// The zombie `tower` should shoot, or nil if no living zombie (hp > 0) is within `range` tiles.

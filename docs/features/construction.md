@@ -11,12 +11,14 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 - `Core/Sources/HoldoutCore/Model/ConstructionJob.swift` — one job (build / upgrade / rebuild).
 - `Core/Sources/HoldoutCore/Systems/Construction/RepairSystem.swift` — repair damaged buildings, rebuild rubble (`Command.repair`).
 - `Core/Sources/HoldoutCore/Model/Building.swift`, `Model/GridPoint.swift`, `Model/NewGame.swift` (starting layout).
+- `Core/Sources/HoldoutCore/Model/Facing.swift` — `Facing` (south/west/north/east), turned footprint size and tiles (`def.size(facing:)`, `building.footprintTiles(def)`).
+- `Core/Sources/HoldoutCore/Systems/Construction/SpotFinder.swift` — `GameLoop.suggestSpot` (nearest spot that fits).
 - `Core/Sources/HoldoutCore/Content/BuildingDefs.swift`, `Content/MapDef.swift`.
 - `Content/maps/phase1_chicago.json` — the map new games use (D-044, `map-chicago.md`); `phase1_exit.json` — the old highway map (old saves, test fixture).
-- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/BuildQueueTests.swift`, `PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`
+- Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/BuildQueueTests.swift`, `PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`, `FootprintRotationTests.swift`, `SpotFinderTests.swift`; `Content/StartingCompoundTests.swift` (13 × 9 ring on both maps + early-horde check)
 
 ## Data files
-- `Content/buildings.json` → `footprint`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `rules.cancelRefundPct`, `rules.constructionSlotsByHq` / `constructionQueueLength` / `buildersPerJob` / `buildDuringHorde`, `rules.repair`, `rules.rubble`, `startingLayout`.
+- `Content/buildings.json` → `footprint` (as facing south), `rotatable`, `rules.suggestSpotRadiusTiles`, `maxCountByHq`, `sharesCountWith`, `requires`, level 1 `cost` / `buildSeconds` / `hp` / `requiredHq`, `rules.demolishRefundPct`, `rules.cancelRefundPct`, `rules.constructionSlotsByHq` / `constructionQueueLength` / `buildersPerJob` / `buildDuringHorde`, `rules.repair`, `rules.rubble`, `startingLayout`.
 - `Content/maps/phase1_exit.json` → `rows` + `legend` (`buildable`), `decorations`, `startingPositions`, `spawnEdges`.
 
 ## Key rules
@@ -25,6 +27,9 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 - Rule checks, in order: HQ level ≥ L1 `requiredHq`, count < `maxCountByHq[hqLevel-1]` (walls share one count), `requires` (finished building at level, or research on the Group), cost affordable.
 - Placing adds a build job. It starts (and pays the L1 cost) when a slot, a free builder and the money are all there, usually at once; then it builds for `buildSeconds`. Unfinished buildings don't produce or count for caps.
 - Moving is free and instant (finished or not); it may overlap its own old tiles.
+- **Facing (CORE-010):** `Command.placeBuilding(defId:at:facing:)` (default south) and `.moveBuilding(id:to:facing:)` (nil = keep). East/west swap width and height; north/south keep them. Only `rotatable` buildings turn; others are stored facing south whatever was asked. The origin is always the top-left tile of the *turned* footprint. Every footprint use in Core (placement, pathing, zombie hits, tower range middle, survivor strolling, tap lookup) goes through `building.footprintTiles(def)` / `size(def)`. `checkPlacement`/`checkMove` take the same facing.
+- **Spot finder:** `GameLoop.suggestSpot(defId:facing:near:ignoring:)` → the top-left tile within `rules.suggestSpotRadiusTiles` whose footprint middle is closest to `near` and whose ground is free; ties go to the lower row, then lower column. Ground only (cost, limits, queue are `checkPlacement`'s job). Pass `ignoring:` the building being moved. Nil = nothing fits ("No room — expand your fence" in APP-006).
+- **Starting compound:** a closed 13 × 9 ring of 40 Chain Fence pieces on both maps (Chicago x11–23, y13–21; highway x18–30, y15–23); the HQ and watchtower stayed where they were, so the HQ sits left of centre with more room on the east. Three Chicago props (junk pile, crates, a wreck) and one highway wreck moved out of the ring.
 - Demolish refunds `demolishRefundPct` of `invested`, clamped to caps. The HQ can't be demolished. Starting-layout buildings were free, so they refund nothing.
 - Ramps, side roads and the town road are buildable so players can wall them off; the highway itself isn't.
 
@@ -51,6 +56,7 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 ## Known issues
 
 ## Change log
+- 2026-11-02 — Ticket CORE-010: 2×1 footprints + facing/rotation, spot finder, 13 × 9 starting fence, wall limit +12, save v6 (D-046, D-048).
 - 2026-11-01 — Chunk CORE-001: build slots, queue and builders, pay-on-start, upgrades, cancel, save v3 (D-033); queue-full is a `PlacementProblem`.
 - 2026-10-31 — Wall lines: planLine + placeLine (all-or-nothing on cost).
 - 2026-10-31 — Added repair / rubble rebuild (`RepairSystem`, 1B).

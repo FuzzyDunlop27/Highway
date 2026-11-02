@@ -42,7 +42,7 @@ public struct FlowField: Sendable {
             guard let def = content.buildingDef(b.defId), Self.blocks(b, def: def) else { continue }
             let isHQ = b.defId == Self.hqId
             let extra = isHQ ? 0 : Self.hpCost(hp: b.hp, def: def, pathing: pathing) * weight
-            for t in b.origin.footprintTiles(width: def.width, height: def.height) where map.contains(t) {
+            for t in b.footprintTiles(def) where map.contains(t) {
                 let i = t.y * map.width + t.x
                 guard entry[i].isFinite else { continue }
                 solid[i] = true

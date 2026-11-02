@@ -29,7 +29,7 @@ Work these **in this order, one at a time** (each ticket's start prompt is in it
 
 | # | Ticket | Model | Why it is in the MVP |
 |---|---|---|---|
-| 1 | CORE-010 | Opus | Room to build: smaller footprints, rotation, bigger fence. Goes first because it changes the starting layout CORE-005 adds to. |
+| 1 | CORE-010 ✅ Done 2026-11-02 | Opus | Room to build: smaller footprints, rotation, bigger fence. Goes first because it changes the starting layout CORE-005 adds to. |
 | 2 | APP-006 | Sonnet | Placing a building takes one or two touches — building has to feel good. |
 | 3 | CORE-005 | Opus | Food and water: survivors eat and drink; Garden, Well, Rain Catcher. The heart of "supplies". |
 | 4 | APP-005 | Sonnet | Survival on screen: water in the HUD, Hungry/Thirsty banner, appeal, new build cards. **First playable checkpoint.** |
@@ -55,9 +55,9 @@ Work these **in this order, one at a time** (each ticket's start prompt is in it
 | CORE-007 | 1L | Core: spotters — Lookout Post, watched edges, warning time, Binoculars/Radio research | APP-002 (done) | APP-005, CORE-004 (save version) | **Ready** (owner design, D-042) |
 | CORE-008 | 1G | Core: guns + bullets — gun stock handed out automatically, armed survivors shoot, Ammo Bench | APP-002 (done) | CORE-009, APP-004, CORE-010 (Ammo Bench is 1×1; check the spot finder) | **Ready** (owner design, D-045) |
 | CORE-009 | 1P | Core: new traps — Bear Trap, Pit Trap, Noise Maker, auto re-arm | APP-002 (done) | CORE-008, APP-004 | **Ready** (owner design, D-045) |
-| CORE-010 | 1H | Core: smaller footprints (5 buildings 2×2 → 2×1), rotation, bigger starting fence (13×9), spot finder | APP-002 (done) | APP-006, MOD-010, MAP-001, CORE-005 (starting well + garden must fit the new ring) | **Ready** (owner request, D-046) |
+| CORE-010 | 1H | Core: smaller footprints (5 buildings 2×2 → 2×1), rotation, bigger starting fence (13×9), spot finder | APP-002 (done) | APP-006, MOD-010, MAP-001, CORE-005 (starting well + garden must fit the new ring) | Done 2026-11-02 (D-048); save v6; 228 Core tests |
 | CORE-012 | 7S-C | Core: town ledger — per-supply rates in/out with sources, survivor roster data, town event log | CORE-005, CORE-008 | APP-008, CORE-009 (save version) | Specced 2026-11-01 — MVP #8 |
-| CORE-011 | 5H | Core: take over neighborhood houses (claim a house/garage/shop as a Shelter, Workshop, Storage…) | CORE-010 | APP-007 | Specced 2026-11-01 — blocked by CORE-010 (owner said yes) |
+| CORE-011 | 5H | Core: take over neighborhood houses (claim a house/garage/shop as a Shelter, Workshop, Storage…) | CORE-010 | APP-007 | Ready (CORE-010 done) — parked until after the MVP (D-047) |
 | APP-001 | 1C | App: speed buttons + menu thumbnails | — | APP-002 | Done 2026-11-01 — speed buttons checked in the simulator; all 13 cards already had a picture |
 | APP-002 | 3B | App: all panels + 30-minute exit check (milestone 1C) | CORE-001, CORE-002, CORE-003 | APP-001 | Done 2026-11-01 — notes in `docs/features/balance.md` "Playtest 3B" |
 | APP-003 | 5B | App: settings, welcome back, Horde Alerts, Engage + milestone 1D exit check | CORE-004 | REL-001 | Blocked by CORE-004 |
@@ -65,7 +65,7 @@ Work these **in this order, one at a time** (each ticket's start prompt is in it
 | APP-005 | 3W | App: survival screens (water in HUD, Hungry/Thirsty banner, appeal, Garden/Well/Rain Catcher cards) — narrowed for the MVP | CORE-005 | APP-009, APP-008, REL-001 | Blocked by CORE-005 — MVP #4 (spotter + more-food screens moved to APP-009) |
 | APP-008 | 7S | App: Supplies and Town screens — inventory page, survivor roster, town log (UI kit) | CORE-012, APP-004, APP-005 | REL-002 | Specced 2026-11-01 — MVP #9 |
 | APP-009 | 3W-2 | App: more-food + spotter screens (Cannery, Hunting, Foraging panels; Lookout panel; "Horde spotted" callout) | CORE-006, CORE-007, APP-005 | REL-001 | Specced 2026-11-01 — after MVP (split out of APP-005) |
-| APP-006 | 2H | App: easier placing — ghost opens on a spot that fits, Rotate button, models scaled to fill their footprint | CORE-010 | MOD-010 | Blocked by CORE-010 |
+| APP-006 | 2H | App: easier placing — ghost opens on a spot that fits, Rotate button, models scaled to fill their footprint | CORE-010 | MOD-010 | **Ready** (CORE-010 done) — MVP #2 |
 | APP-007 | 6H | App + art: "Take over" button on houses, fortified house looks | CORE-011, APP-006, MOD-010 | CORE-011 | Specced 2026-11-01 — blocked by CORE-011, APP-006, MOD-010 |
 | RND-001 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | RND-002 | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers |
 | RND-002 | 2R | 3D: game playable in 3D, labeled boxes | RND-001 | MOD-001 | Done 2026-11-01 — 3D view, ticker, camera, ModelRegistry |
@@ -98,7 +98,7 @@ Work these **in this order, one at a time** (each ticket's start prompt is in it
 
 **Reading the board:** Done = finished. Ready = every Blocked-by ticket is Done, safe to start. Blocked = at least one Blocked-by ticket is not Done: do not start it. When a ticket finishes, update its row and flip any ticket it unblocks to Ready. Tickets with an old "Needs" line in their detail section below use that text as extra context; the **Blocked by** column wins if they disagree.
 
-**Save versions:** the save is v5 now (CORE-002 → v4, CORE-003 → v5). CORE-004, CORE-005, CORE-006, CORE-007, CORE-008 and CORE-009 each add one; whichever merges first takes v6, the next v7, and so on (rebase onto the other's migration). Each Core ticket that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version.
+**Save versions:** the save is v6 now (CORE-002 → v4, CORE-003 → v5, CORE-010 → v6). CORE-004, CORE-005, CORE-006, CORE-007, CORE-008, CORE-009, CORE-011 and CORE-012 each add one; whichever merges first takes v7, the next v8, and so on (rebase onto the other's migration). Each Core ticket that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version.
 
 Context: plan for CORE-010 / MOD-010 / TXT-002… is `docs/plans/buildings-and-look-plan.md` (D-046); 3D renderer plan `docs/plans/3d-rendering-plan.md` §6 (its R/M labels are the RND-/MOD- tickets above). The 2D living-world plan (`docs/plans/living-world-plan.md`) is parked, not queued.
 
@@ -482,18 +482,19 @@ _The humans are split in two so each fits a fresh chat: **MOD-003** makes the pe
 ## Building overhaul (track H) and look quality (track Q) — owner request 2026-11-01, D-046
 _Full design, numbers and the "why it looks flat" diagnosis: `docs/plans/buildings-and-look-plan.md`. Order: CORE-010 → APP-006; TXT-002 → TXT-003 → MOD-010 → RND-008; CORE-010 → CORE-011 → APP-007; MAP-001 last._
 
-### CORE-010 — Core: smaller footprints, rotation, bigger compound, spot finder [Specced 2026-11-01 — Ready]
+### CORE-010 — Core: smaller footprints, rotation, bigger compound, spot finder [Done 2026-11-02, D-048]
 - **Goal:** buildings take the room they look like they need, and a new town has space to build.
 - **Needs:** APP-002 (done). Takes the next free save version (see "Save versions" above).
 - **Scope:** `buildings.json` footprints per plan §2 (Shelter, Scavenger, Workshop, Barracks, Storage → 2×1; HQ, Farm unchanged) and `rotatable`; `Building.facing` + `Command.placeBuilding`/`moveBuilding` take a facing; footprint turned by facing in `PlacementRules`, wall/path/occupancy checks; save migration (old 2×2 keeps its origin, shrinks to 2×1 facing south) + previous-version decode test; starting fence ring 13×9 in `startingLayout` with both maps' decorations moved so it fits (validator + `ChicagoMapTests` stay green; every spawn edge still reaches the HQ); `GameLoop.suggestSpot(defId:facing:near:)` = nearest valid origin (search radius in JSON); a short balance check that day 1–5 hordes still damage the fence (note in `balance.md`).
 - **Do NOT build:** a finer grid (logged as not chosen in plan §2), App buttons (APP-006), new models (MOD-010), clearing decorations.
 - **Exit check:** tests for rotated footprints, migration, `suggestSpot`, compound layout; `cd Core && swift test` passes; GAME-RULES footprint lines updated.
 - **Start prompt:** "Implement ticket CORE-010: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/construction.md, docs/plans/buildings-and-look-plan.md §1–2 and the CORE-010 section of docs/BUILD-QUEUE.md only."
+- **Result:** Shelter/Scavenger/Workshop/Barracks/Storage are 2×1 and `rotatable`; `Facing` + `Building.facing`; `Command.placeBuilding(defId:at:facing:)`, `.moveBuilding(id:to:facing:)`, `checkPlacement(…facing:)`, `checkMove(…facing:)`; `GameLoop.suggestSpot(defId:facing:near:ignoring:)` (radius `rules.suggestSpotRadiusTiles` 12); 13 × 9 ring of 40 Chain Fence on both maps (HQ and watchtower kept in place, 4 props moved out); shared wall limit 52/92/132 (was 40/80/120, else the starting fence filled it); save v6 (old buildings face south, keep origin). Balance check in `balance.md`: days 1–5 still break a fence section, same as before. 228 Core tests pass; app builds. **For APP-006:** the App still draws every building with `def.width/height` (south), so it must switch to `building.size(def)` / `footprintTiles(def)` before it can place turned buildings; today's 2×2 models now overhang their 2×1 footprint until `fitToFootprint`. **For CORE-005:** the inside of the ring has 67 free tiles; put the starting well and garden in the east part (Chicago x19–22, highway x26–29).
 
-### APP-006 — App: easier placing [Specced 2026-11-01 — blocked by CORE-010]
+### APP-006 — App: easier placing [Ready — CORE-010 done 2026-11-02]
 - **Goal:** picking a building and putting it down takes one or two touches.
-- **Needs:** CORE-010.
-- **Scope:** ghost opens at `suggestSpot` near the screen centre (bar says "No room — expand your fence" if none); **Rotate** button in the placement bar for rotatable buildings (also in Move); ghost/footprint/outline/pick boxes drawn turned; interim `presentation.json reality3d.fitToFootprint` (margin in tiles) scales today's models to fill their footprint; placement grid shows free spots that fit the chosen building in light green.
+- **Needs:** CORE-010 (done). Core API: `loop.suggestSpot(defId:facing:near:ignoring:)` (nil = no room), `checkPlacement(defId:at:facing:)`, `checkMove(id:to:facing:)`, `.placeBuilding(defId:at:facing:)`, `.moveBuilding(id:to:facing:)`, `def.isRotatable`, `def.size(facing:)`, `building.size(def)` / `building.footprintTiles(def)`, `Facing.quarterTurns` for the model turn.
+- **Scope:** every App place that uses `def.width/height` for a placed building switches to `building.size(def)` (BuildingLayer3D, SelectionLayer3D, EffectsLayer3D, BarsLayer3D, DefenderLayer3D, World3D; the ghost uses `def.size(facing:)`); ghost opens at `suggestSpot` near the screen centre (bar says "No room — expand your fence" if none); **Rotate** button in the placement bar for rotatable buildings (also in Move); ghost/footprint/outline/pick boxes drawn turned; interim `presentation.json reality3d.fitToFootprint` (margin in tiles) scales today's models to fill their footprint; placement grid shows free spots that fit the chosen building in light green.
 - **Do NOT build:** new models (MOD-010), Core rule changes, drag-to-rotate gestures.
 - **Exit check:** in the simulator: place each building type in the starting compound in ≤ 2 touches + Confirm, rotate a Storage, move a Shelter and rotate it; screenshots before/after in `docs/plans/`; Core tests and simulator build pass.
 - **Start prompt:** "Implement ticket APP-006: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/input.md, docs/plans/buildings-and-look-plan.md §2 and the APP-006 section of docs/BUILD-QUEUE.md only."
@@ -538,7 +539,7 @@ _Full design, numbers and the "why it looks flat" diagnosis: `docs/plans/buildin
 - **Exit check:** overview + street-level screenshots next to the owner's map screenshot; day-1–10 hordes still reach the fence in a sensible time (balance note); fps at day 40; Core tests and simulator build pass.
 - **Start prompt:** "Implement ticket MAP-001: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/map-chicago.md, docs/plans/buildings-and-look-plan.md §6 and the MAP-001 section of docs/BUILD-QUEUE.md only."
 
-### CORE-011 — Core: take over neighborhood houses [Specced 2026-11-01 — blocked by CORE-010]
+### CORE-011 — Core: take over neighborhood houses [Ready — parked until after the MVP (D-047)]
 - **Goal:** survivors can claim a house, garage or shop already on the map and turn it into one of their buildings, so the town grows into the neighborhood instead of only onto empty lots.
 - **Needs:** CORE-010 (rotation/footprint code it builds on). Takes the next free save version.
 - **Scope:** plan §8: `claimable` + allowed uses per decoration in the map JSON (Chicago map houses, garages, storefronts, taverns); `buildings.json rules.claim` (`costPct` 60, `buildSecondsPct` 75, `hpMultiplier` 1.5, `maxDistanceTiles`, `housingPerTile`, storage per tile — first guesses); `Command.claim(decoration:as:)` → normal build job (slot, builder, pay on start) with problems (notClaimable, useNotAllowed, tooFar, queue/cost/HQ-level like placement); the building takes the house's footprint and remembers `claimedFrom`; the map stops counting the claimed decoration as a blocker; HP/housing/storage scale as above; demolish → cleared buildable lot; rubble rebuild as normal; pathing treats claimed houses as attackable buildings; save + migration + previous-version decode test; validator checks claimable uses are real building ids.

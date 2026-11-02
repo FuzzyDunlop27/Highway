@@ -72,8 +72,8 @@ public final class GameLoop {
     @discardableResult
     public func send(_ command: Command) -> Result<CommandOutcome, CommandError> {
         switch command {
-        case .placeBuilding(let defId, let at):
-            let result = ConstructionSystem.place(defId: defId, at: at, state: &state, content: content)
+        case .placeBuilding(let defId, let at, let facing):
+            let result = ConstructionSystem.place(defId: defId, at: at, facing: facing, state: &state, content: content)
             BuildQueue.startJobs(&state, content: content)
             Staffing.assign(&state, content: content)
             return result
@@ -82,8 +82,8 @@ public final class GameLoop {
             BuildQueue.startJobs(&state, content: content)
             Staffing.assign(&state, content: content)
             return result
-        case .moveBuilding(let id, let to):
-            return ConstructionSystem.move(id: id, to: to, state: &state, content: content)
+        case .moveBuilding(let id, let to, let facing):
+            return ConstructionSystem.move(id: id, to: to, facing: facing, state: &state, content: content)
         case .demolish(let id):
             return ConstructionSystem.demolish(id: id, state: &state, content: content)
         case .setSpeed(let speed):
@@ -136,8 +136,15 @@ public final class GameLoop {
     // MARK: Questions the App asks
 
     /// "Can I place `defId` with its top-left tile here?" — for the ghost preview. Includes cost and limits.
-    public func checkPlacement(defId: String, at origin: GridPoint) -> PlacementCheck {
-        ConstructionSystem.checkPlace(defId: defId, at: origin, state: state, content: content)
+    public func checkPlacement(defId: String, at origin: GridPoint, facing: Facing = .south) -> PlacementCheck {
+        ConstructionSystem.checkPlace(defId: defId, at: origin, facing: facing, state: state, content: content)
+    }
+
+    /// The nearest top-left tile to `near` where `defId` fits on the ground facing `facing` (within
+    /// buildings.json `rules.suggestSpotRadiusTiles`), or nil if nothing fits. Pass `ignoring` when moving that building.
+    /// Ground only: cost, limits and the queue are `checkPlacement`'s job.
+    public func suggestSpot(defId: String, facing: Facing = .south, near: GridPoint, ignoring: BuildingID? = nil) -> GridPoint? {
+        SpotFinder.nearest(defId: defId, facing: facing, near: near, ignoring: ignoring, state: state, content: content)
     }
 
     /// What `.placeLine` would build from `from` to `to`: path, buildable/skipped tiles, total cost (wall tool preview).
@@ -145,9 +152,9 @@ public final class GameLoop {
         WallLinePlanner.plan(defId: defId, from: from, to: to, state: state, content: content)
     }
 
-    /// "Can building `id` move here?" — ground only (moving is free). Nil if `id` doesn't exist.
-    public func checkMove(id: BuildingID, to origin: GridPoint) -> PlacementCheck? {
-        ConstructionSystem.checkMove(id: id, to: origin, state: state, content: content)
+    /// "Can building `id` move here (and turn to `facing`, nil = as it is)?" — ground only (moving is free). Nil if `id` doesn't exist.
+    public func checkMove(id: BuildingID, to origin: GridPoint, facing: Facing? = nil) -> PlacementCheck? {
+        ConstructionSystem.checkMove(id: id, to: origin, facing: facing, state: state, content: content)
     }
 
     /// What `.repair(id:)` would cost right now, or nil if the building needs no repair (for the Repair button).
@@ -199,7 +206,7 @@ public final class GameLoop {
     public func building(at tile: GridPoint) -> Building? {
         state.base.buildings.first { b in
             guard let def = content.buildingDef(b.defId) else { return false }
-            return b.origin.footprintTiles(width: def.width, height: def.height).contains(tile)
+            return b.footprintTiles(def).contains(tile)
         }
     }
 }

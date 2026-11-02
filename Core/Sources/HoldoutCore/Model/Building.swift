@@ -11,6 +11,8 @@ public struct Building: Codable, Equatable, Identifiable, Sendable {
     public var level: Int
     /// Top-left tile of the footprint.
     public var origin: GridPoint
+    /// Which way the front points; east/west turn the footprint (only for `rotatable` buildings).
+    public var facing: Facing
     public var hp: Int
     /// Ticks left until construction finishes; 0 = finished and working.
     public var constructionTicksLeft: Int
@@ -37,11 +39,12 @@ public struct Building: Codable, Equatable, Identifiable, Sendable {
 
     public init(id: BuildingID, defId: String, level: Int, origin: GridPoint, hp: Int,
                 constructionTicksLeft: Int, constructionTicksTotal: Int, invested: Cost, staffed: Int = 0,
-                isRubble: Bool = false, assignedWorkers: Int? = nil, heldReward: Cost? = nil) {
+                isRubble: Bool = false, assignedWorkers: Int? = nil, heldReward: Cost? = nil, facing: Facing = .south) {
         self.id = id
         self.defId = defId
         self.level = level
         self.origin = origin
+        self.facing = facing
         self.hp = hp
         self.constructionTicksLeft = constructionTicksLeft
         self.constructionTicksTotal = constructionTicksTotal

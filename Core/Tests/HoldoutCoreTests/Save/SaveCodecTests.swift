@@ -80,7 +80,7 @@ struct SaveCodecTests {
         var bases = state["bases"] as! [[String: Any]]
         for key in ["defenders", "nextDefenderID", "training", "runs", "research"] { bases[0].removeValue(forKey: key) }
         bases[0]["buildings"] = (bases[0]["buildings"] as! [[String: Any]]).map { b in
-            var b = b; b.removeValue(forKey: "assignedWorkers"); b.removeValue(forKey: "heldReward"); return b
+            var b = b; for key in ["assignedWorkers", "heldReward", "facing"] { b.removeValue(forKey: key) }; return b
         }
         state["bases"] = bases
         json["state"] = state
@@ -113,5 +113,32 @@ struct SaveCodecTests {
         json["version"] = 4
         let decoded = try SaveCodec.decode(JSONSerialization.data(withJSONObject: json))
         #expect(decoded == loop.state)
+    }
+
+    // MARK: Ticket CORE-010 migration (v5 → v6)
+
+    /// A v5 save: buildings have no facing. A Shelter there was 2 × 2 at (8, 20).
+    @Test func version5SaveFacesSouthAndOldTwoByTwoShrinksInPlace() throws {
+        let loop = try TestSupport.loop()
+        loop.send(.placeBuilding(defId: "shelter", at: TestSupport.grassSpot))
+        loop.step(ticks: 300)
+        var json = try JSONSerialization.jsonObject(with: SaveCodec.encode(loop.state)) as! [String: Any]
+        var state = json["state"] as! [String: Any]
+        var bases = state["bases"] as! [[String: Any]]
+        bases[0]["buildings"] = (bases[0]["buildings"] as! [[String: Any]]).map { b in
+            var b = b; b.removeValue(forKey: "facing"); return b
+        }
+        state["bases"] = bases
+        json["state"] = state
+        json["version"] = 5
+        let decoded = try SaveCodec.decode(JSONSerialization.data(withJSONObject: json))
+        #expect(decoded == loop.state)
+        #expect(decoded.base.buildings.allSatisfy { $0.facing == .south })
+        let shelter = try #require(decoded.base.buildings.first { $0.defId == "shelter" })
+        #expect(shelter.origin == TestSupport.grassSpot)
+        // The old bottom row of its 2 × 2 spot is free ground now.
+        let resumed = try GameLoop(content: loop.content, state: decoded)
+        #expect(resumed.building(at: GridPoint(x: 8, y: 21)) == nil)
+        #expect(resumed.checkPlacement(defId: "wall_wood", at: GridPoint(x: 9, y: 21)).isValid)
     }
 }

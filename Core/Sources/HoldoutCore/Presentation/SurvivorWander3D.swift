@@ -19,7 +19,7 @@ public struct SurvivorWalkGrid: Sendable {
         for p in map.decorationTiles where map.contains(p) { open[p.y * map.width + p.x] = false }
         for b in state.base.buildings {
             guard let def = content.buildingDef(b.defId) else { continue }
-            for t in b.origin.footprintTiles(width: def.width, height: def.height) where map.contains(t) {
+            for t in b.footprintTiles(def) where map.contains(t) {
                 open[t.y * map.width + t.x] = false
             }
         }

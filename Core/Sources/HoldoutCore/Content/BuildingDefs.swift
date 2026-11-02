@@ -14,6 +14,8 @@ public struct ConstructionRulesDef: Codable, Sendable {
     public let buildersPerJob: Int
     public let constructionQueueLength: Int
     public let buildDuringHorde: Bool
+    /// How far (tiles) `GameLoop.suggestSpot` looks around the asked-for tile.
+    public let suggestSpotRadiusTiles: Int
     public let demolishRefundPct: Int
     /// Share of a running job's cost refunded when the player cancels it (waiting jobs paid nothing).
     public let cancelRefundPct: Int
@@ -50,8 +52,10 @@ public struct BuildingDef: Codable, Sendable {
     public let sprite: String
     public let turretSprite: String?
     public let category: String
-    /// [width, height] in tiles.
+    /// [width, height] in tiles when facing south (east/west swap them; see `size(facing:)`).
     public let footprint: [Int]
+    /// The player may turn it to face east/west/north (nil = no).
+    public let rotatable: Bool?
     /// Survivors needed to run it at full output.
     public let workers: Int
     /// How many may exist at HQ level 1, 2, 3.

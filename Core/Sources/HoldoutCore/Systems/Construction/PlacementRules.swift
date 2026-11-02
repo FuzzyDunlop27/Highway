@@ -32,29 +32,10 @@ public struct PlacementCheck: Equatable, Sendable {
 
 enum PlacementRules {
     /// Checks only the ground: on the map, buildable, no decoration, no other building (except `ignoring`).
-    static func footprintProblem(def: BuildingDef, origin: GridPoint, base: Base, map: MapDef,
+    static func footprintProblem(def: BuildingDef, origin: GridPoint, facing: Facing = .south, base: Base, map: MapDef,
                                  content: GameContent, ignoring: BuildingID?) -> (PlacementProblem?, [GridPoint]) {
-        let tiles = origin.footprintTiles(width: def.width, height: def.height)
-        let decorations = map.decorationTiles
-        var occupiedTiles = Set<GridPoint>()
-        for b in base.buildings where b.id != ignoring {
-            guard let other = content.buildingDef(b.defId) else { continue }
-            occupiedTiles.formUnion(b.origin.footprintTiles(width: other.width, height: other.height))
-        }
-        var problem: PlacementProblem?
-        var bad: [GridPoint] = []
-        for t in tiles {
-            let found: PlacementProblem?
-            if !map.contains(t) { found = .offMap }
-            else if map.tile(at: t)?.buildable != true || decorations.contains(t) { found = .blockedTerrain }
-            else if occupiedTiles.contains(t) { found = .occupied }
-            else { found = nil }
-            if let found {
-                bad.append(t)
-                if problem == nil { problem = found }
-            }
-        }
-        return (problem, bad)
+        let blocked = GroundTiles(base: base, map: map, content: content, ignoring: ignoring)
+        return blocked.problem(tiles: def.footprintTiles(at: origin, facing: facing), map: map)
     }
 
     /// Checks the rules for building a new one (limit, HQ level, prerequisites, cost); ignores the ground.
@@ -84,5 +65,40 @@ enum PlacementRules {
         if !BuildQueue.hasRoom(state, content: content) { return .queueFull }
         if !base.stock.covers(level1.cost) { return .notEnoughResources(needed: level1.cost) }
         return nil
+    }
+}
+
+/// The tiles that already hold something (decorations, other buildings), worked out once so many spots
+/// can be checked quickly (the spot finder checks hundreds).
+struct GroundTiles {
+    let decorations: Set<GridPoint>
+    let occupied: Set<GridPoint>
+
+    init(base: Base, map: MapDef, content: GameContent, ignoring: BuildingID?) {
+        decorations = map.decorationTiles
+        var occupied = Set<GridPoint>()
+        for b in base.buildings where b.id != ignoring {
+            guard let other = content.buildingDef(b.defId) else { continue }
+            occupied.formUnion(b.footprintTiles(other))
+        }
+        self.occupied = occupied
+    }
+
+    /// The first ground problem among `tiles` (off map, blocked, occupied) and every bad tile.
+    func problem(tiles: [GridPoint], map: MapDef) -> (PlacementProblem?, [GridPoint]) {
+        var problem: PlacementProblem?
+        var bad: [GridPoint] = []
+        for t in tiles {
+            let found: PlacementProblem?
+            if !map.contains(t) { found = .offMap }
+            else if map.tile(at: t)?.buildable != true || decorations.contains(t) { found = .blockedTerrain }
+            else if occupied.contains(t) { found = .occupied }
+            else { found = nil }
+            if let found {
+                bad.append(t)
+                if problem == nil { problem = found }
+            }
+        }
+        return (problem, bad)
     }
 }

@@ -3,13 +3,14 @@ import Foundation
 
 /// Everything the App can ask Core to do. The App never edits `GameState` directly.
 public enum Command: Equatable, Sendable {
-    /// Pay the level-1 cost and start building `defId` with its top-left tile at `at`.
-    case placeBuilding(defId: String, at: GridPoint)
+    /// Pay the level-1 cost and start building `defId` with its top-left tile at `at`, front pointing `facing`
+    /// (east/west turn the footprint; buildings that aren't `rotatable` always face south).
+    case placeBuilding(defId: String, at: GridPoint, facing: Facing = .south)
     /// Build a whole line of 1×1 pieces (walls) from one tile to another at once: straight, or an L with one corner.
     /// Tiles that are blocked or already hold this piece are skipped. All or nothing on cost (see `GameLoop.planLine`).
     case placeLine(defId: String, from: GridPoint, to: GridPoint)
-    /// Move a building (finished or not) for free; its new spot must be valid.
-    case moveBuilding(id: BuildingID, to: GridPoint)
+    /// Move a building (finished or not) for free; its new spot must be valid. `facing` turns it too (nil = keep it).
+    case moveBuilding(id: BuildingID, to: GridPoint, facing: Facing? = nil)
     /// Remove a building and refund a share of what was paid (buildings.json demolishRefundPct).
     case demolish(id: BuildingID)
     /// Change game speed; must be one of economy.json speedOptions (0 = pause).

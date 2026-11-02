@@ -1,5 +1,5 @@
 {
-  "_notes": "Phase 1 buildings and defenses. id = graphics-spec name without prefix; sprite = exact asset id (defenses with turrets list base + turret). footprint = [w, h] in tiles. levels[n]: cost = {scrap, food} to build (L1) or upgrade to that level (L2/L3); buildSeconds = in-game seconds at 1x; hp = max HP at that level; requiredHq = min HQ level; effects vary by type: productionPerMin (at full staff, scales linearly with workers staffed), storageAdded (added to food+scrap caps), housing (survivor cap), range (tiles), damage (per shot), fireRate (shots/sec), slowPct (move-speed reduction while on tile), dps (spike damage per second to each zombie on tile). workers = survivors assigned to run it (towers fire only when staffed; a garrisoned defender counts as the worker and applies units.json garrison.towerDamageMultiplier). maxCountByHq = how many may exist at HQ 1/2/3. requires = other prerequisites (building id + level, or research id). startingLayout = what a fresh map places (positions come from the map file). rules = global construction/repair/rubble formulas.",
+  "_notes": "Phase 1 buildings and defenses. id = graphics-spec name without prefix; sprite = exact asset id (defenses with turrets list base + turret). footprint = [w, h] in tiles when facing south; rotatable = can face east/west too, which swaps w and h (north/south keep it). levels[n]: cost = {scrap, food} to build (L1) or upgrade to that level (L2/L3); buildSeconds = in-game seconds at 1x; hp = max HP at that level; requiredHq = min HQ level; effects vary by type: productionPerMin (at full staff, scales linearly with workers staffed), storageAdded (added to food+scrap caps), housing (survivor cap), range (tiles), damage (per shot), fireRate (shots/sec), slowPct (move-speed reduction while on tile), dps (spike damage per second to each zombie on tile). workers = survivors assigned to run it (towers fire only when staffed; a garrisoned defender counts as the worker and applies units.json garrison.towerDamageMultiplier). maxCountByHq = how many may exist at HQ 1/2/3. requires = other prerequisites (building id + level, or research id). startingLayout = what a fresh map places (positions come from the map file). rules = global construction/repair/rubble formulas.",
   "schemaVersion": 1,
   "rules": {
     "constructionSlotsByHq": [2, 3, 4],
@@ -8,6 +8,8 @@
     "constructionQueueLength": 6,
     "_queueNote": "cost is paid when a job STARTS, not when queued; a queued job auto-starts when a slot, a free builder and the resources are available (also during offline catch-up)",
     "buildDuringHorde": true,
+    "suggestSpotRadiusTiles": 12,
+    "_suggestSpotNote": "spot finder (GameLoop.suggestSpot): looks this many tiles around the asked-for tile for the nearest spot the building fits",
     "demolishRefundPct": 50,
     "cancelRefundPct": 75,
     "_cancelNote": "cancelling a RUNNING construction/upgrade/rebuild refunds this % of its cost; cancelling a queued one costs nothing (it paid nothing)",
@@ -25,7 +27,7 @@
       "rubbleSprite1x1": "dec_rubble"
     },
     "constructionSprites": {
-      "2x2": "bld_construction_2x2",
+      "2x2": "bld_construction_2x2", "2x1": "bld_construction_2x2",
       "3x3": "bld_construction_3x3",
       "1x1": "bld_construction_2x2",
       "_1x1Note": "no 1x1 scaffold sprite in the graphics spec; walls/towers reuse the 2x2 one scaled down"
@@ -33,7 +35,7 @@
   },
   "startingLayout": [
     { "id": "hq", "level": 1, "count": 1 },
-    { "id": "wall_fence", "level": 1, "count": 28 },
+    { "id": "wall_fence", "level": 1, "count": 40 },
     { "id": "watchtower", "level": 1, "count": 1, "staffed": true }
   ],
   "buildings": [
@@ -59,7 +61,8 @@
       "displayName": "Shelter",
       "sprite": "bld_shelter",
       "category": "housing",
-      "footprint": [2, 2],
+      "footprint": [2, 1],
+      "rotatable": true,
       "workers": 0,
       "maxCountByHq": [2, 4, 6],
       "levels": [
@@ -87,7 +90,8 @@
       "displayName": "Scavenger Post",
       "sprite": "bld_scavenger",
       "category": "production",
-      "footprint": [2, 2],
+      "footprint": [2, 1],
+      "rotatable": true,
       "workers": 2,
       "maxCountByHq": [2, 3, 4],
       "levels": [
@@ -113,7 +117,8 @@
       "displayName": "Workshop",
       "sprite": "bld_workshop",
       "category": "utility",
-      "footprint": [2, 2],
+      "footprint": [2, 1],
+      "rotatable": true,
       "workers": 2,
       "maxCountByHq": [1, 1, 1],
       "levels": [
@@ -127,7 +132,8 @@
       "displayName": "Barracks",
       "sprite": "bld_barracks",
       "category": "military",
-      "footprint": [2, 2],
+      "footprint": [2, 1],
+      "rotatable": true,
       "workers": 1,
       "maxCountByHq": [1, 1, 1],
       "levels": [
@@ -141,7 +147,8 @@
       "displayName": "Storage",
       "sprite": "bld_storage",
       "category": "utility",
-      "footprint": [2, 2],
+      "footprint": [2, 1],
+      "rotatable": true,
       "workers": 0,
       "maxCountByHq": [1, 2, 3],
       "levels": [
@@ -159,7 +166,7 @@
       "category": "wall",
       "footprint": [1, 1],
       "workers": 0,
-      "maxCountByHq": [40, 80, 120],
+      "maxCountByHq": [52, 92, 132],
       "blocksPath": "bashable",
       "levels": [
         { "level": 1, "cost": { "scrap": 10, "food": 0 }, "buildSeconds": 5, "hp": 200, "requiredHq": 1, "effects": {} },
@@ -174,7 +181,7 @@
       "category": "wall",
       "footprint": [1, 1],
       "workers": 0,
-      "maxCountByHq": [40, 80, 120],
+      "maxCountByHq": [52, 92, 132],
       "sharesCountWith": "wall_wood",
       "blocksPath": "bashable",
       "requires": { "research": "metal_fortification" },
@@ -192,7 +199,7 @@
       "category": "wall",
       "footprint": [1, 1],
       "workers": 0,
-      "maxCountByHq": [40, 80, 120],
+      "maxCountByHq": [52, 92, 132],
       "sharesCountWith": "wall_wood",
       "blocksPath": "bashable",
       "canReplace": "wall_wood",

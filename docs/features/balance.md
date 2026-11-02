@@ -52,7 +52,11 @@ Income check: ~20/min each at 15 min, ~40 food + 60 scrap/min at 60 min. Scrap i
 - `Content/resources.json`, `buildings.json`, `zombies.json`, `units.json`, `hordes.json`, `research.json`, `offline.json`, `economy.json`
 
 ## Change log
+- 2026-11-02 — CORE-010: starting fence 13 × 9 (40 Chain Fence, 12,000 HP total, was 28 / 8,400); wall limit 52/92/132 (was 40/80/120) so you still have 12 pieces to spare at HQ 1. Early-horde check below.
 - 2026-10-31 — First tuning pass for all Phase 1 content files.
+
+## Early-horde check after the bigger fence (CORE-010, 2026-11-02)
+Test `StartingCompoundTests.earlyHordesStillDamageTheFence`: fresh town, nothing built, days 1–5 started at once. Every day still breaks into the fence on both maps: about one section (300 HP) goes down, sometimes two (Chicago days 1, 3, 4), and zombies get through to the HQ (Chicago HQ left at 934 → 51 HP by day 5; highway 867 → 250). The old 9 × 7 ring gave almost the same numbers (one section lost each day, Chicago day-5 HQ 27 HP). The longer fence adds HP but zombies only hit the stretch nearest them, so the first hordes feel the same. No change needed.
 
 ## Playtest APP-002 (2026-11-01, agent-played in the iPhone 18 Pro simulator, 2x, fresh town, ~38 game-minutes)
 What happened: Farm + Scavenger Post first, Barracks + 2 defenders (one in the Watchtower, one holding a spot at the west road), Shelter, 2nd Farm, HQ L2 started ~game-min 25 and done ~28, Workshop (Marksmanship research started), Storage. Hordes 1–4 (5, ~8, brute day, 7 zombies) were all "Held!"; only one wall turned to rubble (day 2, rebuilt for 1 scrap). Not played: HQ L3, metal walls, 2nd tower, levels above 2, the 1x pace.

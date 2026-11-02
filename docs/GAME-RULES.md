@@ -98,12 +98,13 @@ _The one place to read and tweak how the game plays. Owner: change a rule's word
 | Each job borrows 1 idle survivor as builder | `rules.buildersPerJob` (1) | ✅ |
 | Demolish refunds 50%; cancelling a running job refunds 75% | `rules.demolishRefundPct`, `cancelRefundPct` | ✅ |
 | Repair costs 50% of level cost × missing HP; rubble rebuild 50% of invested | `rules.repair`, `rules.rubble` | ✅ |
-| New game: HQ, closed ring of 28 **Chain Fence** walls (the starting barricade, owner 2026-11-01; was wood), 1 staffed watchtower | `buildings.json → startingLayout`; positions in the map's `startingPositions` | ✅ (+ well, garden 🟡 CORE-005) |
+| New game: HQ, closed **13 × 9** ring of 40 **Chain Fence** walls (the starting barricade, owner 2026-11-01; was wood; was 9 × 7 / 28 before CORE-010), 1 staffed watchtower; 67 free tiles inside | `buildings.json → startingLayout`; positions in the map's `startingPositions` | ✅ (+ well, garden 🟡 CORE-005) |
 | New games start on the **Chicago block**: 4-lane main street (not buildable) + side street, alley, houses, shops, vacant lots; old saves keep the highway map | `GameStore.startingMapId`; `maps/phase1_chicago.json` | ✅ (D-044) |
-| **Planned (CORE-010, D-046):** Shelter, Scavenger, Workshop, Barracks, Storage shrink from 2×2 to **2×1** and can be rotated; HQ 3×3 and Farm 2×2 stay; starting fence ring grows from 9×7 to **13×9**; the ghost opens on the nearest spot that fits | `buildings.json → footprint`, `rotatable`, `startingLayout`; spot-finder radius (new) | 🟡 CORE-010 |
+| Footprints: HQ 3×3, Farm 2×2; **Shelter, Scavenger, Workshop, Barracks, Storage 2×1** and can be turned (east/west make them 1×2); walls, towers and traps 1×1. Old saves: those five keep their spot and shrink to 2×1 facing south | `buildings.json → footprint`, `rotatable` | ✅ Core (CORE-010, D-046); Rotate button 🟡 APP-006 |
+| Spot finder: the nearest spot (within 12 tiles) where a building fits, so the ghost opens there | `buildings.json → rules.suggestSpotRadiusTiles` (12) | ✅ Core; ghost 🟡 APP-006 |
 | **Planned (CORE-011, D-046):** take over a house, garage or shop on the map near your town and turn it into a Shelter/Workshop/Storage/… at 60% of the build cost and 75% of the time; it keeps the house's size, has 1.5× HP, and big houses hold more | `buildings.json → rules.claim` (new); `maps/*.json → decorations[].claimable` | 🟡 CORE-011 |
 | Build and repair during hordes | `rules.buildDuringHorde` (true) | ✅ |
-| Barrier choices (drawn as a line, share one wall limit 40/80/120): Wood Wall 10 scrap 200 HP; **Chain Fence** 15 scrap 300 HP (no research); Metal Wall 30 scrap 800 HP (needs Metal Fortification) — level 1 numbers | `buildings.json → defenses wall_wood / wall_fence / wall_metal` | ✅ (fence numbers are a first guess, D-043) |
+| Barrier choices (drawn as a line, share one wall limit 52/92/132; was 40/80/120, raised by 12 so the 40-piece starting fence leaves the same room as before): Wood Wall 10 scrap 200 HP; **Chain Fence** 15 scrap 300 HP (no research); Metal Wall 30 scrap 800 HP (needs Metal Fortification) — level 1 numbers | `buildings.json → defenses wall_wood / wall_fence / wall_metal` | ✅ (fence numbers are a first guess, D-043) |
 | Map props and neighborhood buildings (houses, shops, garages, street lights, wrecks, trees, junk, weeds) block building and zombies on their tiles | `maps/*.json → decorations` | ✅ |
 | Zombies enter at both ends of the main street and of the side street | `maps/phase1_chicago.json → spawnEdges` (ids shared with `hordes.json`) | ✅ |
 
@@ -183,6 +184,7 @@ _The one place to read and tweak how the game plays. Owner: change a rule's word
 
 ## Change log
 - 2026-11-01 — Planned (owner yes): take over neighborhood houses (D-046, tickets CORE-011/APP-007).
+- 2026-11-02 — Built (CORE-010, D-048): five buildings 2×1 and rotatable, 13 × 9 starting fence (40 pieces), wall limit 52/92/132, spot finder.
 - 2026-11-01 — Planned: smaller 2×1 footprints with rotation, bigger starting fence, spot finder (D-046, chunk CORE-010).
 - 2026-11-01 — Starting barricade is now 28 Chain Fence sections instead of wood walls (300 HP each instead of 200).
 - 2026-11-01 — New games start on the Chicago block map (D-044).

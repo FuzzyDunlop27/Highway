@@ -110,7 +110,7 @@ struct BuildingTileIndex {
         slots = Array(repeating: -1, count: map.width * map.height)
         for (i, b) in buildings.enumerated() where !b.isRubble {
             guard let def = content.buildingDef(b.defId) else { continue }
-            for t in b.origin.footprintTiles(width: def.width, height: def.height) where map.contains(t) {
+            for t in b.footprintTiles(def) where map.contains(t) {
                 slots[t.y * width + t.x] = i
             }
         }

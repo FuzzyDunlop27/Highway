@@ -3,27 +3,29 @@ import Foundation
 
 enum ConstructionSystem {
     /// Full placement check for a new building at `origin`: ground first, then rules and cost.
-    static func checkPlace(defId: String, at origin: GridPoint, state: GameState, content: GameContent) -> PlacementCheck {
+    static func checkPlace(defId: String, at origin: GridPoint, facing: Facing = .south, state: GameState,
+                           content: GameContent) -> PlacementCheck {
         guard let def = content.buildingDef(defId) else { return PlacementCheck(problem: .unknownBuilding(defId), badTiles: []) }
         guard let map = content.maps[state.base.mapId] else { return PlacementCheck(problem: .offMap, badTiles: []) }
-        let (ground, bad) = PlacementRules.footprintProblem(def: def, origin: origin, base: state.base, map: map,
-                                                            content: content, ignoring: nil)
+        let (ground, bad) = PlacementRules.footprintProblem(def: def, origin: origin, facing: facing, base: state.base,
+                                                            map: map, content: content, ignoring: nil)
         let problem = ground ?? PlacementRules.ruleProblem(def: def, state: state, content: content)
         return PlacementCheck(problem: problem, badTiles: bad)
     }
 
-    /// Ground-only check for moving building `id` so its top-left tile is `origin`.
-    static func checkMove(id: BuildingID, to origin: GridPoint, state: GameState, content: GameContent) -> PlacementCheck? {
+    /// Ground-only check for moving building `id` so its top-left tile is `origin`, facing `facing` (nil = as it is now).
+    static func checkMove(id: BuildingID, to origin: GridPoint, facing: Facing? = nil, state: GameState,
+                          content: GameContent) -> PlacementCheck? {
         guard let building = state.base.building(id), let def = content.buildingDef(building.defId),
               let map = content.maps[state.base.mapId] else { return nil }
-        let (problem, bad) = PlacementRules.footprintProblem(def: def, origin: origin, base: state.base, map: map,
-                                                             content: content, ignoring: id)
+        let (problem, bad) = PlacementRules.footprintProblem(def: def, origin: origin, facing: facing ?? building.facing,
+                                                             base: state.base, map: map, content: content, ignoring: id)
         return PlacementCheck(problem: problem, badTiles: bad)
     }
 
-    static func place(defId: String, at origin: GridPoint, state: inout GameState,
+    static func place(defId: String, at origin: GridPoint, facing: Facing = .south, state: inout GameState,
                       content: GameContent) -> Result<CommandOutcome, CommandError> {
-        let check = checkPlace(defId: defId, at: origin, state: state, content: content)
+        let check = checkPlace(defId: defId, at: origin, facing: facing, state: state, content: content)
         if let problem = check.problem { return .failure(.placement(problem)) }
         guard let def = content.buildingDef(defId), let level1 = def.level(1) else {
             return .failure(.placement(.unknownBuilding(defId)))
@@ -34,20 +36,23 @@ enum ConstructionSystem {
         // The cost is paid when the job starts (BuildQueue), so `invested` begins at zero.
         state.base.buildings.append(Building(id: id, defId: defId, level: 1, origin: origin, hp: level1.hp,
                                              constructionTicksLeft: ticks, constructionTicksTotal: ticks,
-                                             invested: .zero))
+                                             invested: .zero, facing: def.allowedFacing(facing)))
         BuildQueue.enqueue(ConstructionJob(buildingId: id, kind: .build, targetLevel: 1, cost: level1.cost,
                                            ticksLeft: ticks, ticksTotal: ticks), &state)
         return .success(.placed(id))
     }
 
-    static func move(id: BuildingID, to origin: GridPoint, state: inout GameState,
+    static func move(id: BuildingID, to origin: GridPoint, facing: Facing? = nil, state: inout GameState,
                      content: GameContent) -> Result<CommandOutcome, CommandError> {
-        guard let check = checkMove(id: id, to: origin, state: state, content: content),
+        guard let check = checkMove(id: id, to: origin, facing: facing, state: state, content: content),
               let index = state.base.buildings.firstIndex(where: { $0.id == id }) else {
             return .failure(.unknownBuildingID(id))
         }
         if let problem = check.problem { return .failure(.placement(problem)) }
         state.base.buildings[index].origin = origin
+        if let facing, let def = content.buildingDef(state.base.buildings[index].defId) {
+            state.base.buildings[index].facing = def.allowedFacing(facing)
+        }
         return .success(.moved)
     }
 
