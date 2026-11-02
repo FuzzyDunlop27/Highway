@@ -69,6 +69,9 @@ enum ContentValidator {
             || c.maxPitchDegrees > 90 {
             throw fail(file, "reality3d.camera: need 0 < minPitchDegrees <= startPitchDegrees <= maxPitchDegrees <= 90")
         }
+        for (id, t) in r.groundTextures ?? [:] where t.file.isEmpty || t.repeatTiles <= 0 {
+            throw fail(file, "reality3d.groundTextures.\(id): needs a file and a repeatTiles above 0")
+        }
         if c.snapAngles < 1 { throw fail(file, "reality3d.camera.snapAngles must be at least 1") }
         if c.fieldOfViewDegrees <= 0 || c.fieldOfViewDegrees >= 180 { throw fail(file, "reality3d.camera.fieldOfViewDegrees must be 0–180") }
         if c.minHeightMetres < 0 || c.snapTurnSeconds < 0 || c.twistThresholdDegrees <= 0 || c.pinchSensitivity <= 0 {

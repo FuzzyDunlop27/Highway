@@ -41,7 +41,8 @@ final class World3D {
         camera.camera.fieldOfViewInDegrees = Float(settings.camera.fieldOfViewDegrees)
         camera.camera.far = Float(settings.camera.maxDistance * 3)
         root.addChild(camera)
-        root.addChild(GroundMesh3D.make(map: loop.map, mapping: mapping, registry: registry))
+        root.addChild(GroundMesh3D.make(map: loop.map, mapping: mapping, registry: registry,
+                                        textures: settings.groundTextures ?? [:]))
         root.addChild(GroundMesh3D.decorations(map: loop.map, mapping: mapping, settings: settings, registry: registry))
         root.addChild(buildings.root)
         root.addChild(zombies.root)

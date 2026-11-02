@@ -55,7 +55,20 @@
     {"id": "dec_tree_dead", "x": 36, "y": 24, "footprint": [1, 1]},
     {"id": "dec_tree_dead", "x": 14, "y": 8, "footprint": [1, 1]},
     {"id": "dec_rubble", "x": 24, "y": 9, "footprint": [1, 1]},
-    {"id": "dec_rubble", "x": 12, "y": 17, "footprint": [1, 1]}
+    {"id": "dec_rubble", "x": 12, "y": 17, "footprint": [1, 1]},
+    {"id": "dec_camp", "x": 33, "y": 15, "footprint": [2, 1]},
+    {"id": "dec_fuel_cache", "x": 37, "y": 7, "footprint": [1, 1]},
+    {"id": "dec_fuel_cache", "x": 31, "y": 23, "footprint": [1, 1]},
+    {"id": "dec_supply_crates", "x": 33, "y": 26, "footprint": [1, 1]},
+    {"id": "dec_junk_pile", "x": 38, "y": 11, "footprint": [1, 1]},
+    {"id": "dec_junk_pile", "x": 30, "y": 10, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 36, "y": 8, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 32, "y": 7, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 37, "y": 17, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 34, "y": 21, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 38, "y": 23, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 31, "y": 27, "footprint": [1, 1]},
+    {"id": "dec_weeds", "x": 35, "y": 28, "footprint": [1, 1]}
   ],
   "spawnEdges": [
     {"id": "highway_offramp_east", "x": 39, "y": 1, "w": 1, "h": 4},

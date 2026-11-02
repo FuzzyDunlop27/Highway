@@ -89,6 +89,14 @@
       "shadows": true,
       "shadowMaxDistance": 45,
       "shadowDepthBias": 1.5
+    },
+    "_groundTexturesNote": "Poly Haven CC0 photo textures per tile id; image files live in App/Textures/Ground/. repeatTiles = how many tiles one copy of the image covers; tint is multiplied in. Remove an entry to go back to the flat color.",
+    "groundTextures": {
+      "tile_grass": { "file": "grass_ground_diff.jpg", "repeatTiles": 1.5, "tint": "#D8D8C8" },
+      "tile_dirt": { "file": "muddy_tracks_diff.jpg", "repeatTiles": 2, "tint": "#FFFFFF" },
+      "tile_concrete": { "file": "cracked_concrete_02_diff.jpg", "repeatTiles": 2, "tint": "#E6E2DA" },
+      "tile_asphalt": { "file": "concrete_rock_path_diff.jpg", "repeatTiles": 2, "tint": "#5C5D60" },
+      "tile_asphalt_line": { "file": "concrete_rock_path_diff.jpg", "repeatTiles": 2, "tint": "#5C5D60" }
     }
   }
 }

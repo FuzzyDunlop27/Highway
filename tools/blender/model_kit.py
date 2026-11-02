@@ -88,9 +88,18 @@ def piece(name, x=0.0, y=0.0, z=0.0, turn=0.0, scale=1.0, tilt=(0.0, 0.0)):
     return place(_import_joined('kit_' + name, os.path.join(KIT, name + '.gltf')), x, y, z, turn, scale, tilt)
 
 
+def prop_folder(name):
+    """A Poly Haven download folder: items/, foliage/ or (older downloads) straight under polyhaven/."""
+    for sub in ('items', 'foliage', ''):
+        path = os.path.join(POLYHAVEN, sub, name)
+        if os.path.isdir(path):
+            return path
+    raise FileNotFoundError(f'Poly Haven folder {name!r} not found under {POLYHAVEN}')
+
+
 def prop(name, x=0.0, y=0.0, z=0.0, turn=0.0, scale=1.0, tilt=(0.0, 0.0)):
     """One Poly Haven model (real metres), decimated to about PROP_MAX_TRIS, origin at its footprint's ground middle."""
-    folder = os.path.join(POLYHAVEN, name)
+    folder = prop_folder(name)
     path = next(os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.gltf'))
     return place(_import_joined('ph_' + name, path, PROP_MAX_TRIS, ground_centre=True), x, y, z, turn, scale, tilt)
 
@@ -219,7 +228,7 @@ SANDBAG_COLOUR = (0.16, 0.12, 0.07)  # burlap; the Poly Haven cement bag's print
 def _sandbag():
     """The Poly Haven cement bag, simplified and re-coloured plain burlap."""
     if 'sandbag' not in _templates:
-        folder = os.path.join(POLYHAVEN, 'cement_bag')
+        folder = prop_folder('cement_bag')
         path = next(os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.gltf'))
         bag = _import_joined('sandbag', path, SANDBAG_TRIS, ground_centre=True)
         bag.data.materials.clear()

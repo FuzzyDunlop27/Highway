@@ -43,7 +43,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Camera feel: pan, pinch, twist snap, tilt, min height, zoom limits | `Content/presentation.json` `reality3d.camera`; math `Core/.../Presentation/OrbitCamera3D.swift`; touches `App/Input/OrbitGestures3D.swift` |
 | Sun, shadows, fill light, background color | `Content/presentation.json` `reality3d.light`, `outsideMapColor`; code `App/Rendering/World3D.swift` |
 | Tile ↔ 3D world position | `Core/.../Presentation/WorldMapping3D.swift` |
-| Ground look (merged mesh, colors) | `App/Rendering/GroundMesh3D.swift` |
+| Ground look (merged mesh, colors, photo textures) | `App/Rendering/GroundMesh3D.swift`, `GroundTextures3D.swift`; which texture per tile: `Content/presentation.json` `reality3d.groundTextures`; images `App/Textures/Ground/` |
 | Game clock (who advances Core each frame) | `App/GameTicker.swift` |
 | Wall tool (drag a line, cost, Build) | `App/Input/PlacementController.swift` (`.drawingLine`), `App/UI/WallLineBarView.swift`; drawn by `App/Rendering/PlacementLayer3D.swift`; rules `Core/.../Construction/WallLinePlanner.swift` |
 | Tap-to-place, ghost, grid, invalid-spot red | logic `App/Input/PlacementController.swift`; touches `App/Input/PlacementTouches3D.swift`; drawing `App/Rendering/PlacementLayer3D.swift` |
@@ -180,6 +180,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] Reality3DView.swift   SwiftUI host: RealityView (virtual camera) + touch layer
 │  │  ├─ [x] World3D.swift         scene: camera, sun/fill light, ground, layers; per-frame sync to Core
 │  │  ├─ [x] GroundMesh3D.swift    one merged ground mesh + decorations; Reality3DSizes helpers
+│  │  ├─ [x] GroundTextures3D.swift repeating photo textures for ground tiles (presentation.json groundTextures)
 │  │  ├─ [x] BuildingLayer3D.swift one entity per building, rebuilt on Signature change; wall direction; pick boxes
 │  │  ├─ [x] PlacementLayer3D.swift ghost, tile grid, green/red footprint, planned wall line (3R)
 │  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
@@ -218,6 +219,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] SaveFileStore.swift        Read/write Application Support/HighwayHoldout/save.json
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
+│  ├─ Textures/Ground/      Poly Haven CC0 ground photos (1024 px JPG) used by GroundTextures3D
 │  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (+ 4R turrets def_watchtower_gunner, def_mg_nest_gun) (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
 │  │                        3M: zmb_*.usdz / unit_*.usdz + <artId>.anim.json from tools/blender/export_characters.py — git-ignored (Mixamo, D-038)
 │  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
@@ -260,7 +262,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
       ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
       ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
       ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble
-      ├─ [x] recipes_defenses.py   2M: walls, watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
+      ├─ [x] recipes_defenses.py   2M: walls (wood, metal, chain fence), watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
+      ├─ [x] recipes_dressing.py   map dressing props: fuel cache, supply crates, camp, junk pile, weeds
+      ├─ [x] blend_parts.py        single objects from Poly Haven .blend files (fence panel, foliage with cut-out leaves)
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks
 ```

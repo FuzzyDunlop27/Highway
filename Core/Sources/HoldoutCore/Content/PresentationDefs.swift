@@ -26,6 +26,17 @@ public struct Reality3DDef: Codable, Sendable {
     public let townLife: TownLife3DDef
     public let camera: Camera3DDef
     public let light: Light3DDef
+    /// Photo textures for ground tiles, by tile art id (e.g. "tile_grass"). A tile id not listed here, or a missing
+    /// image file, is drawn in its flat color. Optional so older files still load.
+    public let groundTextures: [String: GroundTexture3D]?
+}
+
+/// One ground texture: an image in the app bundle (`App/Textures/Ground/`), repeated every `repeatTiles` tiles.
+public struct GroundTexture3D: Codable, Sendable {
+    public let file: String
+    public let repeatTiles: Double
+    /// Hex color multiplied into the image ("#FFFFFF" = as photographed).
+    public let tint: String
 }
 
 public struct ZombieBox3D: Codable, Sendable {

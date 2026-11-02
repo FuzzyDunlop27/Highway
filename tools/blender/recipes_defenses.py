@@ -6,6 +6,7 @@ import math
 
 import bpy
 
+from blend_parts import blend_part
 from model_kit import box, coil, material, prop, sandbag_row, stake
 
 TILE = 2.44
@@ -36,6 +37,14 @@ def wall_metal():
         box((0.1, 0.1, 2.3), (x, 0.06, 0), _rust())
     for x, lean in ((-0.6, -1.0), (0.6, 1.2)):
         box((1.25, 0.04, 2.15), (x, -0.03, 0.05), sheet, tilt=(0, math.radians(lean)))
+
+
+FENCE_PANEL_WIDTH = 1.914  # metres, the Poly Haven 'double' panel with its two posts
+
+
+def wall_fence():
+    """Chain-link fence: the Poly Haven modular fence's double panel, stretched to one tile (see-through wire)."""
+    blend_part('modular_chainlink_fence', 'modular_chainlink_fence_double', scale=(TILE / FENCE_PANEL_WIDTH, 1, 1))
 
 
 def watchtower():
@@ -145,7 +154,7 @@ def tree_dead():
 
 # art id: (recipe, footprint tiles w × h)
 RECIPES = {
-    'def_wall_wood': (wall_wood, (1, 1)), 'def_wall_metal': (wall_metal, (1, 1)),
+    'def_wall_wood': (wall_wood, (1, 1)), 'def_wall_metal': (wall_metal, (1, 1)), 'def_wall_fence': (wall_fence, (1, 1)),
     'def_watchtower_base': (watchtower, (1, 1)), 'def_mg_nest_base': (mg_nest, (1, 1)),
     'def_watchtower_gunner': (watchtower_gunner, (1, 1)), 'def_mg_nest_gun': (mg_nest_gun, (1, 1)),
     'def_spikes': (spikes, (1, 1)), 'def_barbwire': (barbwire, (1, 1)),

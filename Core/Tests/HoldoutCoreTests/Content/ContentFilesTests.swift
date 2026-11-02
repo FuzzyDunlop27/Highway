@@ -63,6 +63,19 @@ struct ContentFilesTests {
         #expect(throws: ContentError.self) { try ContentLoader.load(from: dir) }
     }
 
+    @Test func everyMapTileHasAGroundTextureAndBadRepeatFailsValidation() throws {
+        let content = try TestSupport.content()
+        let textured = Set(content.presentation.reality3d.groundTextures?.keys ?? [:].keys)
+        for map in content.maps.values {
+            for tile in map.legend.values { #expect(textured.contains(tile.tile), "\(tile.tile) has no ground texture") }
+        }
+        let dir = try copyOfContent()
+        let url = dir.appendingPathComponent("presentation.json")
+        let text = try String(contentsOf: url, encoding: .utf8).replacingOccurrences(of: "\"repeatTiles\": 1.5", with: "\"repeatTiles\": 0")
+        try Data(text.utf8).write(to: url)
+        #expect(throws: ContentError.self) { try ContentLoader.load(from: dir) }
+    }
+
     @Test func missingFileFails() throws {
         let dir = try copyOfContent()
         try FileManager.default.removeItem(at: dir.appendingPathComponent("units.json"))

@@ -10,6 +10,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - `App/Rendering/Reality3DView.swift` — SwiftUI host: background color, `RealityView` (`content.camera = .virtual`), per-frame `SceneEvents.Update` → `World3D.update`, and the touch layer.
 - `App/Rendering/World3D.swift` — the scene: camera entity, dusk sun (+ shadows) and fill light, ground, decorations, building and zombie layers; each frame finishes the camera turn, applies the camera, syncs to Core. Starts centered on the HQ.
 - `App/Rendering/GroundMesh3D.swift` — **one merged ground mesh** for the whole map (one part per tile art id × checker parity), plus the map's decorations; `Reality3DSizes` (placeholder heights, Core point → simd).
+- `App/Rendering/GroundTextures3D.swift` — repeating Poly Haven photo textures for ground tiles (`reality3d.groundTextures`); loads each image once from `App/Textures/Ground/` (1024 px JPGs, CC0); a missing image → the flat tile color.
 - `App/Rendering/BuildingLayer3D.swift` — one entity per building; rebuilt only when its `Signature` changes (def, level, origin, finished, rubble, wall direction). Picks the art id: finished → `sprite`, building (2×2+) → `constructionSprites`, building (1×1) → own art faded, rubble → `rubbleSprite1x1/2x2`. Walls in a north-south line turn 90°. `pickBoxes` gives one footprint box per building for taps and fading.
 - `App/Rendering/PlacementLayer3D.swift`, `SelectionLayer3D.swift`, `OccluderFader3D.swift`, `OverlayMeshes3D.swift` — placement ghost, grid, footprint, wall line, selection outline, range ring, fading in front of the ghost (chunk 3R; rules in `input.md`). Overlays are unlit, see-through merged meshes just above the ground that cast no shadow.
 - `App/Rendering/EffectsLayer3D.swift` + `EffectMeshes3D.swift` — Core's `SimEvent`s as short effects (4R): tower/defender tracers, muzzle flash, goo splat where a zombie died, dust cloud when a building falls, white flash on a trap, short shake of a hit building. Same caps as the old 2D EventPlayer: 60 goo splats (oldest goes), 80 air effects (extra skipped).
@@ -29,7 +30,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - Tests: `Core/Tests/HoldoutCoreTests/Presentation/{WorldMapping3D,OrbitCamera3D}Tests.swift`, `Content/ContentFilesTests.swift`.
 
 ## Data files
-- `Content/presentation.json` → `outsideMapColor`; `reality3d`: `metresPerTile`, `loadModels`, `placeholderHeightTiles` (per building category + `decoration`, `default`), `zombieBoxTiles`, `camera` (see `input.md`), `light` (sun elevation/azimuth/lux/color, fill lux/color, shadows on/off, shadow distance/bias).
+- `Content/presentation.json` → `outsideMapColor`; `reality3d`: `metresPerTile`, `loadModels`, `placeholderHeightTiles` (per building category + `decoration`, `default`), `zombieBoxTiles`, `camera` (see `input.md`), `light` (sun elevation/azimuth/lux/color, fill lux/color, shadows on/off, shadow distance/bias), `groundTextures` (tile art id → image `file`, `repeatTiles`, `tint`; optional).
 - `Content/maps/*.json` → `legend[*].tile` (ground colors by art id), `decorations` (id + footprint).
 - `Content/buildings.json` → `sprite`, `footprint`, `category` (box height), `rules.constructionSprites`, `rules.rubble.*`.
 - `Content/zombies.json` → `sprite` (zombie art id).
@@ -50,6 +51,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - No fps readout in the game since SpriteKit's went away; the 1R spike still has one. Add one with 5R's performance pass.
 
 ## Change log
+- 2026-11-01 — Ground textures (owner request, D-043): grass, dirt, concrete and asphalt tiles use Poly Haven photo textures (`GroundTextures3D`, UVs in tiles on the merged mesh); `presentation.json reality3d.groundTextures`. Checked in the simulator.
 - 2026-11-01 — Chunk 4R: effects (tracers, muzzle flash, goo, dust, trap flash, shake), health/progress bars, aiming turrets, horde warning arrows (D-039). Checked in the simulator; day-40 horde ~59–60 fps.
 - 2026-11-01 — Chunk 3M: animated zombies, gliding between ticks, runner/brute variants (`characters-3d.md`, D-038).
 - 2026-11-01 — Chunk 3R: placement/selection overlays (`PlacementLayer3D`, `SelectionLayer3D`, `OccluderFader3D`, `OverlayMeshes3D`); `BuildingLayer3D.pickBoxes`.

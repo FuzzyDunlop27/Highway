@@ -186,6 +186,23 @@
       ]
     },
     {
+      "id": "wall_fence",
+      "displayName": "Chain Fence",
+      "sprite": "def_wall_fence",
+      "category": "wall",
+      "footprint": [1, 1],
+      "workers": 0,
+      "maxCountByHq": [40, 80, 120],
+      "sharesCountWith": "wall_wood",
+      "blocksPath": "bashable",
+      "canReplace": "wall_wood",
+      "levels": [
+        { "level": 1, "cost": { "scrap": 15, "food": 0 }, "buildSeconds": 8, "hp": 300, "requiredHq": 1, "effects": {} },
+        { "level": 2, "cost": { "scrap": 25, "food": 0 }, "buildSeconds": 10, "hp": 500, "requiredHq": 2, "effects": {} },
+        { "level": 3, "cost": { "scrap": 40, "food": 0 }, "buildSeconds": 15, "hp": 750, "requiredHq": 3, "effects": {} }
+      ]
+    },
+    {
       "id": "watchtower",
       "displayName": "Watchtower",
       "sprite": "def_watchtower_base",
