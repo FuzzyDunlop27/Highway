@@ -25,20 +25,20 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Ren
 **Goal:** a playable first pass — enough to build that the town feels real, and supplies you can see coming in and going out on real screens, so it feels like a living place. The owner plays it, then picks the next phase.
 **Sacrificed for MVP:** looks (new buildings borrow an existing model or a labeled box with their name), and most extra activities (one food chain is enough; no chickens, canning, hunting, spotters, offline catch-up yet).
 
-Work these **in this order, one at a time** (each ticket's start prompt is in its section below):
+Work these **in this order, one at a time** (each ticket's start prompt is in its section below). **Model** = which Claude to pick for that chat: Opus for rules, saves and judgment; Sonnet for screens on top of finished rules. If a Sonnet ticket fails its exit check twice, rerun it on Opus.
 
-| # | Ticket | Why it is in the MVP |
-|---|---|---|
-| 1 | CORE-010 | Room to build: smaller footprints, rotation, bigger fence. Goes first because it changes the starting layout CORE-005 adds to. |
-| 2 | APP-006 | Placing a building takes one or two touches — building has to feel good. |
-| 3 | CORE-005 | Food and water: survivors eat and drink; Garden, Well, Rain Catcher. The heart of "supplies". |
-| 4 | APP-005 | Survival on screen: water in the HUD, Hungry/Thirsty banner, appeal, new build cards. **First playable checkpoint.** |
-| 5 | CORE-008 | Guns and bullets: a second supply chain (scrap → bullets at the Ammo Bench) tied to defense. |
-| 6 | CORE-009 | Three traps: more things to build outside the fence. |
-| 7 | APP-004 | Guns, bullets and traps on screen. |
-| 8 | CORE-012 | Town ledger: rates in/out per supply, survivor roster data, a "what happened" log. |
-| 9 | APP-008 | Supplies and Town screens: the inventory page, survivor roster, town log. |
-| 10 | REL-002 | MVP playtest: an agent plays 45 minutes, fixes blockers, writes the owner's one-page play guide. **MVP done.** |
+| # | Ticket | Model | Why it is in the MVP |
+|---|---|---|---|
+| 1 | CORE-010 | Opus | Room to build: smaller footprints, rotation, bigger fence. Goes first because it changes the starting layout CORE-005 adds to. |
+| 2 | APP-006 | Sonnet | Placing a building takes one or two touches — building has to feel good. |
+| 3 | CORE-005 | Opus | Food and water: survivors eat and drink; Garden, Well, Rain Catcher. The heart of "supplies". |
+| 4 | APP-005 | Sonnet | Survival on screen: water in the HUD, Hungry/Thirsty banner, appeal, new build cards. **First playable checkpoint.** |
+| 5 | CORE-008 | Opus | Guns and bullets: a second supply chain (scrap → bullets at the Ammo Bench) tied to defense. |
+| 6 | CORE-009 | Sonnet | Three traps: more things to build outside the fence. |
+| 7 | APP-004 | Sonnet | Guns, bullets and traps on screen. |
+| 8 | CORE-012 | Opus | Town ledger: rates in/out per supply, survivor roster data, a "what happened" log. |
+| 9 | APP-008 | Sonnet | Supplies and Town screens: the inventory page, survivor roster, town log. |
+| 10 | REL-002 | Opus | MVP playtest: an agent plays 45 minutes, fixes blockers, writes the owner's one-page play guide. **MVP done.** |
 
 **Parked until after the MVP playtest:** CORE-004/APP-003 (time away, alerts), CORE-006/CORE-007/APP-009 (more food, spotters), CORE-011/APP-007 (take over houses), RND-005 (performance; pull it in early if the owner plays on a real phone and it runs hot), and the whole looks track (MOD-003, MOD-009, MOD-010, TXT-001–003, MAP-001, RND-007, RND-008). OWN-001 downloads can continue any time.
 
