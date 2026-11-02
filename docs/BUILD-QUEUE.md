@@ -16,13 +16,17 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 3B | App: all 1C panels + 1C exit check | 1B, 2B, 2C (not the A art track) | Done 2026-11-01 — panels + 30-min playtest (agent-played, iPhone 18 Pro sim); notes in `docs/features/balance.md` "Playtest 3B" |
 | 4B | Core: offline catch-up, tamper guard, bonus horde, settings in save | 3B (not the A art track) | Ready — 3B completed 2026-11-01; matches Craft Next |
 | 5B | App: settings, welcome back, Horde Alerts, Engage + 1D exit check | 4B | Blocked by 4B |
-| 6B | Art swap, balance pass, TestFlight (owner-led) | 5B (A art track optional) | Blocked by 5B |
+| 6B | Art swap, balance pass, TestFlight (owner-led) | 5B, 3W (A art track optional) | Blocked by 5B and 3W |
+| 1W | Core: food & water survival basics — water, upkeep, shortages, starter supplies, Garden, Well, Rain Catcher | 3B (done) | Specced 2026-11-01 — Ready (owner design, D-042) |
+| 2W | Core: more food — canned goods + Cannery, Foraging, Hunting Lodge, Chicken Coop, Water Filter research | 1W | Specced 2026-11-01 — blocked by 1W |
+| 1L | Core: spotters — Lookout Post, watched edges, warning time, Binoculars/Radio research | 3B (done) | Specced 2026-11-01 — Ready (owner design, D-042) |
+| 3W | App: survival + spotter screens (water/canned in HUD, shortage banner, new panels, "Horde spotted" callout) | 1W, 2W, 1L | Specced 2026-11-01 — blocked by 1W, 2W, 1L |
 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers with shadows |
 | 2R | 3D: game playable in 3D, labeled boxes | 1R | Done 2026-11-01 — 3D view, ticker, camera, ModelRegistry (switch then removed by 6R) |
 | 2M | 3D art: models for buildings, defenses, decorations (CC0, D-036) | 1R | Done 2026-11-01 — 19 models in App/Models, checker 19/19 (D-037) |
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
 | 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Done 2026-11-01 (D-038) — walk/attack/idle walker, runner/brute variants; Mixamo files local only; defenders still boxes |
-| 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props) into the working folder | — | Ready — **you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md`, tick parts A–D |
+| 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props) into the working folder | — | Ready — **you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md`, tick parts A–D. Start with A (terrain, unblocks 1T). Part C is now "more farmer clips first" (the farmer is in the game); other humans optional. Mirrored in the Craft doc "Owner Downloads" and board card |
 | 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | Specced 2026-11-01 — blocked by 1X part A |
 | 2T | 3D: foliage and scatter (trees, bushes, grass, rocks) | 1T; 1X part B | Specced 2026-11-01 — blocked by 1T and 1X part B |
 | 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Doing — first look in game 2026-11-01: farmer drawn for defenders + strolling survivors; more looks/clips (idle, carry, hammer…) still to come |
@@ -39,7 +43,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 Track A = zombie art (details at the bottom of this file; 2D zombie art is retired, D-030). Track B = 1C–1E gameplay. Track C = small parallel side work.
 Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2026-11-01, D-027). R/M "Needs" lines override the wave rule: they depend only on each other, not on track B. Full scope, exit checks and start prompts: `docs/plans/3d-rendering-plan.md` §6. The 2D living-world plan (`docs/plans/living-world-plan.md`, chunks 1K 1N 1F 1U 1S 2F 2S) is parked, not queued.
 
-**Save versions:** the save is v5 now (2B → v4, 2C → v5). Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (2B → v4, 2C → v5, or the other way round).
+**Save versions:** the save is v5 now (2B → v4, 2C → v5). 4B, 1W, 2W and 1L each add one; whichever merges first takes v6, the next v7, and so on (rebase onto the other's migration). Each Core chunk that changes saved data bumps the version by one, adds a migration, and adds a test that decodes a sample from the previous version. If 2B and 2C run at the same time, whichever merges second rebases onto the other's version (2B → v4, 2C → v5, or the other way round).
 
 ## Chunk details
 
@@ -122,10 +126,56 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 ### 6B — Art swap, balance, TestFlight (owner-led)
 - **Goal:** Phase 1 is done: a 30-minute playtest leaves you wanting more, and coming back after 4 hours feels rewarding.
 - **Needs:** 5B (A art track optional).
-- **Scope:** final art import and anchor fixes in `presentation.json`; a balance pass with the `docs/features/balance.md` knobs; answering the STATUS balance questions. Food upkeep is one of them: Core rejects a non-zero `foodUpkeepPerSurvivorPerMin` until upkeep is built, so a "yes" needs a small Core task. Also: sound hooks, an app icon check, the two art-import questions in STATUS, and TestFlight (the owner signs in Xcode; the agent prepares the archive command and checklist).
+- **Scope:** final art import and anchor fixes in `presentation.json`; a balance pass with the `docs/features/balance.md` knobs; answering the STATUS balance questions and tuning `docs/GAME-RULES.md` (food upkeep is decided: yes, built in 1W). Also: sound hooks, an app icon check, the two art-import questions in STATUS, and TestFlight (the owner signs in Xcode; the agent prepares the archive command and checklist).
 - **Exit check:** the Phase 1 "done when" line in `PHASE1-PLAN.md`.
 - **Start prompt:** "Start chunk 6B: read AGENTS.md, docs/STATUS.md, docs/features/balance.md, and the 6B section of docs/BUILD-QUEUE.md; walk me through the balance questions first."
 
+
+### 1W — Core: food & water survival basics [Specced 2026-11-01]
+- **Goal:** survivors eat and drink, a new town starts with a little to live on, and the player grows food and water. Running short hurts but never wipes the town. Rules and proposed numbers: `docs/GAME-RULES.md` §4 (owner design, D-042).
+- **Needs:** 3B (done). Can run beside 4B or 1L; coordinate the save version (see "Save versions").
+- **Scope (Core only):**
+  - **Water** resource (starting 60, cap like food). Turn on `foodUpkeepPerSurvivorPerMin` (0.5) and add `survival.waterUpkeepPerSurvivorPerMin` (0.5); remove the loader's "must be 0" check. Fractions carry like production.
+  - **Shortages:** Hungry / Thirsty output multipliers, no arrivals, leaving after `leaveAfterSeconds` (idle first, defenders last, never below `minSurvivors`, paused during hordes). Seeded order only. Owner confirmed: they leave, nobody dies.
+  - **Town appeal:** arrival interval = `intervalSeconds ÷ appeal`; appeal from food/water going up and the held-horde streak, capped, halved after an HQ fall; 1–2 bonus newcomers after a held horde (seeded). Appeal goes in the HUD snapshot with its reasons. Save the streak.
+  - **New buildings in `buildings.json`:** Garden (1 worker, food), Well (1 worker, water), Rain Catcher (0 workers, fills only during seeded rain showers from `survival.rain`, small tank). `waterUsePerMin` on Garden/Farm.
+  - **Starting layout:** a working Well and a broken Garden (starts as rubble, fixed with the rubble rules), plus one broken Well on the map. Needs a map position for each (`Content/maps/phase1_exit.json`); add `startsBroken`.
+  - Agriculture research also boosts gardens. HUD snapshot gets water and net food/water per minute.
+  - Save: bump the version; old saves get starting water and no new buildings (no free well).
+  - If 4B is done: catch-up runs upkeep (stops at 0, nobody leaves while away) and the summary reports "ran out". If not, 4B does it.
+- **Do NOT build:** canned goods, Cannery, hunting, foraging, coop (2W); spotters (1L); any App UI (3W); weather visuals (rain is a seeded number only); permanent death.
+- **Exit check:** `swift test` passes with tests for: upkeep math over 10 min, Hungry/Thirsty multipliers, leaving order and the minimum, no leaving during a horde, rain catcher only filling in showers (seeded, same result twice), appeal math and its cap, faster arrivals with appeal 2.0, streak reset on HQ fall, bonus newcomers after a held horde (only with free housing), fixing the broken garden, save migration from v5 (or the current version), and `ContentFilesTests`.
+- **Start prompt:** "Implement chunk 1W: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4, docs/features/economy.md, and the 1W section of docs/BUILD-QUEUE.md only."
+
+### 2W — Core: more food (canning, hunting, foraging) [Specced 2026-11-01]
+- **Goal:** more ways to feed the town, and a reason to can food. Rules: `docs/GAME-RULES.md` §4.
+- **Needs:** 1W.
+- **Scope (Core only):** **Canned goods** resource with its own pantry cap (Cannery `storageAdded`), eaten after fresh food, not lost when the HQ falls (`economy.json hqFall.affects` stays food+scrap); starting food becomes 50 fresh + 100 canned. **Cannery** (workers convert food → canned per min). **Foraging** run at the HQ (reuse the scavenging-run system, available from day 1). **Hunting Lodge** with Short/Long Hunt runs (same system; long hunts cost canned rations). **Chicken Coop** (steady food, uses water). **Water Filtration** research (+50% wells). `survival.freshSpoilPctPerHour` knob, default 0. Save bump.
+- **Do NOT build:** run risk/losses (IDEAS §2), fishing (Phase 2), App UI.
+- **Exit check:** `swift test` passes with tests for canning conversion and pantry cap, eat order, HQ fall sparing canned goods, foraging/hunt rewards through the run system, coop water use, spoilage at a non-zero test value, migration.
+- **Start prompt:** "Implement chunk 2W: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4, docs/features/scavenging-research.md, and the 2W section of docs/BUILD-QUEUE.md only."
+
+### 1L — Core: spotters [Specced 2026-11-01]
+- **Goal:** survivors posted as spotters call out hordes; higher lookouts and better optics give earlier, richer warnings. Rules and numbers: `docs/GAME-RULES.md` §6 (owner design, D-042).
+- **Needs:** 3B (done). Can run beside 1W or 4B; coordinate the save version.
+- **Scope (Core only):**
+  - **Lookout Post** building (1×1, 1 worker, levels = height: `sightTiles`, `warningSeconds`, `intel`). HQ roof and staffed Watchtowers act as small lookouts.
+  - **Watched edges:** an edge is watched if a staffed lookout sees its spawn point. Warning time per spawning edge = best watching lookout, else `spotting.unwatchedWarningSeconds`. This replaces the fixed `schedule.warningSeconds` (keep the horde clock itself unchanged).
+  - **Spotted report** in the snapshot: edge, seconds left, and (by level) rough size or zombie types; a "spotted" event for the App's callout. Before spotting, the snapshot only offers a rough minutes-to-horde number.
+  - **Research:** Binoculars (+warning), Radio (HQ 3, +warning; scavengers on runs also spot).
+  - The bonus horde (4B) always counts as spotted.
+  - Save bump if anything new is saved (likely only the new building).
+- **Do NOT build:** sound, banner or any UI (3W); spotters getting hurt; per-zombie fog of war.
+- **Exit check:** `swift test` passes with tests for: watched vs unwatched warning time, best lookout wins, unstaffed lookout sees nothing, intel by level, research bonuses, rough clock rounding, same seed = same result.
+- **Start prompt:** "Implement chunk 1L: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §6, docs/features/hordes.md, and the 1L section of docs/BUILD-QUEUE.md only."
+
+### 3W — App: survival + spotter screens [Specced 2026-11-01]
+- **Goal:** the player can see and use everything from 1W, 2W and 1L.
+- **Needs:** 1W, 2W, 1L.
+- **Scope (App only):** HUD water and canned goods with net per minute, a red Hungry/Thirsty banner, and town appeal with its reasons; build-menu cards for the new buildings (labeled boxes until models exist); Cannery, Hunting Lodge and HQ Foraging panels (reuse the scavenging panel); Lookout panel (sight, warning, upgrade); a sight ring when a lookout is selected and a marker on watched edges; the "Horde spotted — east off-ramp, 75 s · about 15 · 2 brutes" banner with a siren sound hook; the rough "next horde in ~6 min" clock until spotted. Ask whether to add new art ids to `docs/graphics-spec-phase1.md` for a later model chunk.
+- **Do NOT build:** new 3D models (separate art chunk), weather visuals, town-life walking (3M-3).
+- **Exit check:** in the simulator, a fresh town: fix the garden, watch water and food tick, let water run out and see the banner and output drop, build a lookout by the east road and get an early callout for an east horde but a late one for an unwatched edge.
+- **Start prompt:** "Implement chunk 3W: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4 and §6, docs/features/hud-ui.md, and the 3W section of docs/BUILD-QUEUE.md only."
 
 ## Chunk 1D — Realistic static walker [Done]
 - **Goal:** demonstrate one realistic zombie end to end in the current game.

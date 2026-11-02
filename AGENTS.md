@@ -55,6 +55,7 @@ The owner is not an engineer and does not want walls of text while you work.
 1. Read STATUS → MAP → the one feature note.
 2. Make the smallest change that does the job.
 3. Update that feature note: files involved, rules, and a one-line change-log entry.
+   If you changed how the game plays or a `Content/*.json` knob, update its line in `docs/GAME-RULES.md` (the central rule set).
 4. If you added, moved, renamed, or deleted a file, update `docs/MAP.md`.
 5. If you made a non-obvious choice (a trade-off, a workaround), add an entry to `docs/DECISIONS.md`.
 6. Update `docs/STATUS.md` (last thing done, next step) at the end of a work session.

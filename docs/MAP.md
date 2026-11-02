@@ -9,6 +9,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 
 | I want to change… | Look in |
 |---|---|
+| **Any game rule (how the game plays), in plain English** | `docs/GAME-RULES.md` (each rule names its JSON knob) |
 | Zombie speed, health, damage, wall-bashing | `Content/zombies.json` |
 | Horde size, timing, which map edge they use | `Content/hordes.json` |
 | Building cost, build time, size, output, upgrade levels | `Content/buildings.json` |
@@ -86,6 +87,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] DECISIONS.md      Why things are the way they are
 │  ├─ [x] BUILD-QUEUE.md    Build chunks (1A, 2A, 1B…): dependencies, status, start prompts
 │  ├─ [x] GAME-DESIGN.md    What the game is; Phase 1 content list
+│  ├─ [x] GAME-RULES.md     Central rule set: every game rule + its JSON knob + status (tweak here)
 │  ├─ [x] IDEAS.md          Owner's parked future ideas (not approved to build)
 │  ├─ [x] PHASE1-PLAN.md    Stack, milestones 1A–1E, exit checks, kickoff prompts
 │  ├─ [x] PHASE1-TASKS.md   Task-by-task plan for what's left (1V two views → 1E), owner decisions

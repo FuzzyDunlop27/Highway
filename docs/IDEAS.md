@@ -15,7 +15,7 @@ When the owner picks one, turn it into a chunk in `BUILD-QUEUE.md` and a `DECISI
 - **Population balance (added 2026-11-01):** population becomes something you manage. Too few people and you can't staff buildings, defend, or survive losses; too many and food, housing and safety strain. Run losses (above) are one drain, so you must replace people to stay healthy.
   - Today: survivors arrive on a timer while housing is free and food covers `foodCost`; housing caps the count; food upkeep is 0 (`docs/features/economy.md`). Turning on `foodUpkeepPerSurvivorPerMin` is the natural "too many" pressure (already a STATUS open question).
   - Possible levers (all numbers in `Content/*.json`): upkeep per head, housing/crowding penalties (unrest, slower arrivals, disease), a visible "ideal population" gauge in the HUD, and arrivals that slow or stop when you are over capacity.
-  - Open: is shortage punished (can't staff/defend) or is surplus punished (starvation), or both? Keep it forgiving, since the game has no game-over.
+  - **Decided 2026-11-01 (D-042, chunk 1W):** running out of food/water makes survivors leave (no deaths); a successful town attracts people faster (town appeal) and held hordes bring newcomers. Rules: `docs/GAME-RULES.md` §3–4. Still open: crowding penalties and an "ideal population" gauge.
 - Core stays deterministic: the App plays the mini-game and sends the result to Core as a `Command` with a seeded outcome. Don't put mini-game timing in Core.
 
 ## 3. Real-time weather and season (added 2026-11-01)
