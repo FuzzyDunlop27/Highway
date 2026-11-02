@@ -40,6 +40,13 @@ The owner chose MakeHuman (via ChatGPT/Codex) for the human looks; Mixamo is sti
 Before copying the recipe to the whole cast, finish the **rig + motion trial on model 1** (Mixamo auto-rig, check apron/joint deformation, ≤ 3 MB with clips), so any problem is fixed once.
 
 ### 3b. If the owner doesn't like Mixamo's people (added 2026-11-01)
+**Second type built (3M-2MH-F, owner requested):** the farmer example below is now a real
+40-year-old woman in faded overalls/grey T-shirt/work boots and short brown hair. Portable files,
+four views, licences and editable source recipes for farmer and blacksmith are committed under
+`HighwayHoldout_3D_Sources/makehuman/`. Farmer is 9,196 triangles, 1.61135 m clothed, one atlas/material;
+packed blend, FBX and GLB all checked. This finishes the one-additional-model task, not full 3M-2:
+rig/deformation, task clips, game conversion/integration and device checks remain. Optional bandana/props omitted.
+
 **Subsequent live result (3M-2MH-V):** generated actual FBX/MHM and verified Blender import;
 max-height body is 2.44386 m, 28,796 triangles. Body/preview and reports are linked in
 `tools/makehuman/README.md`. Use Blender `use_custom_normals=False` to avoid imported shading

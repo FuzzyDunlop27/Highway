@@ -1,0 +1,40 @@
+{
+  "farmer": {
+    "blend": {
+      "triangles": 9196,
+      "height_metres": 1.611348743957933,
+      "packed_atlas": true
+    },
+    "fbx": {
+      "triangles": 9196,
+      "height_metres": 1.611348716483917,
+      "portable_textures": true,
+      "materials": 1
+    },
+    "glb": {
+      "triangles": 9196,
+      "height_metres": 1.611348743957933,
+      "portable_textures": true,
+      "materials": 1
+    }
+  },
+  "blacksmith": {
+    "blend": {
+      "triangles": 9209,
+      "height_metres": 2.4707209825282916,
+      "packed_atlas": true
+    },
+    "fbx": {
+      "triangles": 9209,
+      "height_metres": 2.470720955345314,
+      "portable_textures": true,
+      "materials": 1
+    },
+    "glb": {
+      "triangles": 9209,
+      "height_metres": 2.4707209825282916,
+      "portable_textures": true,
+      "materials": 1
+    }
+  }
+}

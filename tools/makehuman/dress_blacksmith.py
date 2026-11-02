@@ -6,6 +6,7 @@ def dress_blacksmith():
     import importlib
     import json
     import tempfile
+    import os
     from pathlib import Path
     import mh
     import material
@@ -13,8 +14,11 @@ def dress_blacksmith():
 
     app = G.app
     human = app.selectedHuman
-    source = Path('/Users/rick/Documents/MakeHuman/v1py3/exports/highway-blacksmith/blacksmith_hog2rxxs/blacksmith_base.mhm')
-    output = Path(tempfile.mkdtemp(prefix='blacksmith_dressed_', dir=str(source.parent.parent)))
+    repo = Path(os.environ.get('HIGHWAY_REPO', '/Users/rick/Documents/AI/Highway'))
+    source = repo / 'HighwayHoldout_3D_Sources/makehuman/blacksmith/source/blacksmith_base.mhm'
+    export_root = Path(mh.getPath('exports')) / 'highway-blacksmith'
+    export_root.mkdir(parents=True, exist_ok=True)
+    output = Path(tempfile.mkdtemp(prefix='blacksmith_dressed_', dir=str(export_root)))
     human.save(str(output / 'session_backup.mhm'))
     human.load(str(source), True)
     # Resolve the installed modifier names rather than assuming abbreviated names.

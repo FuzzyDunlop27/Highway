@@ -39,3 +39,6 @@ HighwayHoldout_3D_Sources/mixamo-*/*.fbx
 # Chunk 1X owner downloads: Mixamo humans (any depth) and downloaded terrain textures stay local (public repo).
 HighwayHoldout_3D_Sources/mixamo-*/**/*.fbx
 HighwayHoldout_3D_Sources/terrain/
+
+# Owner-provided Mixamo farmer motion downloads stay local (D-038).
+HighwayHoldout_3D_Sources/makehuman/sv-farmer_*.fbx

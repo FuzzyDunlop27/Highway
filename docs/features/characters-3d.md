@@ -10,7 +10,10 @@ defender model exists (today they stay labeled boxes).
 ## Files involved
 - `tools/makehuman/generate_blacksmith.py` + `README.md` — owner-requested MakeHuman base-body → binary FBX trial (3M-2MH), separate from game integration.
 - `tools/makehuman/dress_blacksmith.py` — load preserved source, add face modifiers + fitted CC0 skin/clothes/hair; separate dressed MHM/FBX.
-- `tools/blender/build_blacksmith_draft.py`, `blacksmith_geometry.py`, `blacksmith_review.py` — apron/beard/material assembly, mesh budget, atlas bake, portable exports, four-angle renders, clean FBX reimport checks.
+- `tools/blender/build_blacksmith_draft.py`, `blacksmith_geometry.py`, shared `character_review.py` — apron/beard/material assembly, mesh budget, atlas bake, portable exports, four-angle renders, clean FBX reimport checks.
+- `tools/makehuman/generate_farmer.py`, `tools/blender/build_farmer_draft.py` — age-40 woman farmer per town-life spec, fitted workwear, portable review model.
+- `tools/blender/check_character_package.py` — actual packed blend / isolated FBX / GLB import and texture portability checks.
+- `HighwayHoldout_3D_Sources/makehuman/` — committed CC0 farmer + blacksmith FBX/GLB/packed blend, atlases, four views, source MHM recipes, licence and verification reports.
 - `tools/blender/check_makehuman_fbx.py` — real FBX import/height/geometry/image-path check, saved `.blend`, neutral review render; source locations/results in MakeHuman README.
 - `docs/plans/blacksmith-profile.md` — age-45 medieval blacksmith sculpt, proportions, costume and pose brief; modern Workshop adaptation noted.
 - `tools/blender/export_characters.py` — Mixamo FBX clips → `App/Models/<artId>.usdz` (all clips on one timeline) +
@@ -41,6 +44,7 @@ defender model exists (today they stay labeled boxes).
 - Mixamo-derived files never go into git (public repo, D-038). No USDZ = labeled box, as for any model.
 
 ## Known issues
+- Farmer model delivered (3M-2MH-F): 9,196 triangles, 1.61135 m clothed, one atlas/material, static FBX ~1.41 MB / GLB ~1.39 MB; all package formats reimport correctly. Adult age 40, normal-height female body, overalls/grey shirt/boots/short brown hair. No bandana or hand prop. It remains unrigged/unanimated and outside the app; full 3M-2 is not complete.
 - Clothed review draft now exists (3M-2MH-L): 9,209 triangles, single 1024 px atlas/material, ~1.22 MB static FBX/GLB, clean FBX round trip. See MakeHuman README for output folder, source assets and precise limitations. It is unrigged/unanimated; beard/skin details and costume remain a draft. Long sleeves and adapted modern collar/shoes deviate from the medieval brief. Original high-detail base preserved; no game asset replaced.
 - MakeHuman trial now exports/imports successfully, but its base is 2.44386 m tall at the requested maximum slider and 28,796 triangles. It still needs the look/garments, optimization to ~10k, rig and animation. Blender must import this source with `use_custom_normals=False` to avoid severe facets; rendered before/after confirmed. Raw FBX retained, game assets not replaced.
 - Clips used (Yaku J Ignite, default sliders): Zombie Walk (In Place, 121 frames), Zombie Attack (139 frames, hips lunge
@@ -53,6 +57,7 @@ defender model exists (today they stay labeled boxes).
 - No in-game fps readout yet (5R); the 1R spike measured 100 animated walkers at 60 fps on an iPhone 18 Pro.
 
 ## Change log
+- 2026-11-01 — 3M-2MH-F: built distinct farmer model; shared character export/bake helper; verified farmer and blacksmith regression, four farmer views and both standalone blend/FBX/GLB packages. Added portable CC0 source/review assets to repo for local commit on human-character branch; no App/Core changes.
 - 2026-11-01 — 3M-2MH-L: fitted source clothing/hair/older skin and jaw modifiers in MakeHuman; built leather apron/beard, corrected visual defects, reduced clothed assembly to 9,209 triangles; baked one atlas, exported blend/FBX/GLB, reviewed four angles and verified clean FBX reimport; packaged review bundle. No rig/animation or game hookup.
 - 2026-11-01 — 3M-2MH-V: actually generated FBX/MHM in live MakeHuman, imported in Blender, checked exact height/finite geometry/images, saved `.blend` and reviewed a clean preview after disabling bad imported custom normals. Output 831,468-byte FBX / 28,796 triangles / 2.443859 m; not phone-ready or dressed/rigged. No App/Core changes.
 - 2026-11-01 — Owner-requested status audit: installed files/settings/script link and active MakeHuman process rechecked; expected blacksmith export folder contains zero FBXs/reports. Preparation and installation done; real export/import and all human game integration remain pending. Craft handoff/kanban reconciled; no character/code changes.

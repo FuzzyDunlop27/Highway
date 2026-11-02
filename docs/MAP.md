@@ -68,6 +68,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
 | Generate a custom MakeHuman body / blacksmith reference | `tools/makehuman/generate_blacksmith.py`, `tools/makehuman/README.md`; `docs/plans/blacksmith-profile.md`; notes `docs/features/characters-3d.md` |
 | Open the installed MakeHuman app / find its user files | `/Users/rick/Applications/MakeHuman.app`; runtime beside it in `MakeHuman-runtime/`; user files `~/Documents/MakeHuman/v1py3/`; install notes `tools/makehuman/README.md` |
+| Open/rebuild the farmer or blacksmith review model | `HighwayHoldout_3D_Sources/makehuman/{farmer,blacksmith}/`; folder README/licence/reports; generators in `tools/makehuman/`, builders and package checker in `tools/blender/` |
 | Settings (Time factor, Horde Alerts) | `App/UI/SettingsView.swift` |
 | "Welcome back" summary | `App/UI/WelcomeBackView.swift` |
 | Horde Alert notification text/timing | `App/Platform/NotificationScheduler.swift` |
@@ -237,6 +238,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
    ├─ makehuman/
    │  ├─ [x] generate_blacksmith.py  Body generation + binary FBX + editable MHM + measured-height report
    │  ├─ [x] dress_blacksmith.py     Fit face/CC0 skin, shirt/trousers, shoes and hair to preserved base; dressed MHM/FBX
+   │  ├─ [x] generate_farmer.py      Adult woman farmer: fitted overalls, grey shirt, boots, short brown hair; source MHM/FBX
    │  └─ [x] README.md               Run instructions, API sources, verification and integration limits
    ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
    ├─ [x] check_models.py   2M: lists art ids with no App/Models/<id>.usdz (exit 1 if a non-character one is missing)
@@ -249,7 +251,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
       ├─ [x] check_makehuman_fbx.py  Live MakeHuman FBX → Blender height/geometry/budget report, saved blend and neutral preview; ignores defective custom normals
       ├─ [x] build_blacksmith_draft.py  Clothed source → optimized blacksmith draft, one atlas, portable exports and previews
       ├─ [x] blacksmith_geometry.py     Draft apron/beard, surface fitting and worn materials
-      ├─ [x] blacksmith_review.py       Atlas bake, FBX/GLB export, four review angles and clean FBX reimport verification
+      ├─ [x] character_review.py        Shared atlas bake, FBX/GLB export, four angles and clean reimport verification (renamed from blacksmith_review.py)
+      ├─ [x] build_farmer_draft.py      Farmer source → ≤10k triangle, single-atlas portable review model
+      ├─ [x] check_character_package.py Packed blend/isolated FBX/GLB texture and geometry checks
       ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
       ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
       ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble

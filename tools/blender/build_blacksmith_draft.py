@@ -11,7 +11,7 @@ from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).parent))
 from blacksmith_geometry import apron, assign, beard, material
-from blacksmith_review import finish
+from character_review import finish
 
 
 def main():

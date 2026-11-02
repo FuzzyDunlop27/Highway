@@ -1,0 +1,67 @@
+{
+  "role": "farmer survivor",
+  "spec": "docs/plans/town-life-plan.md section 3b",
+  "source_fbx": "/Users/rick/Documents/MakeHuman/v1py3/exports/highway-farmer/farmer_source_x36ynjkp/farmer_source.fbx",
+  "source_settings": {
+    "role": "farmer survivor",
+    "requested": {
+      "gender": 0.0,
+      "age_years": 40.0,
+      "muscle": 0.5,
+      "weight": 0.5,
+      "height": 0.5
+    },
+    "actual": {
+      "gender": 0.0,
+      "age_years": 40.0,
+      "muscle": 0.5,
+      "weight": 0.5,
+      "height": 0.5
+    },
+    "measured_height_cm": 158.6709499359131,
+    "rigged": false,
+    "assets": [
+      "middleage_asian_female",
+      "male_worksuit01",
+      "shoes02",
+      "short02"
+    ],
+    "licence": "Bundled MakeHuman system assets CC0",
+    "note": "Workwear proxy fits the common hm08 base, including female body shapes."
+  },
+  "triangles_before_optimization": 32202,
+  "triangle_count": 9196,
+  "max_triangle_budget": 10000,
+  "rigged": false,
+  "animated": false,
+  "look_status": "adult woman farmer in faded denim overalls, grey shirt, boots and short brown hair",
+  "front": "-Y in Blender; not game-converted",
+  "source_licence": "Bundled MakeHuman system assets CC0",
+  "still_pending": [
+    "rig/deformation and task-animation checks",
+    "fine hand/face detail",
+    "RealityKit integration, animated size and real-device performance"
+  ],
+  "atlas_size": [
+    1024,
+    1024
+  ],
+  "game_atlas_copy": [
+    512,
+    512
+  ],
+  "materials": 1,
+  "uv_layers": [
+    "Atlas"
+  ],
+  "fbx_bytes": 1405212,
+  "glb_bytes": 1390852,
+  "fbx_round_trip": {
+    "mesh_count": 1,
+    "triangle_count": 9196,
+    "height_metres": 1.611348716483917,
+    "materials": 1,
+    "missing_images": [],
+    "passed": true
+  }
+}

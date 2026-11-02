@@ -1,4 +1,4 @@
-# Purpose: Bake/export the blacksmith draft and render review angles. Notes: docs/features/characters-3d.md
+# Purpose: Bake/export character drafts and verify review assets. Notes: docs/features/characters-3d.md
 import json
 import math
 from pathlib import Path
@@ -7,7 +7,7 @@ import bpy
 from mathutils import Vector
 
 
-def finish(body, output, report):
+def finish(body, output, report, slug='blacksmith', label='Harlan'):
     bpy.context.view_layer.objects.active = body
     bpy.ops.object.select_all(action='DESELECT')
     body.select_set(True)
@@ -18,7 +18,7 @@ def finish(body, output, report):
     bpy.ops.mesh.select_all(action='SELECT')
     bpy.ops.uv.smart_project(angle_limit=1.15, island_margin=.012)
     bpy.ops.object.mode_set(mode='OBJECT')
-    image = bpy.data.images.new('Harlan single albedo atlas', width=1024, height=1024, alpha=False)
+    image = bpy.data.images.new(label + ' single albedo atlas', width=1024, height=1024, alpha=False)
     image.generated_color = (.1, .1, .1, 1)
     for mat in body.data.materials:
         if not mat:
@@ -34,10 +34,10 @@ def finish(body, output, report):
     scene.render.bake.use_pass_indirect = False
     scene.render.bake.use_pass_color = True
     bpy.ops.object.bake(type='DIFFUSE', pass_filter={'COLOR'}, margin=8)
-    image.filepath_raw = str(output / 'blacksmith_albedo.png')
+    image.filepath_raw = str(output / f'{slug}_albedo.png')
     image.file_format = 'PNG'
     image.save()
-    final = bpy.data.materials.new('Harlan atlas material')
+    final = bpy.data.materials.new(label + ' atlas material')
     final.use_nodes = True
     bsdf = final.node_tree.nodes.get('Principled BSDF')
     bsdf.inputs['Roughness'].default_value = .85
@@ -57,23 +57,25 @@ def finish(body, output, report):
         if layer.name != 'Atlas':
             body.data.uv_layers.remove(layer)
     image.pack()
-    bpy.ops.wm.save_as_mainfile(filepath=str(output / 'blacksmith_draft.blend'))
-    bpy.ops.export_scene.fbx(filepath=str(output / 'blacksmith_draft.fbx'), use_selection=True,
+    # Final packed file must not depend on unused source images elsewhere on this Mac.
+    bpy.data.orphans_purge(do_recursive=True)
+    bpy.ops.wm.save_as_mainfile(filepath=str(output / f'{slug}_draft.blend'))
+    bpy.ops.export_scene.fbx(filepath=str(output / f'{slug}_draft.fbx'), use_selection=True,
                              object_types={'MESH'}, add_leaf_bones=False, bake_anim=False,
                              axis_forward='-Z', axis_up='Y', path_mode='COPY', embed_textures=True)
-    bpy.ops.export_scene.gltf(filepath=str(output / 'blacksmith_draft.glb'), export_format='GLB',
+    bpy.ops.export_scene.gltf(filepath=str(output / f'{slug}_draft.glb'), export_format='GLB',
                               use_selection=True, export_animations=False)
     image512 = image.copy()
     image512.scale(512, 512)
-    image512.filepath_raw = str(output / 'blacksmith_albedo_512.png')
+    image512.filepath_raw = str(output / f'{slug}_albedo_512.png')
     image512.file_format = 'PNG'
     image512.save()
     report.update({'atlas_size': [1024, 1024], 'game_atlas_copy': [512, 512], 'materials': 1,
                    'uv_layers': [layer.name for layer in body.data.uv_layers],
-                   'fbx_bytes': (output / 'blacksmith_draft.fbx').stat().st_size,
-                   'glb_bytes': (output / 'blacksmith_draft.glb').stat().st_size,
-                   'still_pending': ['final face/scar/hand details', 'historical costume refinement',
-                                     'deformation/rigging/animations', 'RealityKit integration and device check']})
+                   'fbx_bytes': (output / f'{slug}_draft.fbx').stat().st_size,
+                   'glb_bytes': (output / f'{slug}_draft.glb').stat().st_size})
+    report.setdefault('still_pending', ['final face/scar/hand details', 'historical costume refinement',
+                                      'deformation/rigging/animations', 'RealityKit integration and device check'])
     (output / 'draft_report.json').write_text(json.dumps(report, indent=2) + '\n')
     low = Vector(tuple(min(v.co[i] for v in body.data.vertices) for i in range(3)))
     high = Vector(tuple(max(v.co[i] for v in body.data.vertices) for i in range(3)))
@@ -103,11 +105,11 @@ def finish(body, output, report):
                       ('back', (2, 7, centre.z)), ('side', (7, 0, centre.z))]:
         camera.location = pos
         camera.rotation_euler = (centre - camera.location).to_track_quat('-Z', 'Y').to_euler()
-        scene.render.filepath = str(output / ('blacksmith_' + name + '.png'))
+        scene.render.filepath = str(output / f'{slug}_{name}.png')
         bpy.ops.render.render(write_still=True)
     # Reimport the actual exported FBX into a clean scene, not just the in-memory mesh.
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    bpy.ops.import_scene.fbx(filepath=str(output / 'blacksmith_draft.fbx'), use_custom_normals=False)
+    bpy.ops.import_scene.fbx(filepath=str(output / f'{slug}_draft.fbx'), use_custom_normals=False)
     imported = [o for o in bpy.context.scene.objects if o.type == 'MESH']
     count = 0
     points = []
@@ -128,4 +130,4 @@ def finish(body, output, report):
                               'height_metres': actual_height, 'materials': len(materials),
                               'missing_images': missing, 'passed': True}
     (output / 'draft_report.json').write_text(json.dumps(report, indent=2) + '\n')
-    print('BLACKSMITH_DRAFT_READY ' + json.dumps(report))
+    print('CHARACTER_DRAFT_READY ' + json.dumps(report))

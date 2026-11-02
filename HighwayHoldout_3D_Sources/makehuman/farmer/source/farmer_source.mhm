@@ -1,0 +1,24 @@
+# Written by MakeHuman master:a8bc2d5
+version v1.3.0
+name Farmer - adult woman survivor
+camera 0.0 0.0 0.0 0.0 0.0 1.0
+modifier breast/BreastSize 0.500000
+modifier breast/BreastFirmness 0.500000
+modifier macrodetails/Gender 0.000000
+modifier macrodetails/Age 0.615385
+modifier macrodetails/African 0.333333
+modifier macrodetails/Asian 0.333333
+modifier macrodetails/Caucasian 0.333333
+modifier macrodetails-universal/Muscle 0.500000
+modifier macrodetails-universal/Weight 0.500000
+modifier macrodetails-height/Height 0.500000
+modifier macrodetails-proportions/BodyProportions 0.500000
+hair short02 c104cd4a-1edc-43f9-8b94-f63345a44638
+eyes HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6
+clothes male_worksuit01 6afd98fa-381b-456f-aa46-3dd15b27b2f0
+clothes shoes02 8887caca-d6fb-4d73-af10-1d4fb740a936
+clothesHideFaces True
+skinMaterial skins/middleage_asian_female/middleage_asian_female.mhmat
+material short02 c104cd4a-1edc-43f9-8b94-f63345a44638 short02.mhmat
+material HighPolyEyes 2c12f43b-1303-432c-b7ce-d78346baf2e6 eyes/materials/brown.mhmat
+subdivide False

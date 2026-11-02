@@ -3,6 +3,22 @@
 This is body-generation tooling for the owner-requested trial, not the full 3M-2 game integration.
 The separate art brief is `docs/plans/blacksmith-profile.md`.
 
+## Committed review assets and second character (3M-2MH-F)
+
+The portable models now live in `HighwayHoldout_3D_Sources/makehuman/` in the repository,
+including the existing blacksmith and the spec's **adult woman farmer**. See that folder's
+README for licences, source recipes, build commands and limitations. Local export folders below
+remain provenance/working copies; they are no longer the only place to find the finished assets.
+
+Farmer: age 40, female, muscle/weight/height sliders .5; bare height 158.67095 cm,
+clothed height 1.61135 m; short brown hair, grey T-shirt, faded denim overalls and worn boots.
+`generate_farmer.py` runs in MakeHuman; `build_farmer_draft.py` builds the final review model.
+Actual output is 9,196 triangles, one material/1024 px atlas (+512 px copy), 1,405,212-byte FBX
+and 1,390,852-byte GLB. Four angles reviewed. `check_character_package.py` opens the packed
+Blender files and imports isolated copies of both characters' FBX/GLB, confirming the counts,
+height and textures without hidden dependencies. No rig/animation/game integration is implied.
+The optional bandana/hand props were not added.
+
 ## Clothed review draft delivered (3M-2MH-L, 2026-11-01)
 
 Open `/Users/rick/Documents/MakeHuman/v1py3/exports/highway-blacksmith/blacksmith_review/`.
@@ -22,7 +38,7 @@ Open `/Users/rick/Documents/MakeHuman/v1py3/exports/highway-blacksmith/blacksmit
   Garments use bundled CC0 MakeHuman assets, re-fitted to this exact body; apron/beard authored here.
 - Build: run `tools/makehuman/dress_blacksmith.py` inside MakeHuman, then Blender:
   `--background --python tools/blender/build_blacksmith_draft.py -- <dressed.fbx> <output_folder>`.
-  Helpers `blacksmith_geometry.py` and `blacksmith_review.py` assemble/bake/export/render/verify.
+  Helpers `blacksmith_geometry.py` and shared `character_review.py` assemble/bake/export/render/verify.
 - Visual iteration fixed apron clipping, imported skin shaders and a jagged shirt/trouser cutoff.
   Original diffuse maps were rebuilt into explicit skin/eye shaders before baking; imported custom normals remain disabled.
 

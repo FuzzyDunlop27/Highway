@@ -30,7 +30,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 3M-2MH-I | Install MakeHuman on the owner's Mac | Owner request only; no wave dependency | Done 2026-11-01 — modeling screen opened, scripting/FBX plugins loaded; real export/import next |
 | 3M-2MH-V | Generate the real MakeHuman body and verify FBX in Blender | 3M-2MH, 3M-2MH-I only | Done 2026-11-01 — actual FBX/MHM + Blender model/preview; 2.44386 m, 28,796 triangles; look/optimization/rig still pending |
 | 3M-2MH-L | Clothed blacksmith draft within mesh budget | 3M-2MH-V only | Done — 9,209 triangles, one atlas/material, FBX/GLB/blend + four previews, clean FBX reimport; rig/art polish pending |
-| 3M-2MH-F | Farmer survivor model + committed portable review assets | Installed MakeHuman pipeline only | Doing — adult woman farmer per town-life spec, verified exports, previews and commit |
+| 3M-2MH-F | Farmer survivor model + committed portable review assets | Installed MakeHuman pipeline only | Done — 9,196 triangles; source + FBX/GLB/blend/atlas/four views; both model packages verified; delivery on chunk-3m-2-humans |
 | 3M-3 | 3D: town life — survivors walk between home and work and do their jobs (Tropico feel) | 3M-2 | Specced 2026-11-01 (draft) — blocked by 3M-2 |
 | 4R | 3D: combat effects, overlays, health bars | 3R, 3M | Done 2026-11-01 (D-039) — tracers, muzzle flash, goo, dust, shake, trap flash, health/progress bars, aiming turrets, warning arrows; day-40 ~60 fps (simulator) |
 | 5R | 3D: performance pass, fps readout, Battery saver (3D is already the only view) | 4R | Ready |
@@ -237,7 +237,24 @@ Track R = 3D renderer code, track M = 3D models (owner picked the 3D option on 2
 - **Exit check:** 9,209 finite triangles; one material/atlas; ~1.22 MB static FBX/GLB; actual FBX reimport preserves count/height/images; four final views reviewed. Fine skin/scar/period-clothes details and deformation/rig/animation explicitly remain.
 - **Next / start prompt:** use the updated 3M-2 continuation below for the rig/motion trial before extending the cast.
 
+## Chunk 3M-2MH-F — Farmer and portable review assets [Done 2026-11-01]
+- **Goal:** one additional model type from the town-life spec, finished through exported/reviewed files and local commit.
+- **Needs:** installed MakeHuman pipeline only; independent of the wave rule.
+- **Scope:** adult woman farmer (40, faded overalls/grey shirt/boots/short hair), source recipe, ≤10k mesh, single atlas, FBX/GLB/packed blend, four views; include both farmer and blacksmith portable CC0 model packages in repo.
+- **Do NOT build:** remaining cast, Core/gameplay changes, task animations or full 3M-2 integration.
+- **Exit check:** actual MakeHuman source generation; farmer 9,196 triangles, one atlas/material, ~1.41 MB FBX; four angles reviewed. Both models pass standalone blend / isolated FBX / GLB counts/height/texture checks; syntax + whitespace pass. Owner-requested commit on `chunk-3m-2-humans`, no merge/push.
+- **Next / start prompt:** "Continue chunk 3M-2 from the committed farmer: read the asset README and reports, test rig/deformation and walk/carry/dig clips on this normal-height character before expanding the cast."
+
 ## Chunk 3M-2 — Human characters: defender + survivor looks [Specced 2026-11-01, draft]
+**Farmer model now ready as the next rig trial source (3M-2MH-F).** Use the committed
+`HighwayHoldout_3D_Sources/makehuman/farmer/` package; normal height, no apron, 9,196 triangles.
+First verify rig/deformation, then idle/walk/run/carry/dig/pick-up/talk clips, 512 px atlas and
+full ≤3 MB animated size. Owner handles Mixamo uploads/downloads per 1X; integration stays on
+the human branch and merges only with owner approval. This task does not remove 3M-3's dependency.
+Local `makehuman/sv-farmer_{walking,running,rifle}.fbx` downloads appeared during staging;
+Mixamo metadata confirmed in walking file, all preserved/ignored under D-038. Inspect their
+character/rig compatibility first; not used or validated in this static model delivery.
+
 **Clothed review model delivered (3M-2MH-L):** portable `blacksmith_review_bundle.zip` in the
 folder documented by `tools/makehuman/README.md`; 9,209 triangles, one atlas/material, ~1.22 MB
 static FBX/GLB, four reviewed views, clean FBX reimport. Next big step in this chunk is a
