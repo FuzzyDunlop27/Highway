@@ -16,6 +16,7 @@ _Update at the end of every work session. Keep it short; history belongs in feat
   Don't start the next one until the current one's exit check passes.
 
 ## Last thing done
+- **MVP roadmap (D-047).** Ordered ten-ticket MVP path in `BUILD-QUEUE.md`; APP-005 narrowed (spotter screens → new APP-009); new tickets CORE-012 (town ledger), APP-008 (Supplies/People/Log screens), REL-002 (MVP playtest). Docs only.
 - **Spec: building overhaul + better looks (D-046, owner request).** Plan `docs/plans/buildings-and-look-plan.md`; new chunks **CORE-010** (Core: smaller footprints, rotation, bigger fence, spot finder — ready), **APP-006** (easier placing), **TXT-002** (lighting & materials spike — waits on owner downloads Part E), **TXT-003** (Chicago trim sheet + dressing), **MOD-010** (Chicago-style player buildings), **RND-008** (builders at work, Tropico-style; taken out of RND-007), **MAP-001** (Roscoe Village map); owner then said yes to **taking over neighborhood houses**: **CORE-011** (Core) and **APP-007** (App + art). `OWNER-DOWNLOADS.md` Part E added. Docs only; no code, no tests run.
 - **Game logic spec: guns, bullets, traps (D-045).** Owner design added to `docs/GAME-RULES.md` §7: a gun stock handed out automatically (armed survivors shoot from their buildings, so small hordes need no towers), bullets from a new Ammo Bench (owner: towers use bullets too), and three new traps that re-arm themselves. New chunks **CORE-008** and **CORE-009** (Core, ready) and **APP-004** (App); REL-001 now also needs APP-004. Docs only; no code, no tests run.
 - **Starting barricade is now the chain-link fence (owner).** `buildings.json startingLayout` places 28 `wall_fence` (300 HP) instead of wood walls on both maps; 6 tests that grabbed the first starting wall use `TestSupport.startingWall`. 213 Core tests pass; build clean; checked in the simulator with Start new town (`docs/plans/chicago-map/fence-barricade.jpg`). The simulator runs that fresh fence town; the owner's earlier town is still `save.old-1793593265.json` (a second `save.old-*` file is my wood-wall test town).
@@ -69,9 +70,8 @@ _Update at the end of every work session. Keep it short; history belongs in feat
 - Earlier: 1A Core half (`Core/` package; see `docs/features/core-api.md`), docs scaffolding, tuning pass.
 
 ## Next step
-- **Track B: APP-002 done; next CORE-004 (Core: time & alerts), then APP-003.**
-- **Chunk RND-005 (performance pass, fps readout, Battery saver, real-phone + heat check) is next on the 3D track**; start prompt in `BUILD-QUEUE.md`.
-- Art: remaining menu thumbnails and real inventory/pause screens are recommended; see the review and UI handoff.
+- **MVP path (D-047, owner goal):** work the ten tickets in "MVP path" at the top of `BUILD-QUEUE.md`, in order, one at a time. **Next: CORE-010** ("Implement ticket CORE-010"). Then APP-006 → CORE-005 → APP-005 (first playable checkpoint) → CORE-008 → CORE-009 → APP-004 → CORE-012 → APP-008 → REL-002 (MVP ready to play).
+- Parked until the owner has played the MVP: CORE-004/APP-003, CORE-006/CORE-007/APP-009, CORE-011/APP-007, RND-005, and the looks track.
 
 ## Decided
 - The map is real 3D only (D-027, D-030); menus use the UI kit. 2A (2D walker frames) is retired.

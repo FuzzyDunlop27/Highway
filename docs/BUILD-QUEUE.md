@@ -20,6 +20,28 @@ Numbers are just the next free number in that prefix (not a priority or a wave).
 
 _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Renamed to ticket IDs 2026-11-01. Milestones done in the older scheme: 1A, 1V, 1B, isometric placement (D-022), wall-line tool (D-024)._
 
+## MVP path (owner goal, 2026-11-01)
+
+**Goal:** a playable first pass — enough to build that the town feels real, and supplies you can see coming in and going out on real screens, so it feels like a living place. The owner plays it, then picks the next phase.
+**Sacrificed for MVP:** looks (new buildings borrow an existing model or a labeled box with their name), and most extra activities (one food chain is enough; no chickens, canning, hunting, spotters, offline catch-up yet).
+
+Work these **in this order, one at a time** (each ticket's start prompt is in its section below):
+
+| # | Ticket | Why it is in the MVP |
+|---|---|---|
+| 1 | CORE-010 | Room to build: smaller footprints, rotation, bigger fence. Goes first because it changes the starting layout CORE-005 adds to. |
+| 2 | APP-006 | Placing a building takes one or two touches — building has to feel good. |
+| 3 | CORE-005 | Food and water: survivors eat and drink; Garden, Well, Rain Catcher. The heart of "supplies". |
+| 4 | APP-005 | Survival on screen: water in the HUD, Hungry/Thirsty banner, appeal, new build cards. **First playable checkpoint.** |
+| 5 | CORE-008 | Guns and bullets: a second supply chain (scrap → bullets at the Ammo Bench) tied to defense. |
+| 6 | CORE-009 | Three traps: more things to build outside the fence. |
+| 7 | APP-004 | Guns, bullets and traps on screen. |
+| 8 | CORE-012 | Town ledger: rates in/out per supply, survivor roster data, a "what happened" log. |
+| 9 | APP-008 | Supplies and Town screens: the inventory page, survivor roster, town log. |
+| 10 | REL-002 | MVP playtest: an agent plays 45 minutes, fixes blockers, writes the owner's one-page play guide. **MVP done.** |
+
+**Parked until after the MVP playtest:** CORE-004/APP-003 (time away, alerts), CORE-006/CORE-007/APP-009 (more food, spotters), CORE-011/APP-007 (take over houses), RND-005 (performance; pull it in early if the owner plays on a real phone and it runs hot), and the whole looks track (MOD-003, MOD-009, MOD-010, TXT-001–003, MAP-001, RND-007, RND-008). OWN-001 downloads can continue any time.
+
 ## Tickets
 
 | Ticket | Old name | Goal | Blocked by | Related | Status |
@@ -34,12 +56,15 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Ren
 | CORE-008 | 1G | Core: guns + bullets — gun stock handed out automatically, armed survivors shoot, Ammo Bench | APP-002 (done) | CORE-009, APP-004, CORE-010 (Ammo Bench is 1×1; check the spot finder) | **Ready** (owner design, D-045) |
 | CORE-009 | 1P | Core: new traps — Bear Trap, Pit Trap, Noise Maker, auto re-arm | APP-002 (done) | CORE-008, APP-004 | **Ready** (owner design, D-045) |
 | CORE-010 | 1H | Core: smaller footprints (5 buildings 2×2 → 2×1), rotation, bigger starting fence (13×9), spot finder | APP-002 (done) | APP-006, MOD-010, MAP-001, CORE-005 (starting well + garden must fit the new ring) | **Ready** (owner request, D-046) |
+| CORE-012 | 7S-C | Core: town ledger — per-supply rates in/out with sources, survivor roster data, town event log | CORE-005, CORE-008 | APP-008, CORE-009 (save version) | Specced 2026-11-01 — MVP #8 |
 | CORE-011 | 5H | Core: take over neighborhood houses (claim a house/garage/shop as a Shelter, Workshop, Storage…) | CORE-010 | APP-007 | Specced 2026-11-01 — blocked by CORE-010 (owner said yes) |
 | APP-001 | 1C | App: speed buttons + menu thumbnails | — | APP-002 | Done 2026-11-01 — speed buttons checked in the simulator; all 13 cards already had a picture |
 | APP-002 | 3B | App: all panels + 30-minute exit check (milestone 1C) | CORE-001, CORE-002, CORE-003 | APP-001 | Done 2026-11-01 — notes in `docs/features/balance.md` "Playtest 3B" |
 | APP-003 | 5B | App: settings, welcome back, Horde Alerts, Engage + milestone 1D exit check | CORE-004 | REL-001 | Blocked by CORE-004 |
 | APP-004 | 2G | App: guns + traps screens (HUD guns/bullets, Ammo Bench panel, trap cards, shooting effects) | CORE-008, CORE-009 | REL-001 | Blocked by CORE-008, CORE-009 |
-| APP-005 | 3W | App: survival + spotter screens (water/canned in HUD, shortage banner, new panels, "Horde spotted" callout) | CORE-005, CORE-006, CORE-007 | REL-001 | Blocked by CORE-005, CORE-006, CORE-007 |
+| APP-005 | 3W | App: survival screens (water in HUD, Hungry/Thirsty banner, appeal, Garden/Well/Rain Catcher cards) — narrowed for the MVP | CORE-005 | APP-009, APP-008, REL-001 | Blocked by CORE-005 — MVP #4 (spotter + more-food screens moved to APP-009) |
+| APP-008 | 7S | App: Supplies and Town screens — inventory page, survivor roster, town log (UI kit) | CORE-012, APP-004, APP-005 | REL-002 | Specced 2026-11-01 — MVP #9 |
+| APP-009 | 3W-2 | App: more-food + spotter screens (Cannery, Hunting, Foraging panels; Lookout panel; "Horde spotted" callout) | CORE-006, CORE-007, APP-005 | REL-001 | Specced 2026-11-01 — after MVP (split out of APP-005) |
 | APP-006 | 2H | App: easier placing — ghost opens on a spot that fits, Rotate button, models scaled to fill their footprint | CORE-010 | MOD-010 | Blocked by CORE-010 |
 | APP-007 | 6H | App + art: "Take over" button on houses, fortified house looks | CORE-011, APP-006, MOD-010 | CORE-011 | Specced 2026-11-01 — blocked by CORE-011, APP-006, MOD-010 |
 | RND-001 | 1R | 3D: go/no-go spike on a real phone (DEBUG only) | — | RND-002 | Done 2026-11-01 — GO (D-028); iPhone 18 Pro 60 fps at 100 walkers |
@@ -68,7 +93,8 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Ren
 | ART-002 | 1D | Art: realistic static walker pilot | — | ART-001 | Done 2026-10-31 |
 | ART-003 | 2A | Art: ZWALK-1 realistic walker limb animation | ART-001 | — | Retired 2026-11-01 — 2D walker frames no longer used (D-030); animated 3D zombie = MOD-002 |
 | OWN-001 | 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props, HDRI) into the working folder | — | TXT-001, TXT-002, MOD-009, RND-008 | **Ready — you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md` (parts A–E). Mirrored in the Craft doc "Owner Downloads" and board card |
-| REL-001 | 6B | Art swap, balance pass, TestFlight (owner-led) | APP-003, APP-005, APP-004 | — | Blocked by APP-003, APP-004, APP-005 |
+| REL-001 | 6B | Art swap, balance pass, TestFlight (owner-led) | APP-003, APP-005, APP-004, APP-009, REL-002 | — | Blocked by APP-003, APP-004, APP-005, APP-009, REL-002 |
+| REL-002 | MVP | MVP playtest: agent plays 45 min, fixes blockers, tunes obvious numbers, owner play guide | APP-008 | REL-001 | Specced 2026-11-01 — MVP #10 (last) |
 
 **Reading the board:** Done = finished. Ready = every Blocked-by ticket is Done, safe to start. Blocked = at least one Blocked-by ticket is not Done: do not start it. When a ticket finishes, update its row and flip any ticket it unblocks to Ready. Tickets with an old "Needs" line in their detail section below use that text as extra context; the **Blocked by** column wins if they disagree.
 
@@ -232,13 +258,21 @@ Context: plan for CORE-010 / MOD-010 / TXT-002… is `docs/plans/buildings-and-l
 - **Exit check:** in the simulator, a fresh town holds the first horde with tracers coming from the HQ and workplaces; bullets go down; an Ammo Bench refills them; a bear trap holds a zombie and re-arms after the horde.
 - **Start prompt:** "Implement ticket APP-004: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §7, docs/features/hud-ui.md, docs/features/rendering-art.md, and the APP-004 section of docs/BUILD-QUEUE.md only."
 
-### APP-005 — App: survival + spotter screens [Specced 2026-11-01]
-- **Goal:** the player can see and use everything from CORE-005, CORE-006 and CORE-007.
-- **Needs:** CORE-005, CORE-006, CORE-007.
-- **Scope (App only):** HUD water and canned goods with net per minute, a red Hungry/Thirsty banner, and town appeal with its reasons; build-menu cards for the new buildings (labeled boxes until models exist); Cannery, Hunting Lodge and HQ Foraging panels (reuse the scavenging panel); Lookout panel (sight, warning, upgrade); a sight ring when a lookout is selected and a marker on watched edges; the "Horde spotted — east off-ramp, 75 s · about 15 · 2 brutes" banner with a siren sound hook; the rough "next horde in ~6 min" clock until spotted. Ask whether to add new art ids to `docs/graphics-spec-phase1.md` for a later model chunk.
-- **Do NOT build:** new 3D models (separate art chunk), weather visuals, town-life walking (RND-007).
-- **Exit check:** in the simulator, a fresh town: fix the garden, watch water and food tick, let water run out and see the banner and output drop, build a lookout by the east road and get an early callout for an east horde but a late one for an unwatched edge.
-- **Start prompt:** "Implement ticket APP-005: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4 and §6, docs/features/hud-ui.md, and the APP-005 section of docs/BUILD-QUEUE.md only."
+### APP-005 — App: survival screens [Specced 2026-11-01; narrowed for the MVP]
+- **Goal:** the player can see and use everything from CORE-005. (Spotter and more-food screens moved to APP-009 so the MVP doesn't wait on CORE-006/CORE-007.)
+- **Needs:** CORE-005.
+- **Scope (App only):** HUD water with net per minute (food already there; add net per minute too), a red Hungry/Thirsty banner, and town appeal with its reasons; build-menu cards for Garden, Well and Rain Catcher. **Stand-in looks:** each new building borrows an existing model in `ModelRegistry` (e.g. Garden → farm, Well/Rain Catcher → storage) with its name label, or a labeled box; list the borrowed ids in `docs/features/models-3d.md` so a later art ticket can replace them.
+- **Do NOT build:** new 3D models, weather visuals, town-life walking (RND-007), spotter or Cannery/Hunting screens (APP-009).
+- **Exit check:** in the simulator, a fresh town: fix the garden, build a Well, watch water and food tick, let water run out and see the banner and output drop, then recover.
+- **Start prompt:** "Implement ticket APP-005: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4, docs/features/hud-ui.md, and the APP-005 section of docs/BUILD-QUEUE.md only."
+
+### APP-009 — App: more-food + spotter screens [Specced 2026-11-01 — after the MVP]
+- **Goal:** the player can see and use CORE-006 and CORE-007 (split out of APP-005).
+- **Needs:** CORE-006, CORE-007, APP-005.
+- **Scope (App only):** HUD canned goods; Cannery, Hunting Lodge and HQ Foraging panels (reuse the scavenging panel); Lookout panel (sight, warning, upgrade); a sight ring when a lookout is selected and a marker on watched edges; the "Horde spotted — east off-ramp, 75 s · about 15 · 2 brutes" banner with a siren sound hook; the rough "next horde in ~6 min" clock until spotted. Stand-in looks as in APP-005.
+- **Do NOT build:** new 3D models, weather visuals.
+- **Exit check:** in the simulator: run a Cannery, build a lookout by the east road and get an early callout for an east horde but a late one for an unwatched edge.
+- **Start prompt:** "Implement ticket APP-009: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/GAME-RULES.md §4 and §6, docs/features/hud-ui.md, and the APP-009 section of docs/BUILD-QUEUE.md only."
 
 ## ART-002 — Realistic static walker [Done]
 - **Goal:** demonstrate one realistic zombie end to end in the current game.
@@ -519,3 +553,29 @@ _Full design, numbers and the "why it looks flat" diagnosis: `docs/plans/buildin
 - **Do NOT build:** new Core rules, new house models (TXT-003 owns the houses), interiors.
 - **Exit check:** in the simulator: take over a garage next to the fence as a Workshop, watch it build, see the fortified look, demolish it to a lot; a far house says "too far"; screenshots in `docs/plans/`; Core tests and simulator build pass.
 - **Start prompt:** "Implement ticket APP-007: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/input.md, docs/features/models-3d.md, docs/plans/buildings-and-look-plan.md §8 and the APP-007 section of docs/BUILD-QUEUE.md only."
+
+## MVP tickets (owner goal 2026-11-01) — see "MVP path" at the top
+
+### CORE-012 — Core: town ledger [Specced 2026-11-01 — MVP #8]
+- **Goal:** Core can answer "where does each supply come from and go to?", "who lives here and what are they doing?" and "what just happened?", so the App can draw a living town without doing any game math.
+- **Needs:** CORE-005, CORE-008 (water, bullets and guns must exist to be in the ledger). Takes the next free save version if the log is saved.
+- **Scope (Core only):** a read-only `TownLedger` snapshot: for every resource, amount / cap, made per minute and used per minute broken down by source (each building type, upkeep, Ammo Bench, repairs, runs), and minutes until empty or full; a survivor roster (name, job or building, defender/builder/idle, hungry/thirsty, knocked out timer) — add seeded first names from a new `Content/names.json` if survivors have none; a capped town event log (`log.maxEntries` in JSON) of plain events: building finished/upgraded, survivor arrived/left, run returned with loot, horde held/broke through, shortage started/ended, research done. Game-time stamps only (no wall clock). Save migration if the log is saved.
+- **Do NOT build:** UI (APP-008), new rules, notifications.
+- **Exit check:** `swift test` passes with tests for: rates match what actually happens over 60 ticked seconds, minutes-until-empty, roster counts match jobs, each event type logs once, the log cap, same seed = same names, migration.
+- **Start prompt:** "Implement ticket CORE-012: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/core-api.md, docs/GAME-RULES.md §4 and §7, and the CORE-012 section of docs/BUILD-QUEUE.md only."
+
+### APP-008 — App: Supplies and Town screens [Specced 2026-11-01 — MVP #9]
+- **Goal:** one tap from the HUD opens a screen that shows the whole town's supplies and people, so the place feels alive and the player knows what to build next.
+- **Needs:** CORE-012, APP-004, APP-005.
+- **Scope (App only, using the delivered UI kit in `HighwayHoldout_UI_Kit/` — see `docs/reviews/2026-10-31-art-and-build-review.md` item 2):** a **Supplies** tab (every resource: amount / cap bar, + and − per minute, tap for the breakdown by source, "runs out in 12 min" warning in red, empty/locked rows for things not built yet); a **People** tab (roster from the ledger: name, job, status; tap to jump the camera to their building); a **Log** tab (latest events, newest first); a HUD button to open it and tapping a HUD resource opens its Supplies row. Pausing the game while it is open follows the existing speed buttons (pause if the speed buttons allow it).
+- **Do NOT build:** Core math (read only from the ledger), new art beyond the UI kit, settings screen (APP-003), portraits.
+- **Exit check:** in the simulator: open Supplies on a running town, the numbers match the HUD and change as buildings work; the breakdown shows the Garden and Well; a shortage shows the red "runs out" line; People lists every survivor with the right job; the Log shows a finished building and a held horde; Core tests and simulator build pass.
+- **Start prompt:** "Implement ticket APP-008: read AGENTS.md, docs/STATUS.md, docs/MAP.md, docs/features/hud-ui.md, docs/reviews/2026-10-31-art-and-build-review.md, and the APP-008 section of docs/BUILD-QUEUE.md only."
+
+### REL-002 — MVP playtest [Specced 2026-11-01 — MVP #10, last]
+- **Goal:** the owner can sit down and play the MVP for real, with nothing blocking the first hour.
+- **Needs:** APP-008 (and so everything in the MVP path).
+- **Scope:** an agent plays a fresh town in the simulator for ~45 game-minutes, using every MVP feature (build, rotate, garden/well, guns/bullets/Ammo Bench, traps, Supplies screen); fixes only blockers (crashes, stuck states, buttons that do nothing) with tests where Core is involved; tunes obvious numbers in `Content/*.json` (town starves in 5 minutes, first horde unbeatable, nothing to do for 10 minutes) and records them in `docs/features/balance.md`; writes `docs/MVP-PLAY-GUIDE.md` (one page: how to start, what to try, what is placeholder, known issues, what feedback is useful).
+- **Do NOT build:** new features, art, anything parked in the MVP path.
+- **Exit check:** the playtest notes and play guide exist; Core tests and simulator build pass; STATUS says "MVP ready to play".
+- **Start prompt:** "Start ticket REL-002: read AGENTS.md, docs/STATUS.md, docs/features/balance.md, and the REL-002 section of docs/BUILD-QUEUE.md only."
