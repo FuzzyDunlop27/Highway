@@ -128,6 +128,12 @@ def flat_roof(half_x, half_y, z):
 
 # MARK: Simple textured shapes (barricades, posts, wire) for things the free packs don't have
 
+def texture_path(name):
+    """A Poly Haven diffuse texture: textures/<name>_diff_1k.jpg, or inside its unzipped folder textures/<name>/textures/."""
+    flat = os.path.join(TEXTURES, name + '_diff_1k.jpg')
+    return flat if os.path.exists(flat) else os.path.join(TEXTURES, name, 'textures', name + '_diff_1k.jpg')
+
+
 def material(texture, metres=1.0, roughness=0.9, metallic=0.0, tint=None):
     """Principled material from a Poly Haven diffuse texture; `metres` = how many metres one texture repeat covers."""
     key = (texture, metres, roughness, metallic, tint)
@@ -141,7 +147,7 @@ def material(texture, metres=1.0, roughness=0.9, metallic=0.0, tint=None):
     bsdf.inputs['Metallic'].default_value = metallic
     if texture:
         image = nodes.new('ShaderNodeTexImage')
-        image.image = bpy.data.images.load(os.path.join(TEXTURES, texture + '_diff_1k.jpg'), check_existing=True)
+        image.image = bpy.data.images.load(texture_path(texture), check_existing=True)
         links.new(image.outputs['Color'], bsdf.inputs['Base Color'])
     if tint:
         bsdf.inputs['Base Color'].default_value = (*tint, 1)

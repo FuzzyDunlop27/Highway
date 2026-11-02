@@ -1,4 +1,4 @@
-// Purpose: DEBUG-only testing menu (long-press the horde chip): start a horde now, add resources, kill all zombies, open the 3D spike. Notes: docs/features/hud-ui.md
+// Purpose: DEBUG-only testing menu (long-press the horde chip): start a horde now, add resources, kill all zombies, start a new town, open the 3D spike. Notes: docs/features/hud-ui.md
 #if DEBUG
 import SwiftUI
 import HoldoutCore
@@ -21,6 +21,14 @@ struct DebugMenuView: View {
             item("Horde now", glyph: "alert", kind: .danger, command: .debugStartHorde)
             item("+\(Self.gift.food) food & scrap", glyph: "plus", kind: .primary, command: .debugAddResources(Self.gift))
             item("Kill all zombies", glyph: "demolish", kind: .secondary, command: .debugKillAllZombies)
+            Button {
+                store.startNewTown()
+                close()
+            } label: {
+                KitLabel(glyph: "plus", title: "Start new town").frame(maxWidth: .infinity)
+            }
+            .buttonStyle(KitButtonStyle(kind: .secondary))
+            .accessibilityIdentifier("debug_new_town")
             Button(action: openSpike3D) {
                 KitLabel(glyph: "plus", title: "3D spike (1R)").frame(maxWidth: .infinity)
             }

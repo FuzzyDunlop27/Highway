@@ -33,7 +33,7 @@
   },
   "startingLayout": [
     { "id": "hq", "level": 1, "count": 1 },
-    { "id": "wall_wood", "level": 1, "count": 28 },
+    { "id": "wall_fence", "level": 1, "count": 28 },
     { "id": "watchtower", "level": 1, "count": 1, "staffed": true }
   ],
   "buildings": [

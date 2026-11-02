@@ -83,7 +83,7 @@ struct HordeResolutionTests {
             Issue.record("farm not placed"); return
         }
         loop.step(ticks: TestSupport.ticks(loop.content.buildingDef("farm")!.level(1)!.buildSeconds, loop))
-        let wallID = try #require(loop.state.base.buildings.first { $0.defId == "wall_wood" }).id
+        let wallID = try #require(loop.state.base.buildings.first { $0.defId == TestSupport.startingWall }).id
         let broken = try loop.edited { s in
             for i in s.base.buildings.indices where [farmID, wallID].contains(s.base.buildings[i].id) { s.base.buildings[i].hp = 0 }
         }

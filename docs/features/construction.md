@@ -12,7 +12,7 @@ The player places buildings and defenses on the grid, moves them, or demolishes 
 - `Core/Sources/HoldoutCore/Systems/Construction/RepairSystem.swift` — repair damaged buildings, rebuild rubble (`Command.repair`).
 - `Core/Sources/HoldoutCore/Model/Building.swift`, `Model/GridPoint.swift`, `Model/NewGame.swift` (starting layout).
 - `Core/Sources/HoldoutCore/Content/BuildingDefs.swift`, `Content/MapDef.swift`.
-- `Content/maps/phase1_exit.json` — the map.
+- `Content/maps/phase1_chicago.json` — the map new games use (D-044, `map-chicago.md`); `phase1_exit.json` — the old highway map (old saves, test fixture).
 - Tests: `Core/Tests/HoldoutCoreTests/Systems/Construction/BuildQueueTests.swift`, `PlacementRulesTests.swift`, `ConstructionSystemTests.swift`, `RepairSystemTests.swift`
 
 ## Data files

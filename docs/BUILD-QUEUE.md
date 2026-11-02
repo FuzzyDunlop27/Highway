@@ -27,7 +27,7 @@ _Seeded 2026-10-31 from `PHASE1-TASKS.md` 1C–1E and STATUS open questions. Don
 | 3R | 3D: placement, selection, walls | 2R | Done 2026-11-01 — ray picking, ghost/grid/footprint, wall line, outline + range ring, fading (D-032) |
 | 3M | 3D art: animated zombies (+ survivors/defenders) | 2R, 2M | Done 2026-11-01 (D-038) — walk/attack/idle walker, runner/brute variants; Mixamo files local only; defenders still boxes |
 | 1X | **Owner:** download assets (terrain textures, foliage, Mixamo humans, props) into the working folder | — | Ready — **you, not an agent**; checklist in `docs/OWNER-DOWNLOADS.md`, tick parts A–D. Start with A (terrain, unblocks 1T). Part C is now "more farmer clips first" (the farmer is in the game); other humans optional. Mirrored in the Craft doc "Owner Downloads" and board card |
-| 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | **Ready, partly done** (2026-11-01, D-043): basic photo textures per tile are in. Left: variation, soft edges, road line, map border, fps/size checks. An asphalt texture is still missing (asphalt uses darkened concrete_rock_path) |
+| 1T | 3D: ground textures + map edge/road dressing | 2R; 1X part A | **Ready, partly done** (2026-11-01, D-043/D-044): photo textures per tile and road lines are in. Left: variation, soft edges, map border, fps/size checks. An asphalt texture is still missing (asphalt uses darkened concrete_rock_path) |
 | 2T | 3D: foliage and scatter (trees, bushes, grass, rocks) | 1T; 1X part B | Blocked by 1T and the rest of 1X part B (have: grass clumps, dandelions, dry branches; missing: trees, bushes, rocks). A few hand-placed `dec_*` props/weeds exist already (D-043) |
 | 3M-2 | 3D art: human characters — defender + 4 survivor looks, task animations | 3M | Doing — first look in game 2026-11-01: farmer drawn for defenders + strolling survivors; more looks/clips (idle, carry, hammer…) still to come |
 | 3M-2MH | MakeHuman trial: body-to-FBX script + medieval blacksmith profile | Owner request only; no wave dependency | Done 2026-11-01 — script/profile preparation; live MakeHuman export/import pending; does not complete 3M-2 |
@@ -363,6 +363,7 @@ _The humans are split in two so each fits a fresh chat: **3M-2** makes the peopl
 - **Exit check:** every ticked part has its files in the listed folder; Mixamo and terrain files are git-ignored (`git status` doesn't list them).
 
 ## Chunk 1T — Ground textures + map edge [Ready, partly done 2026-11-01]
+- **Also done (D-044):** road centre lines and lane lines as tile textures (`tile_road_lane_ew`, `tile_road_center_ew/_ns`, generated placeholders), new tile slots for lots, gravel alleys, sidewalks and garden soil on the Chicago map.
 - **Already done (D-043, owner request):** `presentation.json reality3d.groundTextures` (file, repeatTiles, tint per tile id), `App/Rendering/GroundTextures3D.swift`, UVs in tiles on the merged ground mesh, flat-colour fallback, 4 × 1024 px JPGs in `App/Textures/Ground/` (≈1.5 MB): grass_ground, muddy_tracks (dirt), cracked_concrete_02, concrete_rock_path (darkened, standing in for asphalt). Remaining scope below is unchanged except those parts.
 - **Goal:** the ground looks like real grass, dirt, asphalt and concrete instead of flat colors, and the map no longer ends in a hard flat edge.
 - **Needs:** 2R (done); 1X part A (texture files).

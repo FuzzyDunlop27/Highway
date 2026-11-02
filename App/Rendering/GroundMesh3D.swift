@@ -62,15 +62,18 @@ enum GroundMesh3D {
         return root
     }
 
-    /// Car wrecks, trees and rubble from the map file, as models or labeled boxes ("decoration" height).
+    /// Car wrecks, trees, rubble and neighborhood buildings from the map file, as models or labeled boxes ("decoration"
+    /// height), turned to face `faces` (models are built facing south, +Z).
     static func decorations(map: MapDef, mapping: WorldMapping3D, settings: Reality3DDef, registry: ModelRegistry) -> Entity {
         let root = Entity()
         root.name = "decorations"
         let height = Reality3DSizes.height(category: ArtCategory.decoration, settings: settings)
         for d in map.decorations where d.footprint.count == 2 {
-            let w = d.footprint[0], h = d.footprint[1]
+            let w = d.footprint[0], h = d.footprint[1], turns = d.quarterTurns
             let size = mapping.footprintSize(width: w, height: h)
-            let entity = registry.entity(d.id, size: [Float(size.x), height, Float(size.z)])
+            let unturned: SIMD3<Float> = turns % 2 == 1 ? [Float(size.z), height, Float(size.x)] : [Float(size.x), height, Float(size.z)]
+            let entity = registry.entity(d.id, size: unturned)
+            entity.orientation = simd_quatf(angle: -Float(turns) * .pi / 2, axis: [0, 1, 0])
             entity.position = Reality3DSizes.vector(mapping.footprintCenter(origin: GridPoint(x: d.x, y: d.y), width: w, height: h))
             root.addChild(entity)
         }

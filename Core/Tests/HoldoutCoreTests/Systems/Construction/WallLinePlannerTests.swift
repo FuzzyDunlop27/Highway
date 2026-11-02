@@ -80,7 +80,8 @@ struct WallLinePlannerTests {
             }
         }
         let def = loop.content.buildingDef(wall)!
-        let left = WallLinePlanner.limit(def: def, state: loop.state) - loop.state.base.buildings.filter { $0.defId == wall }.count
+        let walls = loop.state.base.buildings.filter { loop.content.buildingDef($0.defId)?.category == "wall" }.count  // they share one limit
+        let left = WallLinePlanner.limit(def: def, state: loop.state) - walls
         let plan = loop.planLine(defId: wall, from: GridPoint(x: 0, y: 26), to: GridPoint(x: 39, y: 26))
         #expect(plan.buildable.count == left)
         #expect(plan.problem == .limitReached(max: WallLinePlanner.limit(def: def, state: loop.state)))

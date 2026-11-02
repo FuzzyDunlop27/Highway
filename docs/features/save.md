@@ -7,7 +7,7 @@ The whole game is saved as one versioned JSON blob so the town is still there af
 - `Core/Sources/HoldoutCore/Save/SaveCodec.swift` — `encode(GameState) -> Data`, `decode(Data) -> GameState`, `SaveError`.
 - `Core/Sources/HoldoutCore/Save/SaveMigrations.swift` — the migration hook (one step per old version).
 - `Core/Sources/HoldoutCore/Model/*.swift` — everything saved is `Codable`.
-- `App/Platform/SaveFileStore.swift` — reads/writes `Application Support/HighwayHoldout/save.json` (atomic write); renames an unreadable save to `save.broken-<time>.json`.
+- `App/Platform/SaveFileStore.swift` — reads/writes `Application Support/HighwayHoldout/save.json` (atomic write); renames an unreadable save to `save.broken-<time>.json`; DEBUG Start new town renames the current one to `save.old-<time>.json` (`setAside(as:)`).
 - `App/Platform/AppLifecycle.swift` — saves when the app leaves the foreground and every `autosaveSeconds` of real frame time.
 - `App/GameStore.swift` — on launch: load the save, or start a new game if there is none (or it can't be read; the player sees a notice).
 - Tests: `Core/Tests/HoldoutCoreTests/Save/SaveCodecTests.swift`

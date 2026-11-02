@@ -88,13 +88,13 @@ struct RepairSystemTests {
 
     @Test func freeStartingRubbleUsesTheLevelCost() throws {
         let start = try TestSupport.loop()
-        let wall = try #require(start.state.base.buildings.first { $0.defId == "wall_wood" })
+        let wall = try #require(start.state.base.buildings.first { $0.defId == TestSupport.startingWall })
         let loop = try start.edited { s in
             let i = s.base.buildings.firstIndex { $0.id == wall.id }!
             s.base.buildings[i].hp = 0
             s.base.buildings[i].isRubble = true
         }
-        let levelCost = loop.content.buildingDef("wall_wood")!.level(1)!.cost
+        let levelCost = loop.content.buildingDef(TestSupport.startingWall)!.level(1)!.cost
         let cost = levelCost.percent(loop.content.buildings.rules.rubble.rebuildCostPctOfInvested)
         #expect(loop.send(.repair(id: wall.id)) == .success(.repairStarted(cost: cost)))
     }

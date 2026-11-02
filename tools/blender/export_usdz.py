@@ -15,9 +15,12 @@ import model_kit  # noqa: E402  (Blender runs this file directly)
 import recipes_buildings  # noqa: E402
 import recipes_defenses  # noqa: E402
 import recipes_dressing  # noqa: E402
+import recipes_neighborhood  # noqa: E402
+import recipes_storefronts  # noqa: E402
 
 TILES_PER_METRE = 0.41  # a 1.8 m person ≈ 0.74 tiles, the size of the game's walker
-RECIPES = {**recipes_buildings.RECIPES, **recipes_defenses.RECIPES, **recipes_dressing.RECIPES}
+RECIPES = {**recipes_buildings.RECIPES, **recipes_defenses.RECIPES, **recipes_dressing.RECIPES,
+           **recipes_neighborhood.RECIPES, **recipes_storefronts.RECIPES}
 
 
 def fix_unlit(mat):

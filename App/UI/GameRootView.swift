@@ -19,6 +19,7 @@ struct GameRootView: View {
         } else {
             ZStack {
                 Reality3DView(store: store, ticker: ticker)
+                    .id(store.townNumber)  // a new town may be on another map: rebuild the 3D world
                 VStack(spacing: 8) {
                     HUDView(store: store)
                         .frame(maxWidth: .infinity)

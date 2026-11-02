@@ -209,7 +209,7 @@ struct BuildQueueTests {
 
     @Test func rubbleRebuildWaitsInTheQueueAndPaysWhenItStarts() throws {
         let loop = try richLoop()
-        let wallB = try #require(loop.state.base.buildings.first { $0.defId == wall })
+        let wallB = try #require(loop.state.base.buildings.first { $0.defId == TestSupport.startingWall })
         let rubble = try loop.edited { s in
             let i = s.base.buildings.firstIndex { $0.id == wallB.id }!
             s.base.buildings[i].isRubble = true

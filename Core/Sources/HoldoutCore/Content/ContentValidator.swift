@@ -138,6 +138,9 @@ enum ContentValidator {
             if d.footprint.count != 2 { throw fail(file, "decoration '\(d.id)' footprint must be [width, height]") }
             let tiles = GridPoint(x: d.x, y: d.y).footprintTiles(width: d.footprint[0], height: d.footprint[1])
             if !tiles.allSatisfy(m.contains) { throw fail(file, "decoration '\(d.id)' at (\(d.x),\(d.y)) is off the map") }
+            if let f = d.faces, !DecorationDef.facings.contains(f) {
+                throw fail(file, "decoration '\(d.id)' at (\(d.x),\(d.y)): faces must be south, west, north or east")
+            }
         }
         for e in m.spawnEdges {
             let tiles = GridPoint(x: e.x, y: e.y).footprintTiles(width: e.w, height: e.h)

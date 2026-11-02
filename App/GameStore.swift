@@ -5,8 +5,8 @@ import HoldoutCore
 
 @MainActor @Observable
 final class GameStore {
-    /// Phase 1 has one map; a new game always starts here.
-    static let startingMapId = "phase1_exit"
+    /// New games start on the Chicago block (D-044); a save keeps the map it was started on.
+    static let startingMapId = "phase1_chicago"
 
     /// The running simulation (nil if content failed to load). Read it; change it only through `send`.
     private(set) var loop: GameLoop?
@@ -29,6 +29,8 @@ final class GameStore {
     var choosingSpotFor: DefenderID?
     /// A short message for the player, e.g. why demolishing failed. The UI clears it.
     var notice: String?
+    /// Goes up when a different town is loaded, so the 3D view rebuilds for its map.
+    private(set) var townNumber = 0
 
     let placement = PlacementController()
     @ObservationIgnored let lifecycle = AppLifecycle()
@@ -221,6 +223,22 @@ final class GameStore {
     /// Testing commands from the debug menu (DEBUG builds only).
     func sendDebug(_ command: Command) {
         send(command)
+    }
+
+    /// Starts a fresh town on the starting map; the old save is kept as save.old-<time>.json (not deleted).
+    func startNewTown() {
+        guard let content else { return }
+        saveStore.setAside(as: "old")
+        do {
+            loop = try GameLoop(content: content, state: Self.newGame(content))
+            placement.select(nil)
+            choosingSpotFor = nil
+            townNumber += 1
+            refresh()
+            save()
+        } catch {
+            notice = "Couldn't start a new town: \(error)"
+        }
     }
     #endif
 

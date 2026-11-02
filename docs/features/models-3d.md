@@ -11,6 +11,8 @@ Every building, defense, construction/rubble state and map decoration has a real
 - `tools/blender/recipes_buildings.py` — HQ, shelter, farm, scavenger post, workshop, barracks, storage, construction sites, rubble
 - `tools/blender/recipes_defenses.py` — wood/metal walls, chain-link fence, watchtower, MG nest, their aiming turrets (4R), spikes, barbed wire, car wreck, dead tree
 - `tools/blender/recipes_dressing.py` — map dressing: fuel cache, supply crates, camp (picnic table + barrel stove), junk pile, weeds (grass + dandelions)
+- `tools/blender/recipes_neighborhood.py` + `building_kit.py` — Chicago houses as textured boxes (two-flat, three-flat, bungalow, cottage, courtyard apartments, garage) plus street lights, hydrants, community garden, alley bins; wall textures per house in `FACADES` (swap guide: `map-chicago.md`)
+- `tools/blender/recipes_storefronts.py` — Chicago commercial buildings from Quaternius kit pieces (storefront, mixed-use, walk-up, tavern, corner store)
 - `tools/blender/blend_parts.py` — takes single objects out of Poly Haven `.blend` downloads (fence panel, foliage); `cutout=True` gives foliage a plain diffuse + alpha material the USD exporter understands
 - `tools/check_models.py` — lists art ids the content uses that have no model (exit 1 if a non-character one is missing)
 - `App/Models/*.usdz` — the exported models (committed; loaded by `App/Rendering/ModelRegistry.swift`)
@@ -37,6 +39,7 @@ Every building, defense, construction/rubble state and map decoration has a real
 - Not yet measured on a real phone (simulator only).
 
 ## Change log
+- 2026-11-01 — Chicago block (D-044): 15 neighborhood models (`dec_bld_*`, `dec_garage`, `dec_streetlight`, `dec_hydrant`, `dec_garden_beds`, `dec_alley_bins`, ~12 MB, kit storefronts are most of it); `model_kit.texture_path` finds textures inside unzipped folders. 42/42 models.
 - 2026-11-01 — Owner's Poly Haven downloads (D-043): `def_wall_fence` (Chain Fence wall), map dressing `dec_fuel_cache`, `dec_supply_crates`, `dec_camp`, `dec_junk_pile`, `dec_weeds`; `blend_parts.py`; props found in `items/`/`foliage/` subfolders; review sheets + `in-game-polyhaven.jpg`. 27/27 models.
 - 2026-11-01 — Chunk 4R: `def_watchtower_gunner` and `def_mg_nest_gun` turret models (with `muzzle` empties); watchtower roof removed; `check_models.py` counts `turretSprite` (21/21).
 - 2026-11-01 — Chunk 2M: pipeline, 19 models, missing-model checker, review sheets (D-036, D-037).

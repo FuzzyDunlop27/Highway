@@ -31,7 +31,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 
 ## Data files
 - `Content/presentation.json` → `outsideMapColor`; `reality3d`: `metresPerTile`, `loadModels`, `placeholderHeightTiles` (per building category + `decoration`, `default`), `zombieBoxTiles`, `camera` (see `input.md`), `light` (sun elevation/azimuth/lux/color, fill lux/color, shadows on/off, shadow distance/bias), `groundTextures` (tile art id → image `file`, `repeatTiles`, `tint`; optional).
-- `Content/maps/*.json` → `legend[*].tile` (ground colors by art id), `decorations` (id + footprint).
+- `Content/maps/*.json` → `legend[*].tile` (ground look by art id), `decorations` (id + footprint + optional `faces`: south/west/north/east, the model is turned to match).
 - `Content/buildings.json` → `sprite`, `footprint`, `category` (box height), `rules.constructionSprites`, `rules.rubble.*`.
 - `Content/zombies.json` → `sprite` (zombie art id).
 
@@ -51,6 +51,7 @@ Draws the map, decorations, buildings and zombies in real 3D (RealityKit `Realit
 - No fps readout in the game since SpriteKit's went away; the 1R spike still has one. Add one with 5R's performance pass.
 
 ## Change log
+- 2026-11-01 — Chicago block (D-044): decorations turn by `faces`; new ground slots (lot, gravel, sidewalk, soil, road, lane line, double yellow; road images are generated placeholders); 3D view rebuilds when a new town starts (`GameStore.townNumber`).
 - 2026-11-01 — Ground textures (owner request, D-043): grass, dirt, concrete and asphalt tiles use Poly Haven photo textures (`GroundTextures3D`, UVs in tiles on the merged mesh); `presentation.json reality3d.groundTextures`. Checked in the simulator.
 - 2026-11-01 — Chunk 4R: effects (tracers, muzzle flash, goo, dust, trap flash, shake), health/progress bars, aiming turrets, horde warning arrows (D-039). Checked in the simulator; day-40 horde ~59–60 fps.
 - 2026-11-01 — Chunk 3M: animated zombies, gliding between ticks, runner/brute variants (`characters-3d.md`, D-038).

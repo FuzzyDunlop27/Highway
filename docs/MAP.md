@@ -20,7 +20,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Tick rate, autosave, frame-hitch cap, HQ-loss penalty % | `Content/economy.json` |
 | Offline credit cap (12h), what progresses while away, Horde Alert timing | `Content/offline.json` |
 | Which number to change when it feels too slow/hard | `docs/features/balance.md` |
-| Map layout, roads, spawn edges | `Content/maps/phase1_exit.json` |
+| Map layout, roads, spawn edges | `Content/maps/phase1_chicago.json` (new games, D-044; notes `docs/features/map-chicago.md`); old highway map `phase1_exit.json` (old saves, Core test fixture) |
+| Swap a ground texture or a house's wall texture | slots: `Content/presentation.json` `reality3d.groundTextures` + `App/Textures/Ground/`; houses: `tools/blender/recipes_neighborhood.py` `FACADES` (guide in `docs/features/map-chicago.md`) |
 | How buildings / zombies look in 3D | `App/Rendering/{BuildingLayer3D,ZombieLayer3D}.swift`; models `<artId>.usdz` via `ModelRegistry.swift` |
 | Tracers, muzzle flash, goo, dust, trap flash, building shake (sizes, times, caps) | `App/Rendering/EffectsLayer3D.swift` + `EffectMeshes3D.swift` |
 | Health / build-progress bars over buildings | `App/Rendering/BarsLayer3D.swift` |
@@ -111,6 +112,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
 │     ├─ [x] models-3d.md      2M: building/defense/decoration models, pipeline, CC0 sources, rules
+│     ├─ [x] map-chicago.md    the Chicago block map: layout, texture/model swap guide (D-044)
 │     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for 3M
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
@@ -125,7 +127,8 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] offline.json      Time factor (offline credit) + Horde Alert notification rules
 │  ├─ [x] presentation.json 3D view: camera, light, placeholder box sizes, background color (App only)
 │  └─ maps/
-│     └─ [x] phase1_exit.json  The highway-exit starting map (40×30, highway on the north edge)
+│     ├─ [x] phase1_chicago.json The Chicago block (40×30): new games start here (D-044, docs/features/map-chicago.md)
+│     └─ [x] phase1_exit.json  The old highway-exit map (old saves; Core tests' fixture map)
 ├─ Core/                    Swift package HoldoutCore: pure simulation, Foundation only
 │  ├─ [x] Package.swift     iOS 18 / macOS 14, Swift 6; `cd Core && swift test`
 │  ├─ Sources/HoldoutCore/
@@ -167,7 +170,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │     ├─ [x] Presentation/WorldMapping3DTests.swift, OrbitCamera3DTests.swift, RayPicking3DTests.swift, CharacterMotion3DTests.swift
 │     ├─ [x] Systems/Pathing/FlowFieldTests.swift · Systems/Combat/{ZombieMovement,TargetingSystem,TowerFiring}Tests.swift (+ CombatTestSupport)
 │     ├─ [x] Systems/Hordes/{HordeSystem,HordeComposer,HordeResolution}Tests.swift · Systems/Construction/RepairSystemTests.swift
-│     ├─ [x] Content/ContentFilesTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
+│     ├─ [x] Content/ContentFilesTests.swift · Content/ChicagoMapTests.swift · Simulation/GameLoopTests.swift · Save/SaveCodecTests.swift
 │     ├─ [x] Systems/Jobs/{WorkerAssignment,DefenderTraining,DefenderPosts}Tests (+ JobsTestSupport) · Systems/Scavenging/ScavengingTests · Systems/Research/ResearchTests
 │     └─ [x] Systems/Economy/EconomySystemTests.swift · Systems/Construction/PlacementRulesTests.swift, ConstructionSystemTests.swift, BuildQueueTests.swift
 ├─ [x] HighwayHoldout.xcodeproj  App project (created once, D-014). Never edit project.pbxproj.
@@ -264,6 +267,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
       ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble
       ├─ [x] recipes_defenses.py   2M: walls (wood, metal, chain fence), watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
       ├─ [x] recipes_dressing.py   map dressing props: fuel cache, supply crates, camp, junk pile, weeds
+      ├─ [x] recipes_neighborhood.py Chicago houses, garages, street lights, hydrants, garden, alley bins (FACADES = wall texture slots)
+      ├─ [x] recipes_storefronts.py Chicago storefronts, mixed-use, walk-up, taverns, corner store (Quaternius kit)
+      ├─ [x] building_kit.py       textured-box house parts: walls, windows, bays, stoops, hipped roofs
+      ├─ [x] make_ground_textures.py placeholder road textures (asphalt, lane line, double yellow) + ground photo copies
       ├─ [x] blend_parts.py        single objects from Poly Haven .blend files (fence panel, foliage with cut-out leaves)
       ├─ [x] preview_mixamo_walk.py  rendered walker → comparison overlay + four-facing GIF (Pillow)
       └─ [x] extra_models.py        stand-in models for buildings the study lacks

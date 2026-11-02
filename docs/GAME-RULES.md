@@ -97,10 +97,12 @@ _The one place to read and tweak how the game plays. Owner: change a rule's word
 | Each job borrows 1 idle survivor as builder | `rules.buildersPerJob` (1) | ✅ |
 | Demolish refunds 50%; cancelling a running job refunds 75% | `rules.demolishRefundPct`, `cancelRefundPct` | ✅ |
 | Repair costs 50% of level cost × missing HP; rubble rebuild 50% of invested | `rules.repair`, `rules.rubble` | ✅ |
-| New game: HQ, closed ring of 28 wood walls, 1 staffed watchtower | `buildings.json → startingLayout` | ✅ (+ well, garden 🟡 1W) |
+| New game: HQ, closed ring of 28 **Chain Fence** walls (the starting barricade, owner 2026-11-01; was wood), 1 staffed watchtower | `buildings.json → startingLayout`; positions in the map's `startingPositions` | ✅ (+ well, garden 🟡 1W) |
+| New games start on the **Chicago block**: 4-lane main street (not buildable) + side street, alley, houses, shops, vacant lots; old saves keep the highway map | `GameStore.startingMapId`; `maps/phase1_chicago.json` | ✅ (D-044) |
 | Build and repair during hordes | `rules.buildDuringHorde` (true) | ✅ |
 | Barrier choices (drawn as a line, share one wall limit 40/80/120): Wood Wall 10 scrap 200 HP; **Chain Fence** 15 scrap 300 HP (no research); Metal Wall 30 scrap 800 HP (needs Metal Fortification) — level 1 numbers | `buildings.json → defenses wall_wood / wall_fence / wall_metal` | ✅ (fence numbers are a first guess, D-043) |
-| Map props (car wrecks, trees, rubble, fuel cans, crates, camp, junk, weeds) block building and zombies on their tile | `maps/phase1_exit.json → decorations` | ✅ |
+| Map props and neighborhood buildings (houses, shops, garages, street lights, wrecks, trees, junk, weeds) block building and zombies on their tiles | `maps/*.json → decorations` | ✅ |
+| Zombies enter at both ends of the main street and of the side street | `maps/phase1_chicago.json → spawnEdges` (ids shared with `hordes.json`) | ✅ |
 
 ## 6. Hordes and spotters
 **Today:** a countdown to the next horde is always on screen, and arrows show the spawn edges 60 s before it arrives.
@@ -144,6 +146,8 @@ _The one place to read and tweak how the game plays. Owner: change a rule's word
 | Time factor (setting, default OFF): up to 12 h of credit, no combat, horde clock frozen | `offline.json → timeFactor` | 🟡 4B/5B |
 
 ## Change log
+- 2026-11-01 — Starting barricade is now 28 Chain Fence sections instead of wood walls (300 HP each instead of 200).
+- 2026-11-01 — New games start on the Chicago block map (D-044).
 - 2026-11-01 — Added the Chain Fence barrier and more map props (D-043).
 - 2026-11-01 — Owner confirmed: short supplies make survivors leave (no deaths); added town appeal (successful towns attract people faster).
 - 2026-11-01 — Created as the central rule set; added the owner's food/water survival and spotter design (D-042).

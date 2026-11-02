@@ -22,9 +22,12 @@ struct SaveFileStore {
     }
 
     /// Renames an unreadable save to save.broken-<time>.json so it isn't overwritten and can be inspected.
-    func setAsideBroken() {
+    func setAsideBroken() { setAside(as: "broken") }
+
+    /// Renames the save to save.<label>-<time>.json (kept on disk, never deleted).
+    func setAside(as label: String) {
         let stamp = Int(Date().timeIntervalSince1970)
-        let dest = fileURL.deletingLastPathComponent().appendingPathComponent("save.broken-\(stamp).json")
+        let dest = fileURL.deletingLastPathComponent().appendingPathComponent("save.\(label)-\(stamp).json")
         try? FileManager.default.moveItem(at: fileURL, to: dest)
     }
 }

@@ -13,7 +13,7 @@ The SwiftUI layer over the map: resource bar + horde chip, horde banners, build 
 - `App/UI/SpeedButtonsView.swift` — pause / 1x / 2x buttons at the end of the HUD row, one per `economy.json speedOptions` entry (kit pause/play/speed glyphs; the current one is teal). Taps send `.setSpeed`; the choice lives in the save.
 - `App/UI/HordeChipView.swift` — "Day N / next horde 3:12" (clock glyph); red with the alert glyph during the warning; "Horde! / 23 left" during an attack. Long-press (DEBUG) opens the debug menu.
 - `App/UI/HordeBannerView.swift` — `HordeBanner` (from `.hordeStarted`, `.hordeEnded(.held)` → "Held! +X scrap", `.hordeEnded(.hqFell)` → "HQ fell: −X") and its kit dialog panel; hides after 4 s or on tap.
-- `App/UI/DebugMenuView.swift` — DEBUG builds only: Horde now, +500 food & scrap, Kill all zombies (Core debug commands), open the 1R 3D spike (the game clock pauses while it's open).
+- `App/UI/DebugMenuView.swift` — DEBUG builds only: Horde now, +500 food & scrap, Kill all zombies (Core debug commands), Start new town (on the starting map; the old save is kept as `save.old-<time>.json`), open the 1R 3D spike (the game clock pauses while it's open).
 - `App/UI/BuildMenuView.swift` — kit drawer with Buildings / Defenses tabs (`ui_tab_normal` / `ui_tab_selected`) of cards (3/4 picture, name, L1 cost; disabled card + red cost if you can't afford it). The tab is remembered while the app runs.
 - `App/UI/PlacementBarView.swift` — kit bars: Confirm/Cancel while placing or moving; Move/Demolish/close, a progress bar, a health bar when damaged, and Repair / Rebuild (rubble) for a selected building.
 

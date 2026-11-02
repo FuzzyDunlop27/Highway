@@ -55,7 +55,7 @@ struct ConstructionSystemTests {
         let loop = try TestSupport.loop()
         let hq = try #require(loop.state.base.buildings.first { $0.defId == "hq" })
         #expect(loop.send(.demolish(id: hq.id)) == .failure(.cannotDemolish(defId: "hq")))
-        let wall = try #require(loop.state.base.buildings.first { $0.defId == "wall_wood" })
+        let wall = try #require(loop.state.base.buildings.first { $0.defId == TestSupport.startingWall })
         #expect(loop.send(.demolish(id: wall.id)) == .success(.demolished(refund: .zero)))
     }
 

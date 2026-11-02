@@ -41,7 +41,16 @@ public struct DecorationDef: Codable, Sendable {
     public let id: String
     public let x: Int
     public let y: Int
+    /// [width, height] it covers on the map, already turned (a 3×4 house facing east covers [4, 3]).
     public let footprint: [Int]
+    /// Which way the model's front points: "south" (as modelled, the default), "west", "north" or "east". Look only.
+    public let faces: String?
+
+    /// The allowed `faces` values, in quarter turns from "south".
+    public static let facings = ["south", "west", "north", "east"]
+
+    /// Quarter turns from the modelled direction (0 = south … 3 = east); 0 when `faces` is missing.
+    public var quarterTurns: Int { faces.flatMap { Self.facings.firstIndex(of: $0) } ?? 0 }
 }
 
 /// A rectangle of edge tiles where hordes enter (used from 1B).
