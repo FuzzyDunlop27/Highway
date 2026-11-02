@@ -87,4 +87,4 @@ loop.send(.debugStartHorde) ; loop.send(.debugAddResources(Cost(scrap: 500, food
 - 2026-10-31 — Added `presentation.json` decoding (`GameContent.presentation`) and `Presentation/GridProjection` (1V; not used by the simulation).
 - 2026-10-31 — Created for milestone 1A (Core half).
 - 2026-11-01 — 1B queue: Command `.upgrade`, `.cancelJob`; `Base.jobs`; `buildQueue`, `upgradeProblem`, `upgradeCost`; `PlacementProblem.queueFull`; save v3.
-- 2026-11-01 — 2B/2C: commands `.setWorkers`, `.trainDefender`, `.cancelTraining`, `.garrison`, `.holdSpot`, `.recallDefender`, `.startRun`, `.collectRun`, `.startResearch`; `population`, `trainingProblem`, `runProblem`, `researchProblem`, `towerRange`; new events; save v5.
+- 2026-11-01 — CORE-002/CORE-003: commands `.setWorkers`, `.trainDefender`, `.cancelTraining`, `.garrison`, `.holdSpot`, `.recallDefender`, `.startRun`, `.collectRun`, `.startResearch`; `population`, `trainingProblem`, `runProblem`, `researchProblem`, `towerRange`; new events; save v5.

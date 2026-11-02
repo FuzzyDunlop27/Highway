@@ -35,5 +35,5 @@ Staffed towers shoot zombies in range during a horde, so a well-placed Watchtowe
 - (none yet)
 
 ## Change log
-- 2026-11-01 — Chunk 2B/2C: garrison damage multiplier, hold-spot defenders shoot (`DefenderCombat`), Marksmanship range bonus.
+- 2026-11-01 — Chunk CORE-002/CORE-003: garrison damage multiplier, hold-spot defenders shoot (`DefenderCombat`), Marksmanship range bonus.
 - 2026-10-31 — Created for 1B task B6: tower targeting (nearest-to-HQ / nearest) and stateless staggered firing.

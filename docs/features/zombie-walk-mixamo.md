@@ -1,12 +1,12 @@
-> **3D (chunk 3M):** the same FBX now feed `tools/blender/export_characters.py`; see `docs/features/characters-3d.md`.
+> **3D (chunk MOD-002):** the same FBX now feed `tools/blender/export_characters.py`; see `docs/features/characters-3d.md`.
 
-> **Cleanup 2026-11-01:** the 2D walker frames, renderer scripts and Iso art folder were deleted (D-030). The FBX files now live in `HighwayHoldout_3D_Sources/mixamo-walker/`; only the Mixamo source/licence notes here still apply (chunk 3M). Paths below to deleted files are history (see git).
+> **Cleanup 2026-11-01:** the 2D walker frames, renderer scripts and Iso art folder were deleted (D-030). The FBX files now live in `HighwayHoldout_3D_Sources/mixamo-walker/`; only the Mixamo source/licence notes here still apply (chunk MOD-002). Paths below to deleted files are history (see git).
 
-# ZWALK-1M — Walker limb animation via Mixamo (alternative route for chunk 2A)
+# ZWALK-1M — Walker limb animation via Mixamo (alternative route for chunk ART-003)
 
-> **RETIRED as 2D frames (D-030, 2026-11-01):** the app no longer uses the rendered walker PNGs. The Mixamo source and D-026 terms notes still matter for chunk 3M (animated 3D walker).
+> **RETIRED as 2D frames (D-030, 2026-11-01):** the app no longer uses the rendered walker PNGs. The Mixamo source and D-026 terms notes still matter for chunk MOD-002 (animated 3D walker).
 
-**Label:** `ZWALK-1M` · **Chunk:** 2A (art track, see `docs/BUILD-QUEUE.md`) · **Type:** art + rendering only (no Core, gameplay or save change)
+**Label:** `ZWALK-1M` · **Ticket:** ART-003 (art track, see `docs/BUILD-QUEUE.md`) · **Type:** art + rendering only (no Core, gameplay or save change)
 **Runs in:** Claude Code (this repo) or ChatGPT/Codex. Each step says who does it.
 
 ## Why this route
@@ -23,7 +23,7 @@ the still if the owner decides so in step 0.
 - Renderer: `tools/blender/render_mixamo_walk.py`; shared iso staging imported after making `render_iso_sprites.py` import-safe. Separate `preview_mixamo_walk.py` builds comparison/GIF artifacts. Test overlay inspected before all-frame render. Embedded textures intact.
 - Outputs: 12 frames + 2 matching stills imported, zero warnings. Fixed 256×232 canvas / 160 px global envelope / y=184 cycle baseline. Actual action frames 1–122, six evenly spaced samples excluding duplicate endpoint. Root 1.486675 m × scale 0.41361584 = stride **0.6149123397 tiles**. No Swift/Core/save implementation changes.
 - Step 4: 119 Core tests and simulator builds pass. Actual-app fixtures checked four facings, paused stability, attacking hold, missing-frame fallback and crowd rendering. Missing SE w0 restored and full build reinstalled. Two later day-40 crowd captures read 60 fps (32 zombies / 1,389 nodes; protected HQ fixture).
-- **Still pending:** native simulator clicks failed, so long-press → Horde now and hands-on smoothness/foot-sliding acceptance over a normal horde remain unchecked. Chunk 2A remains in progress for that visual acceptance; runner/brute not started.
+- **Still pending:** native simulator clicks failed, so long-press → Horde now and hands-on smoothness/foot-sliding acceptance over a normal horde remain unchecked. Chunk ART-003 remains in progress for that visual acceptance; runner/brute not started.
 - Original town restored byte-for-byte; app stopped. Full evidence, limits and reproduction commands: `HighwayHoldout_Iso_Art/walker-mixamo/README.md`. Raw FBX and local review recordings stay local and ignored by Git.
 
 ## Step 0 — Owner decisions (before any work)

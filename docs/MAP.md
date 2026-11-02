@@ -63,10 +63,11 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 | Upgrading a building | `Core/.../Systems/Construction/UpgradeSystem.swift`; level data in `Content/buildings.json` |
 | Build menu | `App/UI/BuildMenuView.swift` |
 | Menu look (colors, buttons, panels, glyphs from the UI kit) | `App/UI/KitStyle.swift`; art in `HighwayHoldout_UI_Kit/` |
-| 3D spike (chunk 1R, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
+| Building overhaul + better looks plan (footprints, builders on screen, Chicago-style buildings, lighting/textures, Roscoe Village map; chunks CORE-010–RND-008, TXT-002–MAP-001) | `docs/plans/buildings-and-look-plan.md`; chunks in `docs/BUILD-QUEUE.md`; owner textures `docs/OWNER-DOWNLOADS.md` Part E |
+| 3D spike (chunk RND-001, DEBUG) | `App/Spike3D/`; results `docs/plans/3d-spike-1R-results.md` |
 | Free CC0 asset spike (DEBUG, "Free assets" scene) | layout `App/Spike3D/Spike3DLayouts.swift`; convert `tools/blender/free_assets_spike_export.py`; results `docs/research/free-assets.md` |
 | Zombie/defender/survivor animation: walk speed, turning, gliding, runner/brute look, which model humans use | `Content/presentation.json` `reality3d.characters` (+ `townLife` for strolling survivors: count, speed, radius); math `Core/.../Presentation/CharacterMotion3D.swift`; playback `App/Rendering/CharacterAnimator3D.swift`; export `tools/blender/export_characters.py`; notes `docs/features/characters-3d.md` |
-| Building / defense / decoration 3D models (2M) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
+| Building / defense / decoration 3D models (MOD-001) | recipes `tools/blender/recipes_{buildings,defenses}.py`; export `tools/blender/export_usdz.py` → `App/Models/`; checker `tools/check_models.py`; notes `docs/features/models-3d.md` |
 | Old Blender study model scripts (reference only since D-036) | `tools/blender/*_models.py` |
 | Generate a custom MakeHuman body / blacksmith reference | `tools/makehuman/generate_blacksmith.py`, `tools/makehuman/README.md`; `docs/plans/blacksmith-profile.md`; notes `docs/features/characters-3d.md` |
 | Open the installed MakeHuman app / find its user files | `/Users/rick/Applications/MakeHuman.app`; runtime beside it in `MakeHuman-runtime/`; user files `~/Documents/MakeHuman/v1py3/`; install notes `tools/makehuman/README.md` |
@@ -86,7 +87,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] STATUS.md         Where we left off, next step, open questions
 │  ├─ [x] MAP.md            This file
 │  ├─ [x] DECISIONS.md      Why things are the way they are
-│  ├─ [x] BUILD-QUEUE.md    Build chunks (1A, 2A, 1B…): dependencies, status, start prompts
+│  ├─ [x] BUILD-QUEUE.md    Tickets (CORE-001, APP-001, MOD-001…): blocked-by/related links, status, start prompts
 │  ├─ [x] GAME-DESIGN.md    What the game is; Phase 1 content list
 │  ├─ [x] GAME-RULES.md     Central rule set: every game rule + its JSON knob + status (tweak here)
 │  ├─ [x] IDEAS.md          Owner's parked future ideas (not approved to build)
@@ -96,24 +97,24 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  ├─ [x] art-templates/           RETIRED (D-030): iso diamond guides
 │  ├─ plans/                Proposals for the owner to pick from (not yet in BUILD-QUEUE)
 │  │  ├─ [x] living-world-plan.md  Option 1: Tropico-style living world in 2D (chunks 1K 1N 1F 1U 1S 2F 2S)
-│  │  ├─ [x] 3d-rendering-plan.md  Option 2: real 3D drawing with RealityKit (chunks 1R–6R, 2M, 3M)
-│  │  ├─ [x] blacksmith-profile.md  MakeHuman trial: precise age-45 medieval blacksmith art brief (3M-2MH)
-│  │  ├─ [x] 3d-spike-1R-results.md  Chunk 1R results: fps table, iOS 17/18 findings, gaps, go/no-go
-│  │  ├─ [x] spike-1R/     1R screenshots (3D spike + current 2D for comparison)
+│  │  ├─ [x] 3d-rendering-plan.md  Option 2: real 3D drawing with RealityKit (chunks RND-001–RND-006, MOD-001, MOD-002)
+│  │  ├─ [x] blacksmith-profile.md  MakeHuman trial: precise age-45 medieval blacksmith art brief (MOD-004)
+│  │  ├─ [x] 3d-spike-1R-results.md  Chunk RND-001 results: fps table, iOS 17/18 findings, gaps, go/no-go
+│  │  ├─ [x] spike-1R/     RND-001 screenshots (3D spike + current 2D for comparison)
 │  │  └─ [x] mockups/      Look-alike pictures of each option (painted over a real screenshot / Blender render)
 │  └─ features/             One short note per feature (see list below)
 │     ├─ [x] _TEMPLATE.md   Copy this to start a new feature note
 │     ├─ [x] balance.md     Pacing targets, formulas, timeline, tuning knobs
 │     ├─ [x] core-api.md    What the App calls in Core (load, tick, commands, placement, save)
 │     ├─ [x] economy.md     Production, caps, housing, survivor arrival, staffing
-│     ├─ [x] jobs-defenders.md  Worker counts, Barracks training, garrison, hold a spot (2B)
-│     ├─ [x] scavenging-research.md  Runs, held rewards, Workshop research (2C)
+│     ├─ [x] jobs-defenders.md  Worker counts, Barracks training, garrison, hold a spot (CORE-002)
+│     ├─ [x] scavenging-research.md  Runs, held rewards, Workshop research (CORE-003)
 │     ├─ [x] construction.md  Place/move/demolish, placement rules, the map
 │     ├─ [x] save.md        Versioned save JSON + migrations; save file + autosave
 │     ├─ [x] rendering-art.md  3D renderer: ticker, RealityView world, ground, ModelRegistry, layers
-│     ├─ [x] models-3d.md      2M: building/defense/decoration models, pipeline, CC0 sources, rules
+│     ├─ [x] models-3d.md      MOD-001: building/defense/decoration models, pipeline, CC0 sources, rules
 │     ├─ [x] map-chicago.md    the Chicago block map: layout, texture/model swap guide (D-044)
-│     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for 3M
+│     ├─ [x] zombie-walk-mixamo.md  RETIRED 2D walker frames (D-030); Mixamo source notes still useful for MOD-002
 │     ├─ [x] input.md       Camera, ghost placement, select/move/demolish
 │     └─ [x] hud-ui.md      GameStore, HUD, build menu, bottom bars
 ├─ Content/                 ALL tuning data, loaded at runtime. No numbers in Swift.
@@ -146,7 +147,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  │  ├─ [x] GameLoop.swift    Fixed tick, commands, placement checks: the App's entry point
 │  │  │  ├─ [x] Command.swift     Player actions in, outcomes/errors out
 │  │  │  └─ [x] SeededRandom.swift  Deterministic random (SplitMix64), saved
-│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits), CharacterMotion3D.swift (character glide/turn/walk rate, 3M), SurvivorWander3D.swift (survivor stroll routes, 3M-2) — App only
+│  │  ├─ Presentation/      [x] WorldMapping3D.swift (tile ↔ 3D metres), OrbitCamera3D.swift (camera math), RayPicking3D.swift (finger ray, box hits), CharacterMotion3D.swift (character glide/turn/walk rate, MOD-002), SurvivorWander3D.swift (survivor stroll routes, MOD-003) — App only
 │  │  ├─ Model/ (1B)        [x] Zombie.swift, HordeState.swift (+ ActiveHorde); Simulation/SimEvent.swift (events for drawing)
 │  │  ├─ Content/           ContentLoader + Codable definitions matching Content/*.json (+ PresentationDefs.swift)
 │  │  │  ├─ [x] ContentLoader.swift / ContentValidator.swift / GameContent.swift
@@ -155,14 +156,14 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ Systems/           One folder per game system:
 │  │  │  ├─ Economy/        [x] EconomySystem, StorageRules, Staffing, ResourceSnapshot
 │  │  │  ├─ Construction/   [x] PlacementRules, ConstructionSystem (place/move/demolish), BuildQueue + BuildQueueStatus (slots, queue, builders), UpgradeSystem
-│  │  │  ├─ Jobs/           [x] Roster (who is where), WorkerAssignment, DefenderTraining, DefenderPosts, DefenderCombat (2B)
+│  │  │  ├─ Jobs/           [x] Roster (who is where), WorkerAssignment, DefenderTraining, DefenderPosts, DefenderCombat (CORE-002)
 │  │  │  ├─ Pathing/        [x] FlowField (Dijkstra cost to HQ; walls cost by hp), FlowFieldCache (rebuild on change)
 │  │  │  ├─ Combat/         [x] ZombieMovement, WallBashing, Traps (spikes/barbed wire), TargetingSystem, TowerFiring
 │  │  │  ├─ Hordes/         [x] HordeSystem (clock, warning, spawn), HordeComposer (size/mix/edges),
 │  │  │  │                  HordeResolution (deaths, loot, rubble), HordeOutcome (held bonus, HQ fall), HordeStatus
 │  │  │  ├─ Construction/   [x] RepairSystem (repair damage at once, rebuild rubble on a timer; cost preview)
-│  │  │  ├─ Research/       [x] ResearchSystem, ResearchEffects (Knowledge stored on Group, not Base) (2C)
-│  ├─ Scavenging/     [x] ScavengingSystem: runs, held rewards, collect (2C)
+│  │  │  ├─ Research/       [x] ResearchSystem, ResearchEffects (Knowledge stored on Group, not Base) (CORE-003)
+│  ├─ Scavenging/     [x] ScavengingSystem: runs, held rewards, collect (CORE-003)
 │  │  │  └─ [ ] OfflineCatchUp/ Time-factor catch-up: resources/builds only, never attacks
 │  │  └─ Save/              [x] SaveCodec (versioned JSON), SaveMigrations (upgrade old saves)
 │  └─ Tests/HoldoutCoreTests/  Swift Testing; folders mirror Sources/
@@ -177,7 +178,7 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 ├─ App/                     App target HighwayHoldout (iOS, synced folder: new files need no project edit)
 │  ├─ [x] HighwayHoldoutApp.swift  App entry point; saves when the app leaves the foreground
 │  ├─ [x] GameStore.swift   @Observable bridge: loads content + save, owns Core GameLoop, sends Commands
-│  ├─ [x] JobsSnapshot.swift / GameStore+Jobs.swift  what the job panels show + their actions (3B)
+│  ├─ [x] JobsSnapshot.swift / GameStore+Jobs.swift  what the job panels show + their actions (APP-002)
 │  ├─ [x] GameTicker.swift  The game clock: display link → GameStore.advance each frame; buffers Core events
 │  ├─ Rendering/            RealityKit 3D (2D SpriteKit retired, D-030)
 │  │  ├─ [x] Reality3DView.swift   SwiftUI host: RealityView (virtual camera) + touch layer
@@ -185,19 +186,19 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] GroundMesh3D.swift    one merged ground mesh + decorations; Reality3DSizes helpers
 │  │  ├─ [x] GroundTextures3D.swift repeating photo textures for ground tiles (presentation.json groundTextures)
 │  │  ├─ [x] BuildingLayer3D.swift one entity per building, rebuilt on Signature change; wall direction; pick boxes
-│  │  ├─ [x] PlacementLayer3D.swift ghost, tile grid, green/red footprint, planned wall line (3R)
-│  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (3R)
-│  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (3R)
-│  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (3R)
-│  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (3B); rifle clip during hordes (3M-2)
-│  │  ├─ [x] SurvivorLayer3D.swift  strolling survivors around the HQ, hidden during hordes (3M-2 first look)
-│  │  ├─ [x] ZombieLayer3D.swift   one animated zombie per zombie: glides, turns, walk/attack/idle (3M)
-│  │  ├─ [x] EffectsLayer3D.swift  plays Core SimEvents: tracers, muzzle flash, goo, dust, trap flash, shake (4R)
-│  │  ├─ [x] EffectMeshes3D.swift  shared shapes/materials for those effects (4R)
-│  │  ├─ [x] TurretLayer3D.swift   aiming turret under each finished tower; muzzle point for tracers (4R)
-│  │  ├─ [x] BarsLayer3D.swift     health / build-progress bars above roofs (4R)
-│  │  ├─ [x] HordeWarning3D.swift  warned spawn edges: red tiles + ground arrows (4R)
-│  │  ├─ [x] CharacterAnimator3D.swift  plays a character's clip (cut from its one USDZ timeline) at the right speed (3M)
+│  │  ├─ [x] PlacementLayer3D.swift ghost, tile grid, green/red footprint, planned wall line (RND-003)
+│  │  ├─ [x] SelectionLayer3D.swift selected building's outline + range ring (RND-003)
+│  │  ├─ [x] OccluderFader3D.swift  fades buildings between the camera and the ghost (RND-003)
+│  │  ├─ [x] OverlayMeshes3D.swift  flat see-through ground shapes: tiles, outlines, ring (RND-003)
+│  │  ├─ [x] DefenderLayer3D.swift  one character per defender: by the HQ, on its tower or held spot (APP-002); rifle clip during hordes (MOD-003)
+│  │  ├─ [x] SurvivorLayer3D.swift  strolling survivors around the HQ, hidden during hordes (MOD-003 first look)
+│  │  ├─ [x] ZombieLayer3D.swift   one animated zombie per zombie: glides, turns, walk/attack/idle (MOD-002)
+│  │  ├─ [x] EffectsLayer3D.swift  plays Core SimEvents: tracers, muzzle flash, goo, dust, trap flash, shake (RND-004)
+│  │  ├─ [x] EffectMeshes3D.swift  shared shapes/materials for those effects (RND-004)
+│  │  ├─ [x] TurretLayer3D.swift   aiming turret under each finished tower; muzzle point for tracers (RND-004)
+│  │  ├─ [x] BarsLayer3D.swift     health / build-progress bars above roofs (RND-004)
+│  │  ├─ [x] HordeWarning3D.swift  warned spawn edges: red tiles + ground arrows (RND-004)
+│  │  ├─ [x] CharacterAnimator3D.swift  plays a character's clip (cut from its one USDZ timeline) at the right speed (MOD-002)
 │  │  ├─ [x] ModelRegistry.swift   art id → USDZ model loaded in the background, else labeled box; never crashes
 │  │  ├─ [x] ArtRegistry.swift     menu/HUD pictures (Art/UI, Art/Menu) + placeholder; UIColor.hex, ArtCategory
 │  │  └─ [x] PlaceholderArt.swift  labeled flat box for missing menu art; per-prefix colors (also 3D boxes)
@@ -208,10 +209,10 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  └─ [x] PlacementMessages.swift    Core placement problems/errors → player text
 │  ├─ UI/                   SwiftUI
 │  │  ├─ [x] GameRootView.swift  3D map + overlays, ArtIcon, notice banner, load-error screen
-│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (3B)
-│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (3B)
-│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (3B)
-│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (3B)
+│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (APP-002)
+│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (APP-002)
+│  │  ├─ [x] BuildingPanelView.swift  panel above the selection bar: level badge, Upgrade, workers −/+, per-building sections (APP-002)
+│  │  ├─ [x] BarracksSection.swift (+ DefenderCard, TowerGarrisonSection) · ScavengerSection.swift · WorkshopSection.swift · BuildQueueStripView.swift (APP-002)
 │  │  ├─ [x] HUDView.swift / SpeedButtonsView.swift / BuildMenuView.swift / PlacementBarView.swift (Confirm/Cancel; Move/Demolish)
 │  │  ├─ [x] KitStyle.swift      UI kit look: colors, panels, buttons, glyphs, icon buttons
 │  │  ├─ [x] HordeChipView.swift / HordeBannerView.swift  day + countdown chip; start/held/HQ-fell banners
@@ -223,9 +224,9 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [ ] NotificationScheduler.swift  Horde Alert local notifications (1D)
 │  │  └─ [x] AppLifecycle.swift         Save on leaving foreground + every economy.json autosaveSeconds
 │  ├─ Textures/Ground/      Poly Haven CC0 ground photos (1024 px JPG) used by GroundTextures3D
-│  ├─ Models/               2M: one <artId>.usdz per building/defense/state/decoration (+ 4R turrets def_watchtower_gunner, def_mg_nest_gun) (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
-│  │                        3M: zmb_*.usdz / unit_*.usdz + <artId>.anim.json from tools/blender/export_characters.py — git-ignored (Mixamo, D-038)
-│  ├─ Spike3D/              DEBUG chunk 1R RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
+│  ├─ Models/               MOD-001: one <artId>.usdz per building/defense/state/decoration (+ RND-004 turrets def_watchtower_gunner, def_mg_nest_gun) (tools/blender/export_usdz.py); notes: docs/features/models-3d.md
+│  │                        MOD-002: zmb_*.usdz / unit_*.usdz + <artId>.anim.json from tools/blender/export_characters.py — git-ignored (Mixamo, D-038)
+│  ├─ Spike3D/              DEBUG chunk RND-001 RealityKit spike (reference; its study scene now loads the App/Models ones); notes: docs/plans/3d-spike-1R-results.md
 │  │  ├─ [x] Spike3DScreen.swift       screen: fps readout, scene/walker/shadow/host/cap toggles, launch args
 │  │  ├─ [x] Spike3DLayouts.swift      which models each spike scene places (study town / free-asset lineup)
 │  │  ├─ [x] Spike3DWorld.swift        scene: ground, models, dusk sun + fill, walker rings, per-frame update
@@ -233,12 +234,12 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
 │  │  ├─ [x] Spike3DOrbitCamera.swift  pan / zoom / twist / limited tilt → camera transform
 │  │  ├─ [x] Spike3DGestureLayer.swift UIKit touch recognizers driving the orbit camera
 │  │  ├─ [x] Spike3DConfig.swift + spike3d.json  spike-only tuning
-│  │  ├─ Models/               only the git-ignored Mixamo walker USDZ (tools/blender/spike_export_usdz.py); study models were replaced by App/Models (2M)
+│  │  ├─ Models/               only the git-ignored Mixamo walker USDZ (tools/blender/spike_export_usdz.py); study models were replaced by App/Models (MOD-001)
 │  │  └─ FreeAssets/           git-ignored fa_*.usdz from tools/blender/free_assets_spike_export.py (sources in HighwayHoldout_3D_Sources/free-assets/, also git-ignored)
 │  ├─ AppIconLayers/        app_icon_bg/fg layers (written by tools/import_art.py)
 │  └─ Assets.xcassets/      AppIcon + Art/UI/ (UI kit, tools/import_art.py --view ui) + Art/Menu/ (8 old iso building pictures for menu cards)
 ├─ HighwayHoldout_UI_Kit/   ChatGPT's UI kit (menu panels, buttons, glyphs, 3/4 build cards). Don't edit; import with --view ui.
-├─ HighwayHoldout_3D_Sources/  Raw 3D source files, mostly git-ignored (Mixamo FBX, downloaded models, terrain textures). What the owner must download: docs/OWNER-DOWNLOADS.md (chunk 1X).
+├─ HighwayHoldout_3D_Sources/  Raw 3D source files, mostly git-ignored (Mixamo FBX, downloaded models, terrain textures). What the owner must download: docs/OWNER-DOWNLOADS.md (chunk OWN-001).
 ├─ HighwayHoldout_Blender_Study/  3D art study (models + scripts) the isometric art is rendered from. Art team owns it.
 ├─ HighwayHoldout_Blender_Study/  Fresh 3D style study: editable .blend, models/, ten png/ samples, renders/, scripts/, QA and Claude handoff.
 ├─ HighwayHoldout_Blender_Study.zip  Shareable Blender study and sample assets.
@@ -249,23 +250,23 @@ Everything for milestone 1A exists (Core package + App target). `Content/` is bu
    │  ├─ [x] generate_farmer.py      Adult woman farmer: fitted overalls, grey shirt, boots, short brown hair; source MHM/FBX
    │  └─ [x] README.md               Run instructions, API sources, verification and integration limits
    ├─ [x] import_art.py     PNGs → imagesets; only --view ui is still used (topdown/iso folders were removed, D-030)
-   ├─ [x] check_models.py   2M: lists art ids with no App/Models/<id>.usdz (exit 1 if a non-character one is missing)
+   ├─ [x] check_models.py   MOD-001: lists art ids with no App/Models/<id>.usdz (exit 1 if a non-character one is missing)
    └─ blender/
       ├─ [x] render_mixamo_walk.py  FBX walker → fixed-camera SE/NE frames, stills and measured stride
-      ├─ [x] spike_export_usdz.py   one-off 1R export: 6 study models + Mixamo walker → USDZ (not the 2M pipeline)
+      ├─ [x] spike_export_usdz.py   one-off RND-001 export: 6 study models + Mixamo walker → USDZ (not the MOD-001 pipeline)
       ├─ [x] free_assets_spike_export.py  free-asset spike: downloaded CC0 glTF/FBX/OBJ → fa_*.usdz (real metres; textures=512, only=<name> options)
       ├─ [x] free_assets_assemblies.py   free-asset spike: assembles buildings (fa_qt_shop) from Quaternius modular pieces
-      ├─ [x] export_characters.py  3M: Mixamo FBX clips → animated App/Models/<artId>.usdz + .anim.json (clip times, stride)
+      ├─ [x] export_characters.py  MOD-002: Mixamo FBX clips → animated App/Models/<artId>.usdz + .anim.json (clip times, stride)
       ├─ [x] check_makehuman_fbx.py  Live MakeHuman FBX → Blender height/geometry/budget report, saved blend and neutral preview; ignores defective custom normals
       ├─ [x] build_blacksmith_draft.py  Clothed source → optimized blacksmith draft, one atlas, portable exports and previews
       ├─ [x] blacksmith_geometry.py     Draft apron/beard, surface fitting and worn materials
       ├─ [x] character_review.py        Shared atlas bake, FBX/GLB export, four angles and clean reimport verification (renamed from blacksmith_review.py)
       ├─ [x] build_farmer_draft.py      Farmer source → ≤10k triangle, single-atlas portable review model
       ├─ [x] check_character_package.py Packed blend/isolated FBX/GLB texture and geometry checks
-      ├─ [x] export_usdz.py        2M pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
-      ├─ [x] model_kit.py          2M building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
-      ├─ [x] recipes_buildings.py  2M: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble
-      ├─ [x] recipes_defenses.py   2M: walls (wood, metal, chain fence), watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
+      ├─ [x] export_usdz.py        MOD-001 pipeline: every recipe → App/Models/<artId>.usdz (metres → tiles, 512 px, review sheets)
+      ├─ [x] model_kit.py          MOD-001 building blocks: kit pieces, Poly Haven props, sandbags, textured boxes/stakes/coils
+      ├─ [x] recipes_buildings.py  MOD-001: HQ, shelter, farm, scavenger, workshop, barracks, storage, construction, rubble
+      ├─ [x] recipes_defenses.py   MOD-001: walls (wood, metal, chain fence), watchtower, MG nest, spikes, barbed wire, car wreck, dead tree
       ├─ [x] recipes_dressing.py   map dressing props: fuel cache, supply crates, camp, junk pile, weeds
       ├─ [x] recipes_neighborhood.py Chicago houses, garages, street lights, hydrants, garden, alley bins (FACADES = wall texture slots)
       ├─ [x] recipes_storefronts.py Chicago storefronts, mixed-use, walk-up, taverns, corner store (Quaternius kit)

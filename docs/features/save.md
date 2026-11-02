@@ -30,5 +30,5 @@ The whole game is saved as one versioned JSON blob so the town is still there af
 ## Change log
 - 2026-10-31 — Version 1 save codec + migration hook (1A).
 - 2026-10-31 — App side: save file store, save on background + autosave, load on launch (1A App half).
-- 2026-11-01 — v3 (chunk 1B): `Base.jobs` (build queue); a v2 half-built building becomes a running, already-paid job.
-- 2026-11-01 — v4 (chunk 2B): `Base.defenders`, `nextDefenderID`, `training`; `Building.assignedWorkers` (absent = full staffing). v5 (chunk 2C): `Base.runs`, `Base.research`, `Building.heldReward` (absent = none); `Group.knowledge` was already saved. Tests decode a v3 and a v4 sample.
+- 2026-11-01 — v3 (chunk CORE-001): `Base.jobs` (build queue); a v2 half-built building becomes a running, already-paid job.
+- 2026-11-01 — v4 (chunk CORE-002): `Base.defenders`, `nextDefenderID`, `training`; `Building.assignedWorkers` (absent = full staffing). v5 (chunk CORE-003): `Base.runs`, `Base.research`, `Building.heldReward` (absent = none); `Group.knowledge` was already saved. Tests decode a v3 and a v4 sample.

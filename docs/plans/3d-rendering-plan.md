@@ -1,11 +1,11 @@
 # Plan: real 3D drawing for Highway Holdout (option two)
 
-> **Status 2026-11-01:** chosen (D-027), 1R spike GO (D-028), 2R done, and 2D retired early at the owner's request (D-030), so §4's "run side by side" no longer applies and 6R is done. Live status: `docs/BUILD-QUEUE.md`.
+> **Status 2026-11-01:** chosen (D-027), RND-001 spike GO (D-028), RND-002 done, and 2D retired early at the owner's request (D-030), so §4's "run side by side" no longer applies and RND-006 is done. Live status: `docs/BUILD-QUEUE.md`.
 
 _Written 2026-10-31. A plan only: nothing here is built or approved. Compare it with `docs/plans/living-world-plan.md` (option one, staying 2D) and pick._
 
 ## In one paragraph
-Today the game draws flat pictures (sprites) that were rendered from 3D models in Blender at one fixed angle. Going "real 3D" means the phone draws those 3D models itself, every frame. That gives you a camera you can turn and tilt, real sunlight and shadows, and smooth animation from any angle. The game rules (`Core/`) and the menus/HUD stay exactly as they are. Only the part that draws the map changes. It's a big job, roughly **3–5 times the work of the 2D living-world pass**, and most of that work is art, not code. **My advice:** first do a short, cheap test (chunk 1R, below) that shows our models running in 3D on a real iPhone. Decide after seeing it, and only continue if the 2D art redo can't get the look you want.
+Today the game draws flat pictures (sprites) that were rendered from 3D models in Blender at one fixed angle. Going "real 3D" means the phone draws those 3D models itself, every frame. That gives you a camera you can turn and tilt, real sunlight and shadows, and smooth animation from any angle. The game rules (`Core/`) and the menus/HUD stay exactly as they are. Only the part that draws the map changes. It's a big job, roughly **3–5 times the work of the 2D living-world pass**, and most of that work is art, not code. **My advice:** first do a short, cheap test (chunk RND-001, below) that shows our models running in 3D on a real iPhone. Decide after seeing it, and only continue if the 2D art redo can't get the look you want.
 
 ## 1. Which 3D engine? (recommendation: RealityKit)
 
@@ -20,7 +20,7 @@ Today the game draws flat pictures (sprites) that were rendered from 3D models i
 - **(a) Raise the minimum to iOS 18 for the whole app (recommended).** iOS 17-only phones are now a small group.
 - **(b) Keep iOS 17, and have those phones keep the 2D view forever.** That works with the switch in §4, but we'd maintain two renderers indefinitely.
 
-RealityKit also has fewer game tutorials than SceneKit had, and some features (particles, billboards) only arrived in recent iOS versions. Chunk 1R exists to find any such gaps early.
+RealityKit also has fewer game tutorials than SceneKit had, and some features (particles, billboards) only arrived in recent iOS versions. Chunk RND-001 exists to find any such gaps early.
 
 ## 2. What in `App/` is replaced and what is kept
 
@@ -49,14 +49,14 @@ One structural change: today `GameScene` drives the game clock (it calls `store.
 
 ## 4. Can 2D and 3D run side by side? Yes, and they should
 
-Add one field to `Content/presentation.json`, e.g. `"renderer": "sprite2d" | "reality3d"` (plus a DEBUG toggle). The SwiftUI root view shows either the old SpriteKit view or the new 3D view. Both read the same `GameStore` and send the same Commands, so **the same save plays in either view**. The game stays fully playable in 2D at every step. If a 3D chunk stalls, nothing is lost, and the switch makes before/after comparisons on the same town easy. When 3D is good enough, flip the default. Delete 2D later only if you decide to (chunk 6R).
+Add one field to `Content/presentation.json`, e.g. `"renderer": "sprite2d" | "reality3d"` (plus a DEBUG toggle). The SwiftUI root view shows either the old SpriteKit view or the new 3D view. Both read the same `GameStore` and send the same Commands, so **the same save plays in either view**. The game stays fully playable in 2D at every step. If a 3D chunk stalls, nothing is lost, and the switch makes before/after comparisons on the same town easy. When 3D is good enough, flip the default. Delete 2D later only if you decide to (chunk RND-006).
 
 ## 5. Performance, battery, app size
 
 - **Target:** 60 fps on the oldest supported iPhone, with the day-40 horde (~35 zombies today, plan for 100+). Today's 2D baseline: 60 fps with 32–35 zombies (~1,400 sprites).
 - **What's cheap:** buildings and props (a few hundred simple, untextured models). The 40×30 ground must be **one merged mesh**, not 1,200 tiles.
 - **What's expensive:** animated characters. Each skinned zombie is drawn on its own; instancing doesn't help animated meshes. 35 is fine on modern phones; 100+ needs a low-poly zombie (~3–5k triangles), shared materials and maybe simpler animation at a distance. Shadows: one sun light, tuned cascades, and props that don't cast shadows where it doesn't show.
-- **Battery/heat:** 3D with shadows uses noticeably more power than 2D sprites. Mitigations: a "Battery saver" setting (lower resolution, no shadows, 30 fps if RealityKit allows capping, which 1R must verify) and drawing less while the town is idle.
+- **Battery/heat:** 3D with shadows uses noticeably more power than 2D sprites. Mitigations: a "Battery saver" setting (lower resolution, no shadows, 30 fps if RealityKit allows capping, which RND-001 must verify) and drawing less while the town is idle.
 - **App size:** art today is ~8 MB. Palette-coloured building models are tiny; textured characters are ~2–5 MB each. Expect the 3D art to add **tens of MB**, far under App Store limits. The 2D sprites can be dropped if 2D is retired.
 
 ## 6. Build chunks
@@ -65,53 +65,53 @@ Track **R** = 3D renderer code, track **M** = 3D models/art (new letters, so the
 
 | Chunk | Goal | Needs | Size |
 |---|---|---|---|
-| 1R | Go/no-go spike on a real phone | — | S |
-| 2R | 3D view behind the switch, placeholder boxes | 1R | M |
-| 2M | Blender → USDZ pipeline + buildings/props | 1R | L |
-| 3R | Placement, selection, walls in 3D | 2R | M |
-| 3M | Animated zombies (+ survivors/defenders) | 2R, 2M | M |
-| 4R | Combat effects, overlays, health bars | 3R, 3M | M |
-| 5R | Performance pass + make 3D the default | 4R | M |
-| 6R | Retire 2D (optional) | 5R + owner yes | S |
+| RND-001 | Go/no-go spike on a real phone | — | S |
+| RND-002 | 3D view behind the switch, placeholder boxes | RND-001 | M |
+| MOD-001 | Blender → USDZ pipeline + buildings/props | RND-001 | L |
+| RND-003 | Placement, selection, walls in 3D | RND-002 | M |
+| MOD-002 | Animated zombies (+ survivors/defenders) | RND-002, MOD-001 | M |
+| RND-004 | Combat effects, overlays, health bars | RND-003, MOD-002 | M |
+| RND-005 | Performance pass + make 3D the default | RND-004 | M |
+| RND-006 | Retire 2D (optional) | RND-005 + owner yes | S |
 
-**1R — Go/no-go spike.** _Goal:_ see our models in real 3D on an iPhone before committing. _Scope:_ a DEBUG-only RealityKit screen (not wired to the game): ground plane, HQ + 5 study models exported by hand, sun + shadows, orbit camera, 35 then 100 Mixamo walkers walking in circles. Measure fps on the oldest supported phone and in the simulator. Confirm frame-rate capping, iOS 17 vs 18 behaviour, and particle/billboard availability. _Not:_ game hookup, export script, other models. _Exit check:_ screenshots/video next to the current 2D view, an fps table, and a one-page "gaps found" note. You decide go/no-go. _Start prompt:_ "Do chunk 1R from docs/plans/3d-rendering-plan.md: read AGENTS.md and that plan only; build the DEBUG RealityKit spike and report fps and screenshots."
+**RND-001 — Go/no-go spike.** _Goal:_ see our models in real 3D on an iPhone before committing. _Scope:_ a DEBUG-only RealityKit screen (not wired to the game): ground plane, HQ + 5 study models exported by hand, sun + shadows, orbit camera, 35 then 100 Mixamo walkers walking in circles. Measure fps on the oldest supported phone and in the simulator. Confirm frame-rate capping, iOS 17 vs 18 behaviour, and particle/billboard availability. _Not:_ game hookup, export script, other models. _Exit check:_ screenshots/video next to the current 2D view, an fps table, and a one-page "gaps found" note. You decide go/no-go. _Start prompt:_ "Do chunk RND-001 from docs/plans/3d-rendering-plan.md: read AGENTS.md and that plan only; build the DEBUG RealityKit spike and report fps and screenshots."
 
-**2R — 3D view behind the switch.** _Goal:_ the real game, playable in 3D with labeled boxes. _Scope:_ `renderer` field in `presentation.json`; shared ticker moved out of `GameScene`; RealityView world; merged ground mesh from the map; orbit camera (pan/zoom/rotate/tilt limits in JSON); ModelRegistry with the labeled-box placeholder; buildings and zombies synced from Core state (same "rebuild on Signature change" rule); `WorldMapping3D` + Core test. _Not:_ placement, effects, real models. _Exit check:_ a game runs in 3D with boxes moving correctly; flipping the switch back gives the unchanged 2D game on the same save; Core tests and build pass. _Start prompt:_ "Implement chunk 2R from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/MAP.md, docs/features/rendering-art.md and that chunk only."
+**RND-002 — 3D view behind the switch.** _Goal:_ the real game, playable in 3D with labeled boxes. _Scope:_ `renderer` field in `presentation.json`; shared ticker moved out of `GameScene`; RealityView world; merged ground mesh from the map; orbit camera (pan/zoom/rotate/tilt limits in JSON); ModelRegistry with the labeled-box placeholder; buildings and zombies synced from Core state (same "rebuild on Signature change" rule); `WorldMapping3D` + Core test. _Not:_ placement, effects, real models. _Exit check:_ a game runs in 3D with boxes moving correctly; flipping the switch back gives the unchanged 2D game on the same save; Core tests and build pass. _Start prompt:_ "Implement chunk RND-002 from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/MAP.md, docs/features/rendering-art.md and that chunk only."
 
-**2M — Model pipeline + buildings/props.** _Goal:_ every building, defense and decoration has a 3D model in the game. _Scope:_ `tools/blender/export_usdz.py` (scale/origin/facing rules), an import location in `App/`, a missing-model checker; export the study models; finish backs/roofs; model the missing assets in the same style; tower base + turret as separate parts so the turret can aim. _Not:_ characters, code beyond loading. _Exit check:_ the checker reports zero missing for buildings/props; one review screenshot of each model from 4 angles. _Start prompt:_ "Implement chunk 2M from docs/plans/3d-rendering-plan.md: read AGENTS.md, HighwayHoldout_Blender_Study/CLAUDE_HANDOFF.md and that chunk only."
+**MOD-001 — Model pipeline + buildings/props.** _Goal:_ every building, defense and decoration has a 3D model in the game. _Scope:_ `tools/blender/export_usdz.py` (scale/origin/facing rules), an import location in `App/`, a missing-model checker; export the study models; finish backs/roofs; model the missing assets in the same style; tower base + turret as separate parts so the turret can aim. _Not:_ characters, code beyond loading. _Exit check:_ the checker reports zero missing for buildings/props; one review screenshot of each model from 4 angles. _Start prompt:_ "Implement chunk MOD-001 from docs/plans/3d-rendering-plan.md: read AGENTS.md, HighwayHoldout_Blender_Study/CLAUDE_HANDOFF.md and that chunk only."
 
-**3R — Placement in 3D.** _Goal:_ building feels as good as the D-022 isometric placement. _Scope:_ ray hit-testing; ghost = see-through model + tile grid + green/red footprint + reason; ghost lifted above the finger; wall-line drag with count/cost; selection outline; range ring on the ground; buildings between camera and ghost fade (works at any camera angle). _Not:_ effects. _Exit check:_ repeat the D-022 simulator checks (1×1, 2×2, 3×3 move + cancel, invalid spots, wall line) in 3D at two camera angles. _Start prompt:_ "Implement chunk 3R from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/input.md and that chunk only."
+**RND-003 — Placement in 3D.** _Goal:_ building feels as good as the D-022 isometric placement. _Scope:_ ray hit-testing; ghost = see-through model + tile grid + green/red footprint + reason; ghost lifted above the finger; wall-line drag with count/cost; selection outline; range ring on the ground; buildings between camera and ghost fade (works at any camera angle). _Not:_ effects. _Exit check:_ repeat the D-022 simulator checks (1×1, 2×2, 3×3 move + cancel, invalid spots, wall line) in 3D at two camera angles. _Start prompt:_ "Implement chunk RND-003 from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/input.md and that chunk only."
 
-**3M — Animated characters.** _Goal:_ zombies walk, turn and attack with real animation. _Scope:_ Mixamo walker → USDZ with walk/attack/idle; playback speed from movement; smooth turning; hit flash; runner/brute (Mixamo or a re-tint at first); survivors/defenders if they exist by then. _Not:_ effects. _Exit check:_ normal horde, no foot sliding from 4 camera angles, attack hold works, missing-model box shows if a file is removed. _Start prompt:_ "Implement chunk 3M from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/zombie-walk-mixamo.md and that chunk only."
+**MOD-002 — Animated characters.** _Goal:_ zombies walk, turn and attack with real animation. _Scope:_ Mixamo walker → USDZ with walk/attack/idle; playback speed from movement; smooth turning; hit flash; runner/brute (Mixamo or a re-tint at first); survivors/defenders if they exist by then. _Not:_ effects. _Exit check:_ normal horde, no foot sliding from 4 camera angles, attack hold works, missing-model box shows if a file is removed. _Start prompt:_ "Implement chunk MOD-002 from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/zombie-walk-mixamo.md and that chunk only."
 
-**4R — Effects and overlays.** _Goal:_ combat reads as well as in 2D. _Scope:_ tracers, muzzle flash, goo decals, dust, building shake, trap flash, health/progress bars, scaffolding/rubble, horde warning arrows, aiming turrets. The same caps as `EventPlayer`. _Not:_ new effects. _Exit check:_ the 1B on-screen defense check (breach, rubble, "Held!") passes in 3D. _Start prompt:_ "Implement chunk 4R from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/rendering-art.md and that chunk only."
+**RND-004 — Effects and overlays.** _Goal:_ combat reads as well as in 2D. _Scope:_ tracers, muzzle flash, goo decals, dust, building shake, trap flash, health/progress bars, scaffolding/rubble, horde warning arrows, aiming turrets. The same caps as `EventPlayer`. _Not:_ new effects. _Exit check:_ the milestone 1B on-screen defense check (breach, rubble, "Held!") passes in 3D. _Start prompt:_ "Implement chunk RND-004 from docs/plans/3d-rendering-plan.md: read AGENTS.md, docs/features/rendering-art.md and that chunk only."
 
-**5R — Performance + default.** _Goal:_ 3D is ready to be the normal view. _Scope:_ day-40 and 100-zombie stress tests on the oldest supported phone; low-poly zombie and shadow tuning if needed; Battery saver setting; app-size measurement; make `reality3d` the default. _Not:_ deleting 2D. _Exit check:_ 60 fps at day 40 on the oldest phone (≥45 at 100 zombies), a 30-minute play session without the phone getting hot, a size report. _Start prompt:_ "Implement chunk 5R from docs/plans/3d-rendering-plan.md: read AGENTS.md and that chunk only; start with the stress test."
+**RND-005 — Performance + default.** _Goal:_ 3D is ready to be the normal view. _Scope:_ day-40 and 100-zombie stress tests on the oldest supported phone; low-poly zombie and shadow tuning if needed; Battery saver setting; app-size measurement; make `reality3d` the default. _Not:_ deleting 2D. _Exit check:_ 60 fps at day 40 on the oldest phone (≥45 at 100 zombies), a 30-minute play session without the phone getting hot, a size report. _Start prompt:_ "Implement chunk RND-005 from docs/plans/3d-rendering-plan.md: read AGENTS.md and that chunk only; start with the stress test."
 
-**6R — Retire 2D (optional).** Remove the SpriteKit renderer, iso sprite import path and top-down art; archive the render scripts. Only on your explicit yes, and only if option (a) in §1 was chosen. Exit check: build + tests pass, and MAP is updated.
+**RND-006 — Retire 2D (optional).** Remove the SpriteKit renderer, iso sprite import path and top-down art; archive the render scripts. Only on your explicit yes, and only if option (a) in §1 was chosen. Exit check: build + tests pass, and MAP is updated.
 
 ## 7. Honest effort and risk
 
-- **Effort:** roughly **25–40 agent work sessions**, plus your time reviewing models and look. Art (2M, 3M) is about half. Staying 2D with the living-world pass is roughly a quarter to a third of that.
-- **Risk: medium-high.** Main risks: (1) the hand-made "miniature" charm of the renders can look plainer in real-time 3D unless lighting/materials get real attention; (2) RealityKit gaps for games (found in 1R, not later); (3) a large number of zombies on older phones; (4) two renderers to keep working during the switch, so every new feature (e.g. 3B panels, units) has to be drawn twice until 2D is retired. That last one argues for **not** running 3D in parallel with Phase 1 gameplay chunks.
+- **Effort:** roughly **25–40 agent work sessions**, plus your time reviewing models and look. Art (MOD-001, MOD-002) is about half. Staying 2D with the living-world pass is roughly a quarter to a third of that.
+- **Risk: medium-high.** Main risks: (1) the hand-made "miniature" charm of the renders can look plainer in real-time 3D unless lighting/materials get real attention; (2) RealityKit gaps for games (found in RND-001, not later); (3) a large number of zombies on older phones; (4) two renderers to keep working during the switch, so every new feature (e.g. APP-002 panels, units) has to be drawn twice until 2D is retired. That last one argues for **not** running 3D in parallel with Phase 1 gameplay chunks.
 - **What you get that 2D can't:** turning the camera, real shadows that move with time of day, no "zombie hidden behind the HQ" sorting bugs, smooth facing at any angle, and a pipeline where one Blender model replaces 4–8 rendered pictures per animation frame.
 
 ## 8. When it's worth doing
 - **Worth it if** after the 2D art redo you still want a turnable camera, a day/night sun with moving shadows, or close-up zoom. Those are things sprites fundamentally can't do.
 - **Not worth it if** the goal is "looks richer and more alive". The living-world 2D pass plus the art redo gets most of that for far less.
-- **Best timing:** after Phase 1 is finished (chunk 6B), so gameplay isn't being built twice. Chunk 1R alone is cheap and safe any time, and it turns this from a guess into a measured decision.
+- **Best timing:** after Phase 1 is finished (chunk REL-001), so gameplay isn't being built twice. Chunk RND-001 alone is cheap and safe any time, and it turns this from a guess into a measured decision.
 
 ## Owner decisions needed
-1. **Go or no-go on the 1R spike** (small, can be done any time).
+1. **Go or no-go on the RND-001 spike** (small, can be done any time).
 2. **Engine:** approve RealityKit (vs. any outside engine, which would need a third-party approval).
 3. **Minimum iOS:** raise to 18 for everyone (recommended), or keep iOS 17 with 2D-only on those phones.
 4. **Camera:** free rotation, or 4 snapped angles (Tropico-style); how far players may tilt/zoom.
 5. **Timing:** after Phase 1 (recommended) or in parallel.
 6. **Art:** who makes the ~47 missing models and the backs of existing ones (agent + Blender scripts, ChatGPT, or bought packs), and approval of shipping Mixamo characters inside the app.
-7. **Endgame:** once 3D is the default, retire 2D (6R) or keep both.
+7. **Endgame:** once 3D is the default, retire 2D (RND-006) or keep both.
 
 ## Sources checked (2026-10-31)
 - Apple: [Bringing your SceneKit projects to RealityKit](https://developer.apple.com/documentation/realitykit/bringing-your-scenekit-projects-to-realitykit.md) (SceneKit soft-deprecated); forum: [SceneKit is now deprecated – when will it be removed?](https://developer.apple.com/forums/thread/795520) (no removal date); [SpriteKit's continued support](https://developer.apple.com/forums/thread/826562) (SpriteKit not deprecated).
 - Apple: [Scene content, lights and cameras](https://developer.apple.com/documentation/realitykit/scene-content-lights-and-cameras.md), [DirectionalLightComponent.Shadow](https://developer.apple.com/documentation/realitykit/directionallightcomponent/shadow.md), [DirectionalLight](https://developer.apple.com/documentation/realitykit/directionallight.md) (non-AR virtual camera, shadows).
 - Apple: [MeshInstancesComponent](https://developer.apple.com/documentation/realitykit/meshinstancescomponent.md) (GPU instancing, iOS 26+); forum: [RealityKit large-scale practices](https://developer.apple.com/forums/thread/836103) (one draw per mesh; merge meshes that share a material).
-- Not confirmed by search: `RealityView` needing iOS 18 on iPhone comes from Apple's WWDC 2024 material as I know it. Chunk 1R must verify it first.
+- Not confirmed by search: `RealityView` needing iOS 18 on iPhone comes from Apple's WWDC 2024 material as I know it. Chunk RND-001 must verify it first.

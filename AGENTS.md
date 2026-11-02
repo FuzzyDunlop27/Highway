@@ -8,7 +8,7 @@ Before the local docs below, check **Craft → Highway Holdout** for shared proj
 
 Known Craft project page: **Highway Holdout — Zombie TD Game**, root block ID `c6f9fd54-e7d4-463b-4d01-f2e85218f679`. Resolve the current folder through Craft rather than creating duplicate project pages or folders.
 
-**Craft kanban (required):** the board is the collection **Highway Holdout Tasks** (id `88e3b7cd-6bc5-245b-067a-3d4fe4e298f3`, columns Task / Status [Backlog, Next, Doing, Done] / Phase / Notes / Doc; find it with `collections list`). Whenever a chunk is started, finished, blocked, or unblocked, update its card (Status + Notes, one card per chunk named like "Chunk 2B — …"; add a card if missing) and flip any chunk it unblocks to Next. Do this in the same session as the BUILD-QUEUE.md change, re-read the cards to verify, and never say the board is updated unchecked. The handoff note on the project page does not replace the board.
+**Craft kanban (required):** the board is the collection **Highway Holdout Tasks** (id `88e3b7cd-6bc5-245b-067a-3d4fe4e298f3`, columns Ticket / Status [Backlog, Next, Doing, Done] / Phase / Notes / Doc / Ticket Link / Old name; find it with `collections list`). Whenever a ticket is started, finished, blocked, or unblocked, update its card (Status + Notes, one card per ticket named like "CORE-002 — …"; add a card if missing) and flip any ticket it unblocks to Next. Do this in the same session as the BUILD-QUEUE.md change, re-read the cards to verify, and never say the board is updated unchecked. The handoff note on the project page does not replace the board.
 
 1. `docs/STATUS.md` — where we left off and the current milestone.
 2. `docs/MAP.md` — what every folder/file is for, and "to change X, look in Y".
@@ -16,12 +16,13 @@ Known Craft project page: **Highway Holdout — Zombie TD Game**, root block ID 
 4. Building a new milestone? Read only that milestone's section of `docs/PHASE1-PLAN.md`.
 Do NOT scan the whole codebase. If MAP + the feature note aren't enough, MAP is wrong — fix it.
 
-## Build chunks (so the owner can start fresh chats)
-The owner avoids long-running chats. Work is split into **build chunks** tracked in `docs/BUILD-QUEUE.md`.
-- **Labels show dependencies.** Number = wave, letter = track (e.g. 1A, 2A, 1B, 2B, 3B). Any chunk in wave 1 can be done at any time; a wave-2 chunk needs **all** wave-1 chunks done; wave 3 needs all of waves 1–2. If a different dependency is truly needed, write it in the chunk's "Needs" line. (Older "Milestone 1A–1E" names in `PHASE1-PLAN.md` are a separate, earlier scheme; say "chunk" vs "milestone" to avoid mixing them up.)
-- **After finishing any chunk, always write up the next big chunk:** add or update its entry in `BUILD-QUEUE.md` with label, goal, needs, scope, what NOT to build, exit check, and a short start prompt the owner can paste, like "Implement chunk 2A" in a new chat.
-- **When the owner asks "what's left?"** (any time), read `BUILD-QUEUE.md` and answer: done / ready now / blocked (and by which chunks).
-- **Record status in Craft** (Highway Holdout page, see "Look here first") whenever a chunk is started, finished, or blocked, and keep `BUILD-QUEUE.md` the same. Verify the Craft write; never claim it synced unchecked.
+## Tickets (so the owner can start fresh chats)
+The owner avoids long-running chats. Work is split into **tickets** tracked in `docs/BUILD-QUEUE.md` (the old word was "chunk"; old names like 1B or 3M-2 are in its **Old name** column).
+- **Ticket IDs are `PREFIX-NNN`:** `CORE-` core engine, `APP-` app UI, `RND-` 3D renderer, `MOD-` 3D models/characters, `TXT-` textures/materials/lighting, `MAP-` maps, `ART-` 2D art (retired), `OWN-` owner tasks, `REL-` release. A new ticket takes the next free number in its prefix. Add a new prefix only with a line in the BUILD-QUEUE prefix table.
+- **Blocked by / Related (required on every ticket).** **Never start a ticket until every ticket in its Blocked by list is Done**; if you are asked to, say it is blocked and by what. Related tickets do not block but share files, content or a save version: read their notes and coordinate. When a ticket finishes, flip every ticket it unblocks to Ready, in the same edit. Put the same links in the Craft card's **Ticket Link** column (`Blocked by: … · Related: …`).
+- **After finishing any ticket, always write up the next big ticket:** add or update its entry in `BUILD-QUEUE.md` with ID, goal, blocked-by, scope, what NOT to build, exit check, and a short start prompt the owner can paste, like "Implement ticket APP-004" in a new chat.
+- **When the owner asks "what's left?"** (any time), read `BUILD-QUEUE.md` and answer: done / ready now / blocked (and by which tickets).
+- **Record status in Craft** (Highway Holdout page, see "Look here first") whenever a ticket is started, finished, or blocked, and keep `BUILD-QUEUE.md` the same. Verify the Craft write; never claim it synced unchecked.
 
 ## Reporting to the owner (keep it short)
 The owner is not an engineer and does not want walls of text while you work.
@@ -92,5 +93,5 @@ If you cannot run a command (e.g. no Xcode in your sandbox), say so; never claim
 - No third-party dependencies without a DECISIONS entry approved by the owner.
 
 ## Art
-- Map art is 3D: one `<artId>.usdz` per art id (ids as in `docs/graphics-spec-phase1.md`; pipeline is chunk 2M).
+- Map art is 3D: one `<artId>.usdz` per art id (ids as in `docs/graphics-spec-phase1.md`; pipeline is ticket MOD-001).
 - Menu/HUD PNGs (UI kit): put them in a folder and run `python3 tools/import_art.py <folder> --view ui`.

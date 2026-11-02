@@ -1,6 +1,6 @@
 # Character profile — weathered medieval blacksmith, age 45
 
-**Draft implementation (2026-11-01, 3M-2MH-L):** a clothed 9,209-triangle review model now exists;
+**Draft implementation (2026-11-01, MOD-007):** a clothed 9,209-triangle review model now exists;
 model bundle and four-angle previews are in the `blacksmith_review/` folder linked from
 `tools/makehuman/README.md`. Preserves the maximum-height source, adds fitted clothes, apron,
 short hair/beard and head modifiers. This brief remains the art target: exact scars/calluses,

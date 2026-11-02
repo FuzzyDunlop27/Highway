@@ -1,4 +1,4 @@
-# Town life plan — humans (chunks 3M-2, 3M-3)
+# Town life plan — humans (chunks MOD-003, RND-007)
 
 _Draft 2026-11-01. Owner wants a varied cast of survivors walking around doing different jobs, "like Tropico". Nothing built yet. Chunk entries: `docs/BUILD-QUEUE.md`._
 
@@ -15,7 +15,7 @@ _Draft 2026-11-01. Owner wants a varied cast of survivors walking around doing d
 - **Missing model = labeled box**, as for every model.
 - **Naming (owner decided 2026-11-01):** they are **survivors** everywhere (Core, HUD, docs). Not "townspeople" or "settlers".
 
-## 3. Cast and animations (3M-2)
+## 3. Cast and animations (MOD-003)
 > **Update 2026-11-01:** the MakeHuman farmer (rigged in Mixamo, `sv_farmer`) is already in the game for all humans. The table below is now the *optional more-looks* list; the live need is more farmer clips (idle, carry, hammer, dig). See `docs/OWNER-DOWNLOADS.md` Part C.
 Mixamo, one character per file, all clips on one timeline (D-038 pipeline). Download: FBX Binary, With Skin, 30 fps, **In Place** where offered. Folder: `HighwayHoldout_3D_Sources/mixamo-humans/<artId>/`.
 
@@ -33,7 +33,7 @@ The owner chose MakeHuman (via ChatGPT/Codex) for the human looks; Mixamo is sti
 
 | # | Character | State | Notes |
 |---|---|---|---|
-| 1 | Blacksmith (male, 45) | Clothed review draft done (3M-2MH-L) | 9,209 triangles, one atlas, ~1.2 MB FBX/GLB; no rig/animation yet. **Will need scaling:** built at the maximum-height slider (~2.47 m incl. boots/hair), so it must be scaled to normal height (~1.8 m) on export to stand next to the zombie. Medieval costume is a reference exercise; for the game it should read as a modern survivor/Workshop worker. |
+| 1 | Blacksmith (male, 45) | Clothed review draft done (MOD-007) | 9,209 triangles, one atlas, ~1.2 MB FBX/GLB; no rig/animation yet. **Will need scaling:** built at the maximum-height slider (~2.47 m incl. boots/hair), so it must be scaled to normal height (~1.8 m) on export to stand next to the zombie. Medieval costume is a reference exercise; for the game it should read as a modern survivor/Workshop worker. |
 | 2 | Farmer (woman) | **In the game** (2026-11-01) | Owner rigged it in Mixamo (walk, run, shooting rifle) → `sv_farmer`. Used for all defenders and strolling survivors for now. Needs idle + task clips. |
 | 3–4 | Two more civilians | Not started | e.g. mechanic/scrapper, older man (§3). |
 | D | Defender | Not started | Armed survivor; rifle as a separate prop. |
@@ -41,24 +41,24 @@ The owner chose MakeHuman (via ChatGPT/Codex) for the human looks; Mixamo is sti
 Before copying the recipe to the whole cast, finish the **rig + motion trial on model 1** (Mixamo auto-rig, check apron/joint deformation, ≤ 3 MB with clips), so any problem is fixed once.
 
 ### 3b. If the owner doesn't like Mixamo's people (added 2026-11-01)
-**Second type built (3M-2MH-F, owner requested):** the farmer example below is now a real
+**Second type built (MOD-008, owner requested):** the farmer example below is now a real
 40-year-old woman in faded overalls/grey T-shirt/work boots and short brown hair. Portable files,
 four views, licences and editable source recipes for farmer and blacksmith are committed under
 `HighwayHoldout_3D_Sources/makehuman/`. Farmer is 9,196 triangles, 1.61135 m clothed, one atlas/material;
-packed blend, FBX and GLB all checked. This finishes the one-additional-model task, not full 3M-2:
+packed blend, FBX and GLB all checked. This finishes the one-additional-model task, not full MOD-003:
 rig/deformation, task clips, game conversion/integration and device checks remain. Optional bandana/props omitted.
 
-**Subsequent live result (3M-2MH-V):** generated actual FBX/MHM and verified Blender import;
+**Subsequent live result (MOD-006):** generated actual FBX/MHM and verified Blender import;
 max-height body is 2.44386 m, 28,796 triangles. Body/preview and reports are linked in
 `tools/makehuman/README.md`. Use Blender `use_custom_normals=False` to avoid imported shading
-artifacts. Sculpt/clothes, optimization, rig/clips and full 3M-2 integration are still pending.
+artifacts. Sculpt/clothes, optimization, rig/clips and full MOD-003 integration are still pending.
 
-**Owner selected a MakeHuman trial (2026-11-01, chunk 3M-2MH):** preparation delivered in
+**Owner selected a MakeHuman trial (2026-11-01, chunk MOD-004):** preparation delivered in
 `tools/makehuman/` (80% muscle / 20% weight / maximum-height age-45 male → FBX script) and
 `docs/plans/blacksmith-profile.md` (precise medieval blacksmith brief). This is a base-body trial;
 skin weathering, face sculpt, garments, rigging and animations are separate steps. Live MakeHuman
 generation/import is now verified as described above. Medieval costume is a reference exercise, not a change to
-the game's modern setting. The four-survivor/defender integration remains chunk 3M-2.
+the game's modern setting. The four-survivor/defender integration remains chunk MOD-003.
 
 **Mixamo is only needed for the motion.** Its animations work on almost any human-shaped 3D model: upload the model to Mixamo's free auto-rigger, then download the same clips onto it. So the *look* can come from anywhere. ChatGPT cannot make a layer to draw "over" a Mixamo character: the game needs 3D models, and a flat picture can't be wrapped onto someone else's 3D body.
 
@@ -74,9 +74,9 @@ Every option goes through the same exporter (`tools/blender/export_characters.py
 
 The cast to ask for: farmer, mechanic/scrapper, builder, older man, young woman, medic, and the defender (same prompt, "armed survivor in a plate-carrier vest and helmet", still with empty hands: the rifle is added as a separate prop). Get the front image right first, then ask for the matching side and back.
 
-## 4. Who is on screen (3M-3)
+## 4. Who is on screen (RND-007)
 - One visible person per survivor, up to `townLife.maxVisible` (start at 40). Over the cap, each role is scaled down proportionally so the mix still matches.
-- Roles come from Core each tick (`GameLoop.population` + per-building `assignedWorkers`, construction jobs, active runs): **worker@building**, **builder@site**, **away** (not drawn, except leaving/returning), **defender** (3M-2's layer, not town life), **trainee** (drills at the Barracks), **idle**.
+- Roles come from Core each tick (`GameLoop.population` + per-building `assignedWorkers`, construction jobs, active runs): **worker@building**, **builder@site**, **away** (not drawn, except leaving/returning), **defender** (MOD-003's layer, not town life), **trainee** (drills at the Barracks), **idle**.
 - Each person keeps a stable slot id so the same face keeps the same job when numbers change by one (no shuffling the whole town). When a role count drops, the most recently assigned person leaves first.
 - Home = nearest Shelter with room (else HQ). Purely visual.
 
@@ -109,17 +109,17 @@ Task spots: a few points around each building's footprint (computed from the foo
 ## 7. Paths and performance
 - Walk on the tile grid around buildings and walls (never through them) using a small cached A* in `Core/Presentation` over the same blocking rules as `FlowField` (gates/openings only). Cap path requests per frame; reuse paths between the same two buildings.
 - Motion and walk-rate via `CharacterMotion3D` (no foot sliding, smooth turns).
-- Caps: `maxVisible`, max path requests per frame, animation update only for on-screen people; at far zoom drop to every-other-frame updates. Target: no fps loss at day 40 vs. before 3M-3 (check with 5R's readout if available).
+- Caps: `maxVisible`, max path requests per frame, animation update only for on-screen people; at far zoom drop to every-other-frame updates. Target: no fps loss at day 40 vs. before RND-007 (check with RND-005's readout if available).
 
 ## 7b. Crowd budget: how many people can we have on screen? (owner request 2026-11-01)
-The owner wants **lots** of people and zombies, many assets, a large world, and **no hot phone**. So the caps are measured, not guessed. Do this as the **first step of 3M-3** (it needs 3M-2's human models), or fold it into 5R if 5R runs first — 5R already owns the fps readout and stress tests.
+The owner wants **lots** of people and zombies, many assets, a large world, and **no hot phone**. So the caps are measured, not guessed. Do this as the **first step of RND-007** (it needs MOD-003's human models), or fold it into RND-005 if RND-005 runs first — RND-005 already owns the fps readout and stress tests.
 
-**Device floor (owner decided 2026-11-01, D-040):** latest iOS only, minimum phone **iPhone 15 Pro (A17 Pro, 8 GB)**. All caps are measured on an iPhone 15 Pro. Applying it (deployment target + App Store device restriction) is part of this step or 5R. iPads need their own floor (probably M1 or newer, still open).
+**Device floor (owner decided 2026-11-01, D-040):** latest iOS only, minimum phone **iPhone 15 Pro (A17 Pro, 8 GB)**. All caps are measured on an iPhone 15 Pro. Applying it (deployment target + App Store device restriction) is part of this step or RND-005. iPads need their own floor (probably M1 or newer, still open).
 
-**What we know so far:** 1R spike: 100 animated zombies at 60 fps on an iPhone 18 Pro with shadows. 4R: day-40 horde (47 zombies) ~59–60 fps in the *simulator* (not representative of a real phone). Never measured: humans, a big map, sustained heat over 15+ minutes, or an older phone.
+**What we know so far:** RND-001 spike: 100 animated zombies at 60 fps on an iPhone 18 Pro with shadows. RND-004: day-40 horde (47 zombies) ~59–60 fps in the *simulator* (not representative of a real phone). Never measured: humans, a big map, sustained heat over 15+ minutes, or an older phone.
 
 **How to measure:**
-1. A DEBUG **crowd stress scene** (extend the 1R spike or 5R's readout) with sliders: zombies (0–300), survivors (0–200), number of buildings, map size, shadows on/off, camera zoom.
+1. A DEBUG **crowd stress scene** (extend the RND-001 spike or RND-005's readout) with sliders: zombies (0–300), survivors (0–200), number of buildings, map size, shadows on/off, camera zoom.
 2. Record per run: frame time (CPU and GPU separately, Instruments / MetalFX HUD), memory, triangle count, and `ProcessInfo.thermalState` every 30 s over a **15-minute sustained run** (peak fps lies; heat shows after minutes).
 3. Run on the floor phone (owner provides or borrows one) and on the newest phone; the simulator only for rough checks.
 4. Pass line per setting: steady 60 fps with ~30% frame-time headroom (≤ ~11 ms of the 16.7 ms), thermal state never above "fair" in 15 minutes, memory under ~1.5 GB.
@@ -134,11 +134,11 @@ The owner wants **lots** of people and zombies, many assets, a large world, and 
 - **Shadows** only for characters near the camera; a cheap blob shadow for the rest.
 - **Shared textures** (one atlas for all survivor looks, 512 px), fewer materials per character.
 - **Culling:** nothing off-screen is drawn; big world drawn in chunks.
-- **Heat guard:** if `thermalState` reaches "serious", automatically lower the visible cap and shadows (and tell nobody — it should just quietly stay cool); the 5R Battery saver uses the same knobs.
+- **Heat guard:** if `thermalState` reaches "serious", automatically lower the visible cap and shadows (and tell nobody — it should just quietly stay cool); the RND-005 Battery saver uses the same knobs.
 
 **Exit:** the table exists, caps are set from it, and a 15-minute horde + busy town run on the floor phone stays at 60 fps without going above "fair" heat.
 
-## 8. Later (not in 3M-3; see `docs/IDEAS.md`)
+## 8. Later (not in RND-007; see `docs/IDEAS.md`)
 Names and faces you can follow, needs/happiness (Tropico-style), day/night with people sleeping, survivors who can be bitten, morale from victories (ties to idea §5 rewards).
 
 ## 9. Open questions for the owner

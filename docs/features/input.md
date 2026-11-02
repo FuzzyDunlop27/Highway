@@ -1,6 +1,6 @@
 # Feature: Input (camera, placement, selection)
 
-> **3D only (D-030).** Placing, moving, selecting and the wall tool work again in 3D since chunk 3R (2026-11-01, D-032).
+> **3D only (D-030).** Placing, moving, selecting and the wall tool work again in 3D since chunk RND-003 (2026-11-01, D-032).
 
 ## Purpose
 Lets the player look around the map and place, move, select, and demolish buildings with simple touches.
@@ -38,11 +38,11 @@ Lets the player look around the map and place, move, select, and demolish buildi
 
 ## Known issues
 - Simulator testing: the simulator control tool's plain `tap` leaves the finger down until the next input (buttons stay pressed, then fire later). Use a `touch_path` with a down and an up point for taps. Screenshots of the 3D view can lag a frame; take a second one.
-- Decorations (trees, wrecks) don't fade in front of the ghost yet; only buildings do (decorations are low boxes today; revisit with 2M models).
+- Decorations (trees, wrecks) don't fade in front of the ghost yet; only buildings do (decorations are low boxes today; revisit with MOD-001 models).
 
 ## Change log
-- 2026-11-01 — Chunk 3R: placement, selection and the wall tool rebuilt in 3D (ray picking in Core, ghost/grid/footprint, lifted drag, wall line, outline + range ring, occluder fading from any angle; two-finger pan in the wall tool). D-032.
-- 2026-11-01 — 2D retired (D-030): 2D camera, taps, ghost/wall drawing removed; placement off until 3R. 3D orbit camera (2R): pan, pinch toward fingers, one-step snapped twist, tilt, min height, map-clamped zoom.
+- 2026-11-01 — Chunk RND-003: placement, selection and the wall tool rebuilt in 3D (ray picking in Core, ghost/grid/footprint, lifted drag, wall line, outline + range ring, occluder fading from any angle; two-finger pan in the wall tool). D-032.
+- 2026-11-01 — 2D retired (D-030): 2D camera, taps, ghost/wall drawing removed; placement off until RND-003. 3D orbit camera (RND-002): pan, pinch toward fingers, one-step snapped twist, tilt, min height, map-clamped zoom.
 - 2026-10-31 — Wall tool: drag a line, see count + cost, Build all at once; two-finger pan.
 - 2026-10-31 — D-022 isometric placement: grid, lifted drag, occluder fading; auto top-down off (old saved setting reset).
 - 2026-10-31 — Recorded owner-approved isometric placement direction and staged rollout (D-022); documentation only, implementation pending.

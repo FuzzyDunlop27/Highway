@@ -15,7 +15,7 @@ When the owner picks one, turn it into a chunk in `BUILD-QUEUE.md` and a `DECISI
 - **Population balance (added 2026-11-01):** population becomes something you manage. Too few people and you can't staff buildings, defend, or survive losses; too many and food, housing and safety strain. Run losses (above) are one drain, so you must replace people to stay healthy.
   - Today: survivors arrive on a timer while housing is free and food covers `foodCost`; housing caps the count; food upkeep is 0 (`docs/features/economy.md`). Turning on `foodUpkeepPerSurvivorPerMin` is the natural "too many" pressure (already a STATUS open question).
   - Possible levers (all numbers in `Content/*.json`): upkeep per head, housing/crowding penalties (unrest, slower arrivals, disease), a visible "ideal population" gauge in the HUD, and arrivals that slow or stop when you are over capacity.
-  - **Decided 2026-11-01 (D-042, chunk 1W):** running out of food/water makes survivors leave (no deaths); a successful town attracts people faster (town appeal) and held hordes bring newcomers. Rules: `docs/GAME-RULES.md` §3–4. Still open: crowding penalties and an "ideal population" gauge.
+  - **Decided 2026-11-01 (D-042, chunk CORE-005):** running out of food/water makes survivors leave (no deaths); a successful town attracts people faster (town appeal) and held hordes bring newcomers. Rules: `docs/GAME-RULES.md` §3–4. Still open: crowding penalties and an "ideal population" gauge.
 - Core stays deterministic: the App plays the mini-game and sends the result to Core as a `Command` with a seeded outcome. Don't put mini-game timing in Core.
 
 ## 3. Real-time weather and season (added 2026-11-01)
@@ -25,6 +25,7 @@ When the owner picks one, turn it into a chunk in `BUILD-QUEUE.md` and a `DECISI
 - Open: gameplay effects or cosmetic only? Real location weather (needs network, conflicts with "offline") vs. date-only seasons (offline-safe, recommended).
 
 ## 4. Neighborhood start: fortify a place you found (added 2026-11-01)
+- **Partly scheduled (2026-11-01, D-046):** taking over existing houses is now tickets CORE-011/APP-007 (`docs/BUILD-QUEUE.md`). The buildable-area mask and pre-placed choke points are still ideas.
 - Maps feel like a real neighborhood (houses, streets, fences). You can only build inside your claimed area, with the fortress already there.
 - Some defense work is already done: conveniently placed barriers/buildings (walls, parked vehicles, fences, sturdy houses) form natural choke points. You are **fortifying** a found location, not starting from scratch.
 - Design implications: pre-placed, non-demolishable (or costly to remove) blocking pieces per map; a buildable-area mask (Core map data: `Content/` JSON); zombie paths must still reach the base through the gaps. Fits the existing wall/pathing rules (`docs/features/pathing.md`, `construction.md`) and the CC0 modular-building art direction (D-036).
@@ -44,5 +45,5 @@ When the owner picks one, turn it into a chunk in `BUILD-QUEUE.md` and a `DECISI
 The shoreline (1) gives each map a setting, the neighborhood start (4) is how each map plays, supply runs (2) is how you leave the base, and weather (3) is the skin over all of it.
 
 ## 6. Deeper town life, Tropico-style (added 2026-11-01)
-- After chunk 3M-3 (survivors visibly walking and working, looks only): named survivors you can follow, needs/happiness, day/night with sleeping, survivors who can be bitten, morale from held hordes (ties to §5).
+- After chunk RND-007 (survivors visibly walking and working, looks only): named survivors you can follow, needs/happiness, day/night with sleeping, survivors who can be bitten, morale from held hordes (ties to §5).
 - Each of these adds Core state + a save migration, so each is its own decision. Design notes: `docs/plans/town-life-plan.md` §8.

@@ -51,7 +51,7 @@ The first map feels like a lived-in Chicago neighborhood: a 4-lane street with s
 - Core tests still use `phase1_exit` as their fixture map; `ChicagoMapTests` covers this one.
 
 ## Known issues / not done
-- Frame rate with ~80 decorations not measured (no fps readout until 5R); looked smooth in the simulator.
+- Frame rate with ~80 decorations not measured (no fps readout until RND-005); looked smooth in the simulator.
 - No real asphalt, sidewalk curb, crosswalk or street-sign art yet; trees are the dead-tree model only (no live trees downloaded).
 - Houses and garages are simple textured boxes (windows, bays, stoops, hipped roofs), not detailed models.
 

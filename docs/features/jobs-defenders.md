@@ -1,4 +1,4 @@
-# Feature: Jobs and defenders (chunk 2B)
+# Feature: Jobs and defenders (chunk CORE-002)
 
 ## Purpose
 The player chooses how many survivors work in each building, and the Barracks trains defenders who garrison towers or hold a spot and fight.
@@ -19,7 +19,7 @@ The player chooses how many survivors work in each building, and the Barracks tr
 - `Content/zombies.json` → `damageVsUnitsPerSec`, `attackRange` (how zombies hurt a defender on a spot).
 
 ## Key rules
-- **Everyone is in exactly one place:** working, building (borrowed by a construction job), away (2C runs), a defender, in training, or idle. `Roster.snapshot` adds up to `survivors`. Defenders and trainees still count toward housing (they stay in `Group.survivors`).
+- **Everyone is in exactly one place:** working, building (borrowed by a construction job), away (CORE-003 runs), a defender, in training, or idle. `Roster.snapshot` adds up to `survivors`. Defenders and trainees still count toward housing (they stay in `Group.survivors`).
 - **Order of claims (D-034):** defenders, trainees and runners come off the top, then builders, then workers get whoever is left (oldest building first). So a new command (train, send a run) never needs the player to un-assign anyone first: workers step aside, like they already do for builders.
 - **Workers:** `Command.setWorkers(id, count)`, 0 up to the building's `workers`. `assignedWorkers == nil` means "full" (new buildings fill themselves, so the game still just works). Output scales with `staffed / workers`. Errors: `.jobs(.notAWorkplace)`, `.jobs(.tooManyWorkers)`, `.unknownBuildingID`.
 - **Training:** needs a finished Barracks. The cost and one survivor are taken when queued (not when it starts). Queue length and `maxDefenders` (defenders + queued) come from the Barracks level. Only the first job counts down, and only while the Barracks is staffed; time = `trainSeconds × trainTimeMultiplier`. Cancel: a waiting job refunds everything, the one in progress refunds `cancelRefundPct`. Demolishing the Barracks refunds the whole queue.
@@ -30,7 +30,7 @@ The player chooses how many survivors work in each building, and the Barracks tr
 
 ## Known issues
 - A hurt defender doesn't heal until it is knocked out and returns (no rule for it yet; balance question).
-- No App UI yet (3B).
+- No App UI yet (APP-002).
 
 ## Change log
-- 2026-11-01 — Chunk 2B: worker counts, Barracks training, garrison, hold spot, knock-out; save v4 (D-034).
+- 2026-11-01 — Chunk CORE-002: worker counts, Barracks training, garrison, hold spot, knock-out; save v4 (D-034).

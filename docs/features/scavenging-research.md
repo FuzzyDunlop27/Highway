@@ -1,7 +1,7 @@
-# Feature: Scavenging runs and research (chunk 2C)
+# Feature: Scavenging runs and research (chunk CORE-003)
 
 ## Purpose
-Send survivors on timed runs for loot, and research three upgrades at the Workshop. Both only run on Core's ticks, so a later catch-up (4B) can advance them too.
+Send survivors on timed runs for loot, and research three upgrades at the Workshop. Both only run on Core's ticks, so a later catch-up (CORE-004) can advance them too.
 
 ## Files involved
 - `Core/Sources/HoldoutCore/Systems/Scavenging/ScavengingSystem.swift` — start, tick, collect, `RunProblem`.
@@ -23,7 +23,7 @@ Send survivors on timed runs for loot, and research three upgrades at the Worksh
 - Not built (by scope): risk of losses on runs, more research items, cancelling research.
 
 ## Known issues
-- No App UI yet (3B). `GameLoop.runProblem`, `researchProblem`, `trainingProblem` give the reason a button would be greyed out.
+- No App UI yet (APP-002). `GameLoop.runProblem`, `researchProblem`, `trainingProblem` give the reason a button would be greyed out.
 
 ## Change log
-- 2026-11-01 — Chunk 2C: scavenging runs with held rewards, Workshop research with three effects; save v5 (D-035).
+- 2026-11-01 — Chunk CORE-003: scavenging runs with held rewards, Workshop research with three effects; save v5 (D-035).

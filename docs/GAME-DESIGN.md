@@ -15,9 +15,10 @@ Zombie-apocalypse town builder + tower defense for iPhone (15+) and iPad. Grow a
 
 ## Core rules
 - **Build live:** you can place, upgrade, and repair at any time, including mid-horde.
-- **Resources (Phase 1):** Food, Scrap, Survivors (population); Water and Canned goods planned (1W/2W). Storage caps from HQ + Storage buildings.
+- **Resources (Phase 1):** Food, Scrap, Survivors (population); Water and Canned goods planned (CORE-005/CORE-006). Storage caps from HQ + Storage buildings.
 - **Survival (owner, 2026-11-01, planned):** survivors eat and drink. A new town starts with canned goods, bottled water, a working well and a broken garden to fix; grow food with gardens, farms, foraging, hunting, chickens and canning, and water with wells and rain catchers. Shortages slow work and make people leave, never a wipe.
 - **Spotters (owner, 2026-11-01, planned):** survivors posted at Lookout Posts call out hordes. Higher lookouts see farther; binoculars/radio give earlier warning and more detail. Unwatched roads give almost no warning.
+- **Guns, bullets, traps (owner, 2026-11-01, planned):** the town keeps a stock of guns that hand themselves out; every armed survivor shoots during a horde, so small hordes can be held without towers. Bullets are made from scrap at an Ammo Bench. New traps: Bear Trap, Pit Trap, Noise Maker; they re-arm themselves after each horde.
 - **All rules and their knobs in one place:** `docs/GAME-RULES.md`.
 - **Hordes:** run on an in-game clock that only advances while the app is open. They enter from telegraphed map edges (highway on/off ramps, side roads). Size scales with day count and town size.
 - **Zombie pathing:** flow field toward the HQ. Walls are passable at high cost (zombies bash through), so they naturally pile up at the weakest points.
@@ -28,7 +29,7 @@ Zombie-apocalypse town builder + tower defense for iPhone (15+) and iPad. Grow a
 - **Speed:** pause, 1x, 2x.
 
 ## Phase 1 content
-- **Buildings:** HQ (3×3), Shelter, Farm, Scavenger Post, Workshop, Barracks, Storage (2×2). Planned: Garden, Cannery, Hunting Lodge (2×2); Well, Rain Catcher, Chicken Coop, Lookout Post (1×1).
+- **Buildings:** HQ (3×3), Shelter, Farm, Scavenger Post, Workshop, Barracks, Storage (2×2). Planned: Garden (2×2), Cannery, Hunting Lodge (2×1); Well, Rain Catcher, Chicken Coop, Lookout Post, Ammo Bench (1×1); traps Bear Trap, Pit Trap, Noise Maker.
 - **Defenses:** Wood Wall → Metal Wall, Watchtower (long range, single target), MG Nest (short range, rapid), Spike Trap (damage), Barbed Wire (slow). Upgrade levels 1–3.
 - **Units:** Survivor (worker), Defender (trained at Barracks, can garrison towers / patrol).
 - **Zombies:** Walker (baseline), Runner (fast, fragile), Brute (slow tank, wrecks walls).
